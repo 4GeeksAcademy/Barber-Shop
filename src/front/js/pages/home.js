@@ -3,14 +3,17 @@ import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Header from "../component/header";
+import InfoSection from "../component/infoSection";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
 
 	return (
-		<div>
-
+		<div className="contenedor-page">
+			
 			<Header/>
+			<InfoSection/>
+
 
 		</div>
 	);

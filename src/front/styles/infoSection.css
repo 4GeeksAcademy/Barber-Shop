@@ -1,0 +1,24 @@
+.infoSection {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+
+}
+
+.cardSection {
+    padding: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
+    margin-top: 300px;
+    width: 90%;
+
+    .img-fluid-section {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+    }
+}
