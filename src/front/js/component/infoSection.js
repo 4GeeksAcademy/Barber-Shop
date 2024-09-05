@@ -21,7 +21,7 @@ const InfoSection = () => {
                                                 <div className="col-6 col-sm-4 fw-bold display-6">10</div>
                                                 <div className="w-100 d-none d-md-block"></div>
                                                 <div className="col-6 col-sm-4 fs-3">CUSTOMER SATISFACTION</div>
-                                                <div className="col-6 col-sm-4 fs-3 text">YEARS OF EXPERIENCE</div>
+                                                <div className="col-6 col-sm-4 fs-3">YEARS OF EXPERIENCE</div>
                                             </div>
                                         </div>
                                     </div>
