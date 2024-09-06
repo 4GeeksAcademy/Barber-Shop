@@ -12,7 +12,7 @@ const Header = () => {
           <button>BOOK AN APPOINTMENT</button>
         </div>
         <div className="cardHeader">
-        <div className="card">
+        <div className="card " style={{width: "100%"}}>
           <div className="card-body-header row">
             <div className="card-item col-lg-4 col-md-6 col-12">
               <i className="fa-solid fa-location-dot"></i>

@@ -4,6 +4,7 @@ import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
 import Header from "../component/header";
 import InfoSection from "../component/infoSection";
+import Servicios from "../component/servicios";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
@@ -13,6 +14,8 @@ export const Home = () => {
 			
 			<Header/>
 			<InfoSection/>
+			<Servicios/>
+
 
 
 		</div>
