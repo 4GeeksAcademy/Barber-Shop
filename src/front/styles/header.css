@@ -30,15 +30,21 @@ button {
     cursor: pointer;
 }
 
+
+
 .cardHeader {
-    padding: 20px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+    position: relative;
+    margin-top: -100px;
     text-align: center;
-    margin-top: -120px;
     width: 90%;
+    max-width: 1300px; 
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 1; 
+   
+ 
 }
+
 
 .card-body-header {
     display: flex;
@@ -49,8 +55,7 @@ button {
 .card-item {
     flex: 1;
     text-align: center;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 40px;
 }
 
 .card-item i {
@@ -68,3 +73,4 @@ button {
     background-color: gray;
     margin: 10px auto 0;
 }
+
