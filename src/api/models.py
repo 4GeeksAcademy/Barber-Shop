@@ -8,7 +8,7 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    password = db.Column(db.String(150), unique=False, nullable=False)
     is_active = db.Column(Boolean, default=True, unique=False, nullable=False)
     
     def __repr__(self):
@@ -42,11 +42,11 @@ class UserAdmin(db.Model):
 class Employee(db.Model):
     __tablename__ = 'employee'
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), unique=False, nullable=False)
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(50), unique=False, nullable=False)
-    first_name = db.Column(db.String(100), unique=False, nullable=False)
     last_name = db.Column(db.String(100), unique=False, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), unique=False, nullable=False)
     date_of_birth = db.Column(DateTime, unique=False, nullable=False)
     address = db.Column(db.String(255), unique=False, nullable=False)
     phone = db.Column(db.Integer, unique=True, nullable=False)
@@ -60,7 +60,8 @@ class Employee(db.Model):
     customer_favs = relationship("CustomerFav", back_populates="employee")
     appointments = relationship("Appointment", back_populates="employee")
     notifications = relationship("Notifications", back_populates="employee")
-    
+    user = db.relationship('User', backref=db.backref('employees', lazy=True))
+
     def __repr__(self):
         return f'<Employee {self.name}>'
     
@@ -68,9 +69,8 @@ class Employee(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "email": self.email,
-            "first_name": self.first_name,
             "last_name": self.last_name,
+            "email": self.email,
             "date_of_birth": self.date_of_birth,
             "address": self.address,
             "phone": self.phone,
@@ -81,17 +81,22 @@ class Employee(db.Model):
             "reservations_id": self.reservations_id,
             "schedules_id": self.schedules_id
         }
-
+    
+    
 class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), unique=False, nullable=False)
+    last_name = db.Column(db.String(100), unique=False, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(50), unique=False, nullable=False)
-    phone = db.Column(db.Integer, unique=True, nullable=False)
-    customer_favs = relationship("CustomerFav", back_populates="customer")
-    appointments = relationship("Appointment", back_populates="customer")
-    notifications = relationship("Notifications", back_populates="customer")
+    password = db.Column(db.String(150), unique=False, nullable=False)
+    phone = db.Column(db.String(20), unique=True, nullable=False)  # Cambié el tipo de dato a String
+    is_active = db.Column(Boolean, default=True, unique=False, nullable=False)
+    customer_favs = db.relationship("CustomerFav", back_populates="customer")
+    appointments = db.relationship("Appointment", back_populates="customer")
+    notifications = db.relationship("Notifications", back_populates="customer")
+    user = db.relationship('User', backref=db.backref('customers', lazy=True))
     
     def __repr__(self):
         return f'<Customer {self.name}>'
@@ -100,9 +105,11 @@ class Customer(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "last_name": self.last_name,
             "email": self.email,
             "phone": self.phone
         }
+
 
 class CustomerFav(db.Model):
     __tablename__ = 'customer_fav'    

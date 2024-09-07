@@ -18,7 +18,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
-
+import datetime
 
 # from models import Person
 
@@ -125,19 +125,226 @@ def login():
        'jwt_token': access_token
     }), 200
 
+# Paso 1: Solicitar restablecimiento de contraseña
+# El cliente solicita restablecer su contraseña proporcionando su email. Se genera un token de restablecimiento y se envía un enlace al email del cliente.
+
+# Código para solicitar restablecimiento de contraseña
+@app.route('/api/request_password_reset', methods=['POST'])
+def request_password_reset():
+    body = request.get_json(silent=True)
+    if body is None or 'email' not in body:
+        return jsonify({'msg':'Debes enviar el campo email'}), 400
+
+    user = User.query.filter_by(email=body['email']).first()
+    if not user:
+        return jsonify({'msg':'El email no está registrado'}), 404
+
+    # Generar un token de restablecimiento de contraseña
+    expires = datetime.timedelta(hours=1)
+    reset_token = create_access_token(identity=user.email, expires_delta=expires)
+
+    # Enviar el token al email del usuario (aquí solo se muestra el token)
+    # En un entorno real, deberías enviar un email con un enlace que contenga el token
+    return jsonify({
+        'msg': 'Se ha enviado un enlace de restablecimiento de contraseña a tu email',
+        'reset_token': reset_token
+    }), 200
+
+# Paso 2: Restablecer la contraseña
+# El cliente usa el enlace con el token para acceder a la página de restablecimiento de contraseña y proporcionar una nueva contraseña.
+
+# Código para restablecer la contraseña
+@app.route('/api/reset_password', methods=['POST'])
+@jwt_required()
+def reset_password():
+    body = request.get_json(silent=True)
+    if body is None or 'new_password' not in body:
+        return jsonify({'msg':'Debes enviar el campo new_password'}), 400
+
+    # Obtener la identidad del usuario desde el token JWT
+    current_user_email = get_jwt_identity()
+
+    # Buscar al usuario usando el email del token
+    user = User.query.filter_by(email=current_user_email).first()
+    if not user:
+        return jsonify({'msg':'Usuario no existe'}), 404
+
+    # Actualizar la contraseña
+    pw_hash = bcrypt.generate_password_hash(body['new_password']).decode('utf-8')
+    user.password = pw_hash
+    db.session.commit()
+
+    return jsonify({
+        'msg': '¡Tu contraseña ha sido restablecida!'
+    }), 200
+
 #Customer
 @app.route('/api/customer_register', methods=['POST'])
 def customer_register():
-    return 'ok para register'
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar los siguientes campos:',
+                       'campos':{
+                           'name' :'requerido',
+                           'last_name': 'requerido',
+                           'email':'requerido',
+                           'password':'requerido',
+                           'phone': 'requerido'
+                       }}), 400
+    if 'name' not in body:
+       return jsonify({'msg':'Debes enviar el campo name'}), 400
+    if 'last_name' not in body:
+       return jsonify({'msg':'Debes enviar el campo last_name'}), 400
+    if 'email' not in body:
+       return jsonify({'msg':'Debes enviar el campo email'}), 400
+    if 'password' not in body:
+       return jsonify({'msg':'Debes enviar el campo password'}), 400
+    if 'phone' not in body:
+       return jsonify({'msg':'Debes enviar el campo phone'}), 400
+
+    # Verificar si el email ya está registrado
+    existing_customer = Customer.query.filter_by(email=body['email']).first()
+    if existing_customer:
+        if existing_customer.is_active:
+            return jsonify({'msg':'El usuario ya existe. Se recomienda recuperar la contraseña.'}), 400
+        else:
+            # Actualizar los datos del cliente existente y reactivar la cuenta
+            existing_customer.name = body['name']
+            existing_customer.last_name = body['last_name']
+            pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+            existing_customer.password = pw_hash
+            existing_customer.phone = body['phone']
+            existing_customer.is_active = True
+
+            # Actualizar los datos del usuario en la tabla User
+            user_update = User.query.filter_by(id=existing_customer.user_id).first()
+            user_update.password = pw_hash
+            user_update.is_active = True
+
+            db.session.commit()
+
+            access_token = create_access_token(identity=user_update.email)
+            return jsonify({
+               'Msg':'¡Tu usuario ha sido actualizado y reactivado!',
+               'jwt_token': access_token
+            }), 200
+    else:
+        # Crear el usuario en la tabla User
+        pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+        new_user = User(
+            email=body['email'],
+            password=pw_hash
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Crear el cliente en la tabla Customer
+        new_customer = Customer(
+            user_id=new_user.id,
+            name=body['name'],
+            last_name=body['last_name'],
+            email=body['email'],
+            password=pw_hash,
+            phone=body['phone'],
+            is_active=True
+        )
+        db.session.add(new_customer)
+        db.session.commit()
+
+        access_token = create_access_token(identity=new_user.email)
+        return jsonify({
+           'Msg':'¡Tu usuario ha sido creado!',
+           'jwt_token': access_token
+        }), 201
+
 
 @app.route('/api/customer_update', methods=['PUT'])
+@jwt_required()
 def customer_update():
-    return 'ok para update'
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar cualquiera de los siguientes campos para actualizar:',
+                       'campos':{
+                           'email':'requerido',
+                           'update_name' :'opcional',
+                           'update_last_name': 'opcional',
+                           'update_email':'opcional',
+                           'update_password':'opcional',
+                           'update_phone': 'opcional'
+                       }}), 400
+    current_user_email = get_jwt_identity()
+    customer_update = Customer.query.filter_by(email=current_user_email).first()
+    if not customer_update:
+        return jsonify({'msg':'Usuario no existe o el email está mal',
+                        'campos':{
+                           'email':'requerido',
+                           'update_name' :'opcional',
+                           'update_last_name': 'opcional',
+                           'update_email':'opcional',
+                           'update_password':'opcional',
+                           'update_phone': 'opcional'
+                       }}), 404
 
+    # Actualizar los campos del cliente
+    if 'update_name' in body:
+        customer_update.name = body['update_name']
+    if 'update_last_name' in body:
+        customer_update.last_name = body['update_last_name']
+    if 'update_email' in body:
+        customer_update.email = body['update_email']
+    if 'update_password' in body:
+        pw_hash = bcrypt.generate_password_hash(body['update_password']).decode('utf-8')
+        customer_update.password = pw_hash
+    if 'update_phone' in body:
+        customer_update.phone = body['update_phone']
+    
+    db.session.commit()
 
-@app.route('/api/customer_delete', methods=['PUT'])
-def customer_delete():
-    return 'ok para delete se usa para desactivar el customer'
+    # Actualizar los campos del usuario en la tabla User
+    user_update = User.query.filter_by(id=customer_update.user_id).first()
+    if 'update_email' in body:
+        user_update.email = body['update_email']
+    if 'update_password' in body:
+        user_update.password = pw_hash
+    
+    db.session.commit()
+    
+    # Crear un nuevo token para identificar al usuario con el nuevo email
+    access_token = create_access_token(identity=user_update.email)
+    return jsonify({
+       'Msg':'¡Tu usuario ha sido actualizado!',
+       'jwt_token': access_token
+    }), 200
+
+@app.route('/api/deactivate_customer', methods=['PUT'])
+@jwt_required()
+def deactivate_customer():
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar el campo email para desactivar el cliente:',
+                       'campos':{
+                           'email':'requerido'
+                       }}), 400
+
+    current_user_email = get_jwt_identity()
+    customer_deactivate = Customer.query.filter_by(email=current_user_email).first()
+    if not customer_deactivate:
+        return jsonify({'msg':'Usuario no existe o el email está mal',
+                        'campos':{
+                           'email':'requerido'
+                       }}), 404
+
+    # Desactivar el cliente
+    customer_deactivate.is_active = False
+
+    user_deactivate = User.query.filter_by(id=customer_deactivate.user_id).first()
+    user_deactivate.is_active = False
+    db.session.commit()
+
+    return jsonify({
+       'Msg':'¡El cliente ha sido desactivado!'
+    }), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
