@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 
+
+//este es el nabvar definitivo
 export const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -33,7 +35,7 @@ export const Navbar = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/contact">
-                Contact
+                Contacts
               </Link>
             </li>
             <li className="nav-item">
