@@ -6,12 +6,13 @@ const ImageGrid = () => {
   const imageStyle = {
     height: '250px',  // Tamaño uniforme para las imágenes
     width: '100%',
-    objectFit: 'cover'  // Ajuste para que la imagen no se deforme
+    objectFit: 'cover',  // Ajuste para que la imagen no se deforme
+    marginBottom: '1rem'  // Espacio inferior entre las imágenes
   };
 
   return (
     <Container className="my-4">
-      <Row>
+      <Row className="gx-4"> {/* Añade espaciado horizontal entre columnas */}
         <Col xs={12} md={4}>
           {/* Imagen 1 */}
           <img
