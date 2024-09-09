@@ -13,10 +13,8 @@ const professionals = [
 const Appointment = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
 
-  // Definimos el color dorado menos intenso para el profesional seleccionado.
   const selectedColor = '#FFD700'; // Dorado menos intenso
 
-  // Función para definir el estilo del fondo en función del estado (Available, Day Off, Holyday)
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Available':
@@ -80,12 +78,14 @@ const Appointment = () => {
               justifyContent: 'center'
             }}>
               <img
-                src="https://via.placeholder.com/100"
+                src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 className="card-img-top"
                 alt="Location"
                 style={{
-                  width: '100px', // Imagen más pequeña
-                  height: '100px'
+                  width: '100%', // Ajustamos la imagen al 100% del contenedor
+                  height: '200px', // Mantiene la altura
+                  objectFit: 'cover', // Evita la deformación de la imagen
+                  objectPosition: 'center' // Centra la imagen
                 }}
               />
             </div>
