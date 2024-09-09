@@ -10,6 +10,9 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import BookAppointment_Services from "./component/BookAppointment_Services";
+import BookAppointment_Proffesional from "./component/BookAppointment_Proffesional";
+import BookAppointment_TimeSelection from "./component/BookAppointment_Date";
 
 //create your first component
 const Layout = () => {
@@ -26,7 +29,7 @@ const Layout = () => {
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />
+                        <Route element={<BookAppointment_Services />} path="/services" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
