@@ -17,7 +17,7 @@ const BookAppointment_Proffesional = () => {
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Available':
-        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde suave
+        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde.  suave
       case 'Day Off':
         return { backgroundColor: '#f8d7da', color: '#721c24' }; // Rojo suave
       case 'Holyday':

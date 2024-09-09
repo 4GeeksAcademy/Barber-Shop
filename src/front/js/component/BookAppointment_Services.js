@@ -14,7 +14,7 @@ const services = [
     const [selectedService, setSelectedService] = useState(null);
   
     return (
-      <div className="container mt-5" style={{ paddingBottom: '80px' }}> {/* Agregado padding-bottom */}
+      <div className="container mt-5" style={{ paddingBottom: '80px' }}> {/* Agregado.  padding-bottom */}
         <div className="row">
           {/* Lista de Servicios */}
           <div className="col-md-8">
