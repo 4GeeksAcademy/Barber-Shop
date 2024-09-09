@@ -90,7 +90,7 @@ def users():
     users = User.query.all()
     users_serialized = [user.serialize() for user in users]
     return jsonify(users_serialized)
-
+# sirve para que inicien los clientes y los empleados.
 @app.route('/api/login', methods=['POST'])
 def login():
     body = request.get_json(silent=True)
@@ -178,6 +178,309 @@ def reset_password():
         'msg': '¡Tu contraseña ha sido restablecida!'
     }), 200
 
+#Employee & admin
+
+# la idea de esta ruta es para que el primer usuario que se registre se haga con esta y sera empleado admin
+# lo que le permite registrar a otros empleados y hacerlos admin tambien 
+@app.route('/api/register_first_admin', methods=['POST'])
+def register_first_admin():
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar los siguientes campos:',
+                       'campos':{
+                           'name' :'requerido',
+                           'last_name': 'requerido',
+                           'email':'requerido',
+                           'password':'requerido',
+                           'phone': 'requerido'
+                       }}), 400
+    if 'name' not in body:
+       return jsonify({'msg':'Debes enviar el campo name'}), 400
+    if 'last_name' not in body:
+       return jsonify({'msg':'Debes enviar el campo last_name'}), 400
+    if 'email' not in body:
+       return jsonify({'msg':'Debes enviar el campo email'}), 400
+    if 'password' not in body:
+       return jsonify({'msg':'Debes enviar el campo password'}), 400
+    if 'phone' not in body:
+       return jsonify({'msg':'Debes enviar el campo phone'}), 400
+
+    # Crear el usuario en la tabla User
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    new_user = User(
+        email=body['email'],
+        password=pw_hash
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    # Crear el empleado en la tabla Employee
+    new_employee = Employee(
+        user_id=new_user.id,
+        name=body['name'],
+        last_name=body['last_name'],
+        email=body['email'],
+        password=pw_hash,
+        phone=body['phone'],
+        is_active=True,
+        admin_is_active=True  # El primer usuario es administrador
+    )
+    db.session.add(new_employee)
+    db.session.commit()
+
+    # Crear un registro en la tabla UserAdmin
+    new_admin = UserAdmin(
+        employe_id=new_employee.id,
+        is_active=True
+    )
+    db.session.add(new_admin)
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.email)
+    return jsonify({
+       'Msg':'¡El primer administrador ha sido creado!',
+       'jwt_token': access_token
+    }), 201
+
+
+# para registrar un empleado solo lo puede hacer un empleado administrador
+@app.route('/api/register_employee', methods=['POST'])
+@jwt_required()
+def register_employee():
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    current_employee = Employee.query.filter_by(user_id=current_user.id).first()
+
+    if not current_employee.admin_is_active:
+        return jsonify({'msg':'No tienes permisos para realizar esta acción'}), 403
+
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar los siguientes campos:',
+                       'campos':{
+                           'name' :'requerido',
+                           'last_name': 'requerido',
+                           'email':'requerido',
+                           'password':'requerido',
+                           'phone': 'requerido',
+                           'date_of_birth': 'requerido',
+                           'address': 'requerido',
+                           'hire_date': 'requerido',
+                           'job_position': 'requerido',
+                           'salary': 'requerido'
+                       }}), 400
+    if 'name' not in body:
+       return jsonify({'msg':'Debes enviar el campo name'}), 400
+    if 'last_name' not in body:
+       return jsonify({'msg':'Debes enviar el campo last_name'}), 400
+    if 'email' not in body:
+       return jsonify({'msg':'Debes enviar el campo email'}), 400
+    if 'password' not in body:
+       return jsonify({'msg':'Debes enviar el campo password'}), 400
+    if 'phone' not in body:
+       return jsonify({'msg':'Debes enviar el campo phone'}), 400
+    if 'date_of_birth' not in body:
+       return jsonify({'msg':'Debes enviar el campo date_of_birth'}), 400
+    if 'address' not in body:
+       return jsonify({'msg':'Debes enviar el campo address'}), 400
+    if 'hire_date' not in body:
+       return jsonify({'msg':'Debes enviar el campo hire_date'}), 400
+    if 'job_position' not in body:
+       return jsonify({'msg':'Debes enviar el campo job_position'}), 400
+    if 'salary' not in body:
+       return jsonify({'msg':'Debes enviar el campo salary'}), 400
+
+    # Verificar si el email ya está registrado
+    existing_employee = Employee.query.filter_by(email=body['email']).first()
+    if existing_employee:
+        return jsonify({'msg':'El email ya está registrado como empleado.'}), 400
+
+    # Crear el usuario en la tabla User
+    pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
+    new_user = User(
+        email=body['email'],
+        password=pw_hash
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    # Crear el empleado en la tabla Employee
+    new_employee = Employee(
+        user_id=new_user.id,
+        name=body['name'],
+        last_name=body['last_name'],
+        email=body['email'],
+        password=pw_hash,
+        phone=body['phone'],
+        date_of_birth=body['date_of_birth'],
+        address=body['address'],
+        hire_date=body['hire_date'],
+        job_position=body['job_position'],
+        salary=body['salary'],
+        is_active=True,
+        admin_is_active=False  # Por defecto, el empleado no es administrador
+    )
+    db.session.add(new_employee)
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.email)
+    return jsonify({
+       'Msg':'¡El empleado ha sido creado!',
+       'jwt_token': access_token
+    }), 201
+
+#para modificar o actualizar los datos un empleado
+@app.route('/api/update_employee', methods=['PUT'])
+@jwt_required()
+def update_employee():
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar cualquiera de los siguientes campos para actualizar:',
+                       'campos':{
+                           'email':'requerido',
+                           'update_name' :'opcional',
+                           'update_last_name': 'opcional',
+                           'update_email':'opcional',
+                           'update_password':'opcional',
+                           'update_phone': 'opcional',
+                           'update_address': 'opcional',
+                           'update_job_position': 'opcional',
+                           'update_salary': 'opcional'
+                       }}), 400
+
+    current_user_email = get_jwt_identity()
+    employee_update = Employee.query.filter_by(email=body.get('email')).first()
+    if not employee_update:
+        return jsonify({'msg':'Empleado no existe o el email está mal',
+                        'campos':{
+                           'email':'requerido',
+                           'update_name' :'opcional',
+                           'update_last_name': 'opcional',
+                           'update_email':'opcional',
+                           'update_password':'opcional',
+                           'update_phone': 'opcional',
+                           'update_address': 'opcional',
+                           'update_job_position': 'opcional',
+                           'update_salary': 'opcional'
+                       }}), 404
+
+    current_user = User.query.filter_by(email=current_user_email).first()
+    current_employee = Employee.query.filter_by(user_id=current_user.id).first()
+    # Verificar si el usuario actual es el mismo que el empleado o un administrador
+    if current_user_email != employee_update.email and not current_employee.admin_is_active:
+        return jsonify({'msg':'No tienes permiso para actualizar este empleado'}), 403
+
+    # Actualizar los campos del empleado
+    if 'update_name' in body:
+        employee_update.name = body['update_name']
+    if 'update_last_name' in body:
+        employee_update.last_name = body['update_last_name']
+    if 'update_email' in body:
+        employee_update.email = body['update_email']
+    if 'update_password' in body:
+        pw_hash = bcrypt.generate_password_hash(body['update_password']).decode('utf-8')
+        employee_update.password = pw_hash
+    if 'update_phone' in body:
+        employee_update.phone = body['update_phone']
+    if 'update_address' in body:
+        employee_update.address = body['update_address']
+    if 'update_job_position' in body:
+        employee_update.job_position = body['update_job_position']
+    if 'update_salary' in body:
+        employee_update.salary = body['update_salary']
+    
+    db.session.commit()
+
+    # Actualizar los campos del usuario en la tabla User
+    user_update = User.query.filter_by(id=employee_update.user_id).first()
+    if 'update_email' in body:
+        user_update.email = body['update_email']
+    if 'update_password' in body:
+        user_update.password = pw_hash
+    
+    db.session.commit()
+    
+    # Crear un nuevo token para identificar al usuario con el nuevo email
+    access_token = create_access_token(identity=user_update.email)
+    return jsonify({
+       'Msg':'¡Tu usuario ha sido actualizado!',
+       'jwt_token': access_token
+    }), 200
+
+
+#convertir un empleado a administrados (solo lo puede hacer admin otro admin)
+@app.route('/api/make_admin', methods=['PUT'])
+@jwt_required()
+def make_admin():
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    current_employee = Employee.query.filter_by(user_id=current_user.id).first()
+
+    if not current_employee.admin_is_active:
+        return jsonify({'msg':'No tienes permisos para realizar esta acción'}), 403
+
+    body = request.get_json(silent=True)
+    if body is None or 'email' not in body:
+        return jsonify({'msg':'Debes enviar el campo email'}), 400
+
+    # Buscar al empleado usando el email proporcionado
+    employee = Employee.query.filter_by(email=body['email']).first()
+    if not employee:
+        return jsonify({'msg':'Empleado no encontrado'}), 404
+
+    # Convertir al empleado en administrador
+    employee.admin_is_active = True
+
+    # Crear un registro en la tabla UserAdmin
+    new_admin = UserAdmin(
+        employe_id=employee.id,
+        is_active=True
+    )
+    db.session.add(new_admin)
+    db.session.commit()
+
+    return jsonify({
+        'msg': '¡El empleado ha sido convertido en administrador!'
+    }), 200
+
+#para desactivar a un empleado, solo puede ser desactivado por un admin
+@app.route('/api/deactivate_employee', methods=['PUT'])
+@jwt_required()
+def deactivate_employee():
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar el campo email para desactivar el empleado:',
+                       'campos':{
+                           'email':'requerido'
+                       }}), 400
+
+    current_user_email = get_jwt_identity()
+    current_user = User.query.filter_by(email=current_user_email).first()
+    current_employee = Employee.query.filter_by(user_id=current_user.id).first()
+
+    # Verificar si el usuario actual es un administrador
+    if not current_employee.admin_is_active:
+        return jsonify({'msg':'No tienes permisos para realizar esta acción'}), 403
+
+    employee_deactivate = Employee.query.filter_by(email=body.get('email')).first()
+    if not employee_deactivate:
+        return jsonify({'msg':'Empleado no existe o el email está mal',
+                        'campos':{
+                           'email':'requerido'
+                       }}), 404
+
+    # Desactivar el empleado
+    employee_deactivate.is_active = False
+
+    user_deactivate = User.query.filter_by(id=employee_deactivate.user_id).first()
+    user_deactivate.is_active = False
+    db.session.commit()
+
+    return jsonify({
+       'Msg':'¡El empleado ha sido desactivado!'
+    }), 200
+
+
 #Customer
 @app.route('/api/customer_register', methods=['POST'])
 def customer_register():
@@ -257,7 +560,6 @@ def customer_register():
            'jwt_token': access_token
         }), 201
 
-
 @app.route('/api/customer_update', methods=['PUT'])
 @jwt_required()
 def customer_update():
@@ -284,6 +586,14 @@ def customer_update():
                            'update_password':'opcional',
                            'update_phone': 'opcional'
                        }}), 404
+
+    current_user = User.query.filter_by(email=current_user_email).first()
+    employee = Employee.query.filter_by(user_id=current_user.id).first()
+
+    # Verificar si el usuario actual es el mismo que el cliente o un empleado
+    if current_user_email != customer_update.email and employee is None:
+        return jsonify({'msg':'No tienes permiso para actualizar este cliente'}), 403
+
 
     # Actualizar los campos del cliente
     if 'update_name' in body:
@@ -327,12 +637,18 @@ def deactivate_customer():
                        }}), 400
 
     current_user_email = get_jwt_identity()
-    customer_deactivate = Customer.query.filter_by(email=current_user_email).first()
+    customer_deactivate = Customer.query.filter_by(email=body.get('email')).first()
     if not customer_deactivate:
         return jsonify({'msg':'Usuario no existe o el email está mal',
                         'campos':{
                            'email':'requerido'
                        }}), 404
+
+    current_user = User.query.filter_by(email=current_user_email).first()
+    # Verificar si el usuario actual es el mismo que el cliente o un administrador
+    user_admin = UserAdmin.query.filter_by(employe_id=current_user.id).first()
+    if current_user_email != customer_deactivate.email and (user_admin is None or not user_admin.is_active):
+        return jsonify({'msg':'No tienes permiso para desactivar este cliente'}), 403
 
     # Desactivar el cliente
     customer_deactivate.is_active = False
