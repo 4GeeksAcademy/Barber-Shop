@@ -10,7 +10,7 @@ const professionals = [
   { id: 6, name: 'Sophia Harris', available: false, hours: 'Day Off' }
 ];
 
-const Appointment = () => {
+const BookAppointment_Proffesional = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
 
   const selectedColor = '#FFD700'; // Dorado menos intenso
@@ -42,19 +42,17 @@ const Appointment = () => {
                 className={`list-group-item d-flex justify-content-between align-items-center`}
                 style={{
                   cursor: 'pointer',
-                  backgroundColor: selectedProfessional === pro.id ? selectedColor : '',
+                  backgroundColor: selectedProfessional === pro.id ? '#fff9e6' : '', // Fondo dorado suave cuando está seleccionado
+                  border: selectedProfessional === pro.id ? '1px solid #FFD700' : '', // Borde dorado
                   fontSize: '1.2rem' // Aumenta el tamaño de los nombres
                 }}
                 onClick={() => setSelectedProfessional(pro.id)}
               >
-                <div>
-                  <input
-                    type="radio"
-                    name="professional"
-                    checked={selectedProfessional === pro.id}
-                    onChange={() => setSelectedProfessional(pro.id)}
-                    className="me-2"
-                  />
+                <div className="d-flex align-items-center">
+                  {/* Mostrar el ícono a la izquierda solo si está seleccionado */}
+                  {selectedProfessional === pro.id && (
+                    <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
+                  )}
                   {pro.name}
                 </div>
                 <span
@@ -95,7 +93,7 @@ const Appointment = () => {
               {selectedProfessional && (
                 <div>
                   <p><strong>{professionals.find(pro => pro.id === selectedProfessional).name}</strong></p>
-                  <p>Available</p>
+                  <p>{professionals.find(pro => pro.id === selectedProfessional).hours}</p>
                 </div>
               )}
               <p><strong>Total:</strong> EUR 0,00</p>
@@ -109,4 +107,4 @@ const Appointment = () => {
   );
 };
 
-export default Appointment;
+export default BookAppointment_Proffesional;
