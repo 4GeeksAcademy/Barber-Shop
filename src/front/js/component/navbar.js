@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 
 
 //este es el nabvar definitivo
 export const Navbar = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleNavbar = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -18,28 +24,27 @@ export const Navbar = () => {
         <button
           className="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
+          onClick={toggleNavbar}
           aria-controls="navbarNav"
-          aria-expanded="false"
+          aria-expanded={isExpanded}
           aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <div className={`collapse navbar-collapse justify-content-end ${isExpanded ? "show" : ""}`} id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link" to="/services">
+              <Link className="nav-link" to="/services" onClick={toggleNavbar}>
                 Services
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">
+              <Link className="nav-link" to="/contact" onClick={toggleNavbar}>
                 Contacts
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/login">
+              <Link className="nav-link" to="/login" onClick={toggleNavbar}>
                 Login
               </Link>
             </li>
