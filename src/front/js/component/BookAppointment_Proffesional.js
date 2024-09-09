@@ -9,7 +9,6 @@ const professionals = [
   { id: 5, name: 'William Bennett', available: true, hours: 'Holyday' },
   { id: 6, name: 'Sophia Harris', available: false, hours: 'Day Off' }
 ];
-
 const BookAppointment_Proffesional = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
 
@@ -29,11 +28,11 @@ const BookAppointment_Proffesional = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-5" style={{ paddingBottom: '80px' }}> {/* Agregado padding-bottom */}
       <div className="row">
         {/* Profesionales */}
         <div className="col-md-8">
-          <h3>Step 1 of 3</h3>
+          <h3>Step 2 of 3</h3>
           <h2>Select Professional</h2>
           <ul className="list-group">
             {professionals.map(pro => (
@@ -41,15 +40,15 @@ const BookAppointment_Proffesional = () => {
                 key={pro.id}
                 className={`list-group-item d-flex justify-content-between align-items-center`}
                 style={{
-                  cursor: 'pointer',
+                  cursor: pro.hours === 'Available' ? 'pointer' : 'not-allowed', // Desactiva la selección para los no disponibles
                   backgroundColor: selectedProfessional === pro.id ? '#fff9e6' : '', // Fondo dorado suave cuando está seleccionado
                   border: selectedProfessional === pro.id ? '1px solid #FFD700' : '', // Borde dorado
-                  fontSize: '1.2rem' // Aumenta el tamaño de los nombres
+                  fontSize: '1.2rem',
+                  opacity: pro.hours === 'Available' ? 1 : 0.6 // Reduce la opacidad de los no disponibles
                 }}
-                onClick={() => setSelectedProfessional(pro.id)}
+                onClick={() => pro.hours === 'Available' && setSelectedProfessional(pro.id)} // Solo selecciona si está disponible
               >
                 <div className="d-flex align-items-center">
-                  {/* Mostrar el ícono a la izquierda solo si está seleccionado */}
                   {selectedProfessional === pro.id && (
                     <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
                   )}
@@ -70,8 +69,8 @@ const BookAppointment_Proffesional = () => {
         <div className="col-md-4">
           <div className="card" style={{ backgroundColor: '#F0F0F0' }}> {/* Fondo gris claro */}
             <div style={{
-              backgroundColor: '#E0E0E0', // Fondo similar al original que mencionas
-              padding: '20px', 
+              backgroundColor: '#E0E0E0', // Fondo similar al original
+              padding: '20px',
               display: 'flex',
               justifyContent: 'center'
             }}>
