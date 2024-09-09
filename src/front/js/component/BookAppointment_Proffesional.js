@@ -32,7 +32,7 @@ const BookAppointment_Proffesional = () => {
       <div className="row">
         {/* Profesionales */}
         <div className="col-md-8">
-          <h3>Step 2 of 3</h3>
+          <h3>Step 1 of 3</h3>
           <h2>Select Professional</h2>
           <ul className="list-group">
             {professionals.map(pro => (

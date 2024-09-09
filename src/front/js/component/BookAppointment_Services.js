@@ -18,7 +18,7 @@ const services = [
         <div className="row">
           {/* Lista de Servicios */}
           <div className="col-md-8">
-            <h3>Step 1 of 3</h3>
+            <h3>Step 2 of 3</h3>
             <h2>Select Services</h2>
             <ul className="list-group">
               {services.map(service => (
