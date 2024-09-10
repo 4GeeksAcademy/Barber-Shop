@@ -1,5 +1,6 @@
-import React from 'react'
-import '../../styles/header.css'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../../styles/header.css';
 
 const Header = () => {
   return (
@@ -9,10 +10,12 @@ const Header = () => {
         <div className="titleheader">
           <h1 className='display-1 fw-bold'>THE ULTIMATE CONVENIENCE FOR BUSY PEOPLE</h1>
           <h3>Experience the Convenience of in-Home Barber Services</h3>
-          <button>BOOK AN APPOINTMENT</button>
+          <Link to="/book-appointment"> {/* Link para redirigir a BookAppointment */}
+            <button>BOOK AN APPOINTMENT</button>
+          </Link>
         </div>
         <div className="cardHeader">
-        <div className="card " style={{width: "100%"}}>
+        <div className="card" style={{width: "100%"}}>
           <div className="card-body-header row">
             <div className="card-item col-lg-4 col-md-6 col-12">
               <i className="fa-solid fa-location-dot"></i>
