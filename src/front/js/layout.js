@@ -9,9 +9,11 @@ import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import BookAppointment_Proffesional from "./component/BookAppointment_Proffesional"; // Importación del componente profesional
-import SalonInfo from "./component/SalonInfo"; // Importación de SalonInfo (BookAppointment)
-import BookAppointment from "./component/BookAppointment";
+import BookAppointment from "./component/BookAppointment"; // Importar el componente BookAppointment
+import BookAppointment_Proffesional from "./component/BookAppointment_Proffesional"; 
+import BookAppointment_Services from "./component/BookAppointment_Services"; 
+import BookAppointment_Date from "./component/BookAppointment_Date";
+
 
 //create your first component
 const Layout = () => {
@@ -27,12 +29,19 @@ const Layout = () => {
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         
-                        {/* Ruta para BookAppointment_Proffesional */}
-                        <Route element={<BookAppointment_Proffesional />} path="/book-appointment-proffesional" />
-                        
-                        {/* Ruta para SalonInfo (donde está el botón para redirigir) */}
+                        {/* Ruta para seleccionar BookAppointment */}
                         <Route element={<BookAppointment />} path="/book-appointment" />
                         
+                        {/* Ruta para seleccionar profesionales */}
+                        <Route element={<BookAppointment_Proffesional />} path="/book-appointment-proffesional" />
+                        
+                        {/* Ruta para seleccionar servicios */}
+                        <Route element={<BookAppointment_Services />} path="/book-appointment-services" />
+
+                        {/* Ruta para seleccionar servicios */}
+                        <Route element={<BookAppointment_Date />} path="/book-appointment-date" />
+
+                    
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>

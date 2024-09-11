@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate
 
 const professionals = [
   { id: 1, name: 'James Mitchell', available: true, hours: 'Available' },
@@ -12,19 +13,28 @@ const professionals = [
 
 const BookAppointment_Proffesional = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
+  const navigate = useNavigate(); // Usamos el hook useNavigate
 
   const selectedColor = '#FFD700'; // Dorado menos intenso
 
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Available':
-        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde.  suave
+        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde suave
       case 'Day Off':
         return { backgroundColor: '#f8d7da', color: '#721c24' }; // Rojo suave
       case 'Holyday':
         return { backgroundColor: '#e2e3e5', color: '#6c757d' }; // Gris
       default:
         return {};
+    }
+  };
+
+  const handleContinue = () => {
+    if (selectedProfessional) {
+      navigate('/book-appointment-services'); // Navega a la siguiente página si se selecciona un profesional
+    } else {
+      alert("Please select a professional before continuing.");
     }
   };
 
@@ -96,8 +106,8 @@ const BookAppointment_Proffesional = () => {
                 </div>
               )}
               <p><strong>Total:</strong> EUR 0,00</p>
-              <button className="btn btn-warning w-100 mb-2">Continue</button>
-              <button className="btn btn-secondary w-100">Back</button>
+              <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button> {/* Actualizar onClick */}
+              <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment')}>Back</button>
             </div>
           </div>
         </div>
