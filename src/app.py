@@ -10,6 +10,7 @@ from api.models import db, User, UserAdmin, Appointment, Employee, Customer, Cus
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from flask_mail import Mail, Message
 
 
 
@@ -18,7 +19,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
-import datetime
+from datetime import timedelta
 
 # from models import Person
 
@@ -27,6 +28,19 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 
 app = Flask(__name__)
+
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS') == 'True'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL') == 'True'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['MAIL_MAX_EMAILS'] = os.getenv('MAIL_MAX_EMAILS')
+app.config['MAIL_ASCII_ATTACHMENTS'] = os.getenv('MAIL_ASCII_ATTACHMENTS') == 'True'
+
+# Inicializar Flask-Mail
+mail = Mail(app)
 
 app.url_map.strict_slashes = False
 
@@ -119,7 +133,8 @@ def login():
     if not password_db:
        return jsonify({'msg':'Email o contraseña incorrecta'}), 400
     
-    access_token = create_access_token(identity=user.email)
+    expires = timedelta(hours=1)
+    access_token = create_access_token(identity=user.email, expires_delta=expires)
     return jsonify({
        'Msg':'Todos los datos están ok',
        'jwt_token': access_token
@@ -346,41 +361,51 @@ def deactivate_customer():
     }), 200
 
 
-#Appointment
+
+#appointment_GET
 @app.route('/api/appointments', methods=['GET'])
 def get_appoinment():
     appointments = Appointment.query.all()
     appointments_serialized = [appointment.serialize() for appointment in appointments]
     return jsonify(appointments_serialized)
 
+#appointment_POST
 @app.route('/api/new_appointment', methods=['POST'])
 def post_appointment():
     body_appointment = request.get_json(silent=True)
+    
+    # Validar datos recibidos
     if body_appointment is None:
         return jsonify({'msg': 'Debes enviar los siguientes campos:',
-                        'campos':{
-                           'order_date':'requerido',
-                           'appointment_time':'requerido',
+                        'campos': {
+                           'order_date': 'requerido',
+                           'appointment_time': 'requerido',
+                           'customer_id': 'requerido',
+                           'employee_id': 'requerido',
+                           'service_id': 'requerido',
+                           'appointment_state_id': 'requerido',
+                           'appointment_date': 'requerido',
                            }}), 400
-    if 'order_date' not in body_appointment:
-       return jsonify({'msg':'Debes enviar el campo order_date'}), 400
-    if 'appointment_time' not in body_appointment:
-       return jsonify({'msg':'Debes enviar el campo appointment_time'}), 400
     
-    # Verificar si el cliente, el empleado y el servicio existen
-    existing_customer_id = Customer.query.filter_by(id=body_appointment['customer_id']).first()
-    if existing_customer_id is None:
-        return jsonify({'msg':'Debes estar registrado para reservar'})
+    required_fields = ['order_date', 'appointment_time', 'customer_id', 'employee_id', 'service_id', 'appointment_state_id', 'appointment_date']
+    for field in required_fields:
+        if field not in body_appointment:
+            return jsonify({'msg': f'Debes enviar el campo {field}'}), 400
 
-    existing_employee_id = Employee.query.filter_by(id=body_appointment['employee_id']).first()
-    if existing_employee_id is None:
-        return jsonify({'msg':'Debes seleccionar el empleado'})
-  
-    existing_service_id = Services.query.filter_by(id=body_appointment['service_id']).first()
-    if existing_service_id is None:
-        return jsonify({'msg':'Debes seleccionar el servicio'})
+    # Verificar existencia de cliente, empleado y servicio
+    customer = Customer.query.filter_by(id=body_appointment['customer_id']).first()
+    if customer is None:
+        return jsonify({'msg': 'Debes estar registrado para reservar'}), 400
+
+    employee = Employee.query.filter_by(id=body_appointment['employee_id']).first()
+    if employee is None:
+        return jsonify({'msg': 'Debes seleccionar el empleado'}), 400
     
-    # Verificar si ya existe una cita para el mismo cliente y servicio
+    service = Services.query.filter_by(id=body_appointment['service_id']).first()
+    if service is None:
+        return jsonify({'msg': 'Debes seleccionar el servicio'}), 400
+    
+    # Verificar si ya existe una cita para el cliente y servicio
     existing_appointment = Appointment.query.filter_by(
         customer_id=body_appointment['customer_id'],
         service_id=body_appointment['service_id']
@@ -389,31 +414,77 @@ def post_appointment():
     if existing_appointment:
         return jsonify({'msg': 'Ya tienes una cita programada para este servicio.'}), 400
     
-    # Verificar si la fecha existe en notifications
-    existing_notification = Notifications.query.filter_by(appointment_date=body_appointment['appointment_date']).first()
-    if not existing_notification:
+    # Verificar existencia en notifications
+    notification_exists = Notifications.query.filter_by(appointment_date=body_appointment['appointment_date']).first()
+    if not notification_exists:
         return jsonify({'msg': 'El appointment_date debe existir en notifications'}), 400
 
     # Crear nueva cita
     new_appointment = Appointment(
-        order_date = body_appointment['order_date'],
-        appointment_time = body_appointment['appointment_time'],
-        customer_id = body_appointment['customer_id'],
-        employee_id = body_appointment['employee_id'],
-        service_id = body_appointment['service_id'],
-        appointment_state_id = body_appointment['appointment_state_id'],
-        appointment_date = body_appointment['appointment_date']
+        order_date=body_appointment['order_date'],
+        appointment_time=body_appointment['appointment_time'],
+        customer_id=body_appointment['customer_id'],
+        employee_id=body_appointment['employee_id'],
+        service_id=body_appointment['service_id'],
+        appointment_state_id=body_appointment['appointment_state_id'],
+        appointment_date=body_appointment['appointment_date']
     )
     
     db.session.add(new_appointment)
     db.session.commit()
 
-    return jsonify({'msg': 'Se ha creado tu reserva exitosamente'})
+    # Obtener detalles para correos electrónicos
+    customer_email = customer.email
+    employee_email = employee.email
+    customer_name = customer.name
+    employee_name = employee.name
+    service_name = service.service_name
 
-@app.route('/api/appointment', methods=['PUT'])
+    # Crear y enviar correos electrónicos
+    try:
+        # Correo al cliente
+        msg_to_customer = Message(
+            subject="Confirmación de Cita",
+            recipients=[customer_email],
+            body=(
+                f"Hola {customer_name},\n\n"
+                f"Tu cita ha sido confirmada para el {body_appointment['appointment_date']} a las {body_appointment['appointment_time']}. "
+                f"El servicio que recibirás es: {service_name}.\n"
+                f"Tu cita será atendida por: {employee_name}.\n\n"
+                f"¡Gracias por elegirnos!"
+            ),
+            sender=app.config['MAIL_DEFAULT_SENDER']
+        )
+        mail.send(msg_to_customer)
+
+        # Correo al empleado
+        msg_to_employee = Message(
+            subject="Nueva Cita Programada",
+            recipients=[employee_email],
+            body=(
+                f"Hola {employee_name},\n\n"
+                f"Tienes una nueva cita programada para el {body_appointment['appointment_date']} a las {body_appointment['appointment_time']}. "
+                f"El cliente es: {customer_name}.\n"
+                f"El servicio reservado es: {service_name}.\n\n"
+                f"¡Prepárate para la cita!"
+            ),
+            sender=app.config['MAIL_DEFAULT_SENDER']
+        )
+        mail.send(msg_to_employee)
+
+    except Exception as e:
+        print("Error al enviar correos:", e)
+        return jsonify({'msg': 'Se ha creado tu reserva exitosamente, pero hubo un problema al enviar las notificaciones por correo.'}), 500
+
+    return jsonify({'msg': 'Se ha creado tu reserva exitosamente y las notificaciones por correo se han enviado.'})
+
+#appointment_PUT
+@app.route('/api/update_appointment', methods=['PUT'])
 @jwt_required()
 def put_appointment():
     body_appointment = request.get_json(silent=True)
+    
+    # Validar datos recibidos
     if body_appointment is None:
         return jsonify({'msg': 'Debes enviar los siguientes campos opcionales:',
                         'campos': {
@@ -437,7 +508,7 @@ def put_appointment():
     if 'appointment_id' not in body_appointment:
         return jsonify({'msg': 'Debes enviar el appointment_id de la cita que quieres actualizar'}), 400
 
-    # Buscar la cita a modificar, ya sea por customer_id o employee_id
+    # Buscar la cita a modificar
     appointment = None
     if customer_update_app:
         appointment = Appointment.query.filter_by(id=body_appointment['appointment_id'], customer_id=customer_update_app.id).first()
@@ -446,6 +517,11 @@ def put_appointment():
 
     if appointment is None:
         return jsonify({'msg': 'Cita no encontrada o no tienes permiso para modificar esta cita'}), 404
+
+    # Obtener datos previos para comparar y enviar notificaciones adecuadas
+    previous_customer_id = appointment.customer_id
+    previous_employee_id = appointment.employee_id
+    previous_service_id = appointment.service_id
 
     # Actualizar los campos opcionales si están presentes en el request
     if 'order_date' in body_appointment:
@@ -468,7 +544,180 @@ def put_appointment():
 
     db.session.commit()
 
-    return jsonify({'msg': 'Cita actualizada exitosamente'})          
+    # Obtener detalles actualizados
+    updated_customer = Customer.query.get(appointment.customer_id)
+    updated_employee = Employee.query.get(appointment.employee_id)
+    updated_service = Services.query.get(appointment.service_id)
+
+    # Obtener detalles para correos electrónicos
+    customer_email = updated_customer.email
+    employee_email = updated_employee.email
+    customer_name = updated_customer.name
+    employee_name = updated_employee.name
+    service_name = updated_service.service_name
+
+    # Crear y enviar correos electrónicos
+    try:
+        # Correo al cliente
+        msg_to_customer = Message(
+            subject="Confirmación de Modificación de Cita",
+            recipients=[customer_email],
+            body=(
+                f"Hola {customer_name},\n\n"
+                f"Tu cita ha sido modificada:\n"
+                f"Fecha de reserva: {appointment.order_date}\n"
+                f"Hora de la cita: {appointment.appointment_time}\n"
+                f"Servicio a realizar: {service_name}\n"
+                f"Barbero: {employee_name}\n\n"
+                f"Gracias por mantenernos informados."
+            ),
+            sender=app.config['MAIL_DEFAULT_SENDER']
+        )
+        mail.send(msg_to_customer)
+
+        # Correo al empleado
+        msg_to_employee = Message(
+            subject="Notificación de Modificación de Cita",
+            recipients=[employee_email],
+            body=(
+                f"Hola {employee_name},\n\n"
+                f"La cita con el cliente {customer_name} ha sido modificada:\n"
+                f"Fecha de reserva: {appointment.order_date}\n"
+                f"Hora de la cita: {appointment.appointment_time}\n"
+                f"Servicio a realizar: {service_name}\n\n"
+                f"Revisa tu calendario para actualizaciones."
+            ),
+            sender=app.config['MAIL_DEFAULT_SENDER']
+        )
+        mail.send(msg_to_employee)
+
+    except Exception as e:
+        print("Error al enviar correos:", e)
+        return jsonify({'msg': 'Cita actualizada exitosamente, pero hubo un problema al enviar las notificaciones por correo.'}), 500
+
+    return jsonify({'msg': 'Cita actualizada exitosamente y las notificaciones por correo se han enviado.'})
+
+
+#appointment_delete
+@app.route('/api/delete_appointment', methods=['DELETE'])
+@jwt_required()
+def delete_appointment():
+    body_appointment = request.get_json(silent=True)
+    if body_appointment is None or 'appointment_id' not in body_appointment:
+        return jsonify({'msg': 'Debes enviar el appointment_id de la cita que quieres eliminar'}), 400
+
+    # Obtener el correo electrónico del usuario autenticado
+    current_user_email = get_jwt_identity()
+
+    # Verificar si el usuario es un cliente o un empleado
+    customer = Customer.query.filter_by(email=current_user_email).first()
+    employee = Employee.query.filter_by(email=current_user_email).first()
+
+    if customer is None and employee is None:
+        return jsonify({'msg': 'Usuario no encontrado'}), 404
+
+    # Buscar la cita a eliminar
+    appointment = None
+    if customer:
+        appointment = Appointment.query.filter_by(id=body_appointment['appointment_id'], customer_id=customer.id).first()
+    elif employee:
+        appointment = Appointment.query.filter_by(id=body_appointment['appointment_id'], employee_id=employee.id).first()
+
+    if appointment is None:
+        return jsonify({'msg': 'Cita no encontrada o no tienes permiso para eliminar esta cita'}), 404
+
+    # Guardar correos electrónicos de los involucrados
+    customer_email = appointment.customer.email
+    employee_email = appointment.employee.email
+    print(customer_email)
+    print(employee_email)
+
+    # Obtener el admin_id dinámicamente
+    admin = UserAdmin.query.filter_by(is_active=True).first()  # Obtener el primer admin activo
+    if not admin:
+        return jsonify({'msg': 'Admin no encontrado o no hay administradores activos'}), 404
+    admin_id = admin.id
+
+    # Eliminar la cita
+    db.session.delete(appointment)
+    db.session.commit()
+
+    # Verificar si ya existe una notificación con la misma appointment_date
+    existing_notification_customer = Notifications.query.filter_by(appointment_date=appointment.appointment_date, customer_id=appointment.customer_id).first()
+    existing_notification_employee = Notifications.query.filter_by(appointment_date=appointment.appointment_date, employee_id=appointment.employee_id).first()
+
+    # Solo agregar la notificación si no existe una previa
+    if not existing_notification_customer:
+        notification_customer = Notifications(
+            customer_id=appointment.customer_id,
+            employee_id=appointment.employee_id,
+            admin_id=admin_id,  # Usando el admin_id dinámico
+            appointment_date=appointment.appointment_date,
+            services=appointment.service_id
+        )
+        db.session.add(notification_customer)
+
+    if not existing_notification_employee:
+        notification_employee = Notifications(
+            customer_id=appointment.customer_id,
+            employee_id=appointment.employee_id,
+            admin_id=admin_id,  # Usando el admin_id dinámico
+            appointment_date=appointment.appointment_date,
+            services=appointment.service_id
+        )
+        db.session.add(notification_employee)
+
+    db.session.commit()
+
+    # Obtener detalles actualizados
+    delete_customer = Customer.query.get(appointment.customer_id)
+    delete_employee = Employee.query.get(appointment.employee_id)
+    delete_service = Services.query.get(appointment.service_id)
+
+    # Obtener detalles para correos electrónicos
+    customer_email = delete_customer.email
+    employee_email = delete_employee.email
+    customer_name = delete_customer.name
+    employee_name = delete_employee.name
+    service_name = delete_service.service_name
+
+    # Enviar correos electrónicos de notificación
+    send_email(
+        subject="Cita Cancelada",
+        recipients=[customer_email],
+        body=(f"Hola {customer_name},\n\n"
+              f"Tu cita ha sido cancelada:\n"
+              f"Fecha de la reserva: {appointment.order_date}\n"
+              f"Hora de la cita: {appointment.appointment_time}\n"
+              f"Servicio a realizar: {service_name}\n"
+              f"Empleado: {employee_name}\n\n"
+              f"Gracias por mantenernos informados."
+              ),
+        sender=app.config['MAIL_DEFAULT_SENDER']
+    )
+
+    send_email(
+        subject="Cita Cancelada",
+        recipients=[employee_email],
+        body=(
+            f"Hola {employee_name},\n\n"
+            f"La cita con el cliente {customer_name} ha sido cancelada:\n"
+            f"Fecha de la reserva: {appointment.order_date}\n"
+            f"Hora de la cita: {appointment.appointment_time}\n"
+            f"Servicio a realizar: {service_name}\n\n"
+            f"Revisa tu calendario para actualizaciones."
+        ),
+        sender=app.config['MAIL_DEFAULT_SENDER']
+    )
+
+    return jsonify({'msg': 'Cita cancelada exitosamente y notificaciones enviadas'}), 200
+
+def send_email(subject, recipients, body, sender):
+    msg = Message(subject, recipients=recipients)
+    msg.body = body
+    msg.sender = sender
+    mail.send(msg) 
+    
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
