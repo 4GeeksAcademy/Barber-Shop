@@ -97,7 +97,7 @@ const BookAppointment_Services = () => {
               )}
               <p><strong>Total:</strong> EUR 0,00</p>
               <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>
-              <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment-professional')}>Back</button>
+              <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment-proffesional')}>Back</button>
             </div>
           </div>
         </div>
