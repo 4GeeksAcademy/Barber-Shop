@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../../styles/footer.css";
+import "../../styles/login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export const Footer = () => (
