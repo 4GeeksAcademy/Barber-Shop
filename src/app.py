@@ -39,6 +39,8 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 app.config['MAIL_MAX_EMAILS'] = os.getenv('MAIL_MAX_EMAILS')
 app.config['MAIL_ASCII_ATTACHMENTS'] = os.getenv('MAIL_ASCII_ATTACHMENTS') == 'True'
 
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES_DAYS', 1)))
+
 # Inicializar Flask-Mail
 mail = Mail(app)
 
@@ -133,8 +135,7 @@ def login():
     if not password_db:
        return jsonify({'msg':'Email o contraseña incorrecta'}), 400
     
-    expires = timedelta(hours=1)
-    access_token = create_access_token(identity=user.email, expires_delta=expires)
+    access_token = create_access_token(identity=user.email)
     return jsonify({
        'Msg':'Todos los datos están ok',
        'jwt_token': access_token
