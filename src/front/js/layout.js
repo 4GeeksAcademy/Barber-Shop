@@ -19,11 +19,6 @@ import { Login } from "./pages/Login";
 
 import "../styles/home.css";
 
-import BookAppointment from "./component/BookAppointment"; // Importar el componente BookAppointment
-import BookAppointment_Proffesional from "./component/BookAppointment_Proffesional"; 
-import BookAppointment_Services from "./component/BookAppointment_Services"; 
-import BookAppointment_Date from "./component/BookAppointment_Date";
-
 
 
 //create your first component.
