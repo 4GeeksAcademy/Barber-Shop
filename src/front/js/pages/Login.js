@@ -22,6 +22,9 @@ export const Login = () => {
         })
         .then(response => response.json())
         .then(data => {
+            if (data.jwt_token){
+                localStorage.setItem('jwt_token', data.jwt_token);
+            }
             console.log('Success:', data);
         })
         .catch((error) => {
