@@ -118,7 +118,7 @@ def login():
     password_db = bcrypt.check_password_hash(user.password, body['password'])
     if not password_db:
        return jsonify({'msg':'Email o contraseña incorrecta'}), 400
-
+    
     access_token = create_access_token(identity=user.email)
     return jsonify({
        'Msg':'Todos los datos están ok',
@@ -661,6 +661,130 @@ def deactivate_customer():
        'Msg':'¡El cliente ha sido desactivado!'
     }), 200
 
+
+#Appointment
+@app.route('/api/appointments', methods=['GET'])
+def get_appoinment():
+    appointments = Appointment.query.all()
+    appointments_serialized = [appointment.serialize() for appointment in appointments]
+    return jsonify(appointments_serialized)
+
+@app.route('/api/new_appointment', methods=['POST'])
+def post_appointment():
+    body_appointment = request.get_json(silent=True)
+    if body_appointment is None:
+        return jsonify({'msg': 'Debes enviar los siguientes campos:',
+                        'campos':{
+                           'order_date':'requerido',
+                           'appointment_time':'requerido',
+                           }}), 400
+    if 'order_date' not in body_appointment:
+       return jsonify({'msg':'Debes enviar el campo order_date'}), 400
+    if 'appointment_time' not in body_appointment:
+       return jsonify({'msg':'Debes enviar el campo appointment_time'}), 400
+    
+    # Verificar si el cliente, el empleado y el servicio existen
+    existing_customer_id = Customer.query.filter_by(id=body_appointment['customer_id']).first()
+    if existing_customer_id is None:
+        return jsonify({'msg':'Debes estar registrado para reservar'})
+
+    existing_employee_id = Employee.query.filter_by(id=body_appointment['employee_id']).first()
+    if existing_employee_id is None:
+        return jsonify({'msg':'Debes seleccionar el empleado'})
+  
+    existing_service_id = Services.query.filter_by(id=body_appointment['service_id']).first()
+    if existing_service_id is None:
+        return jsonify({'msg':'Debes seleccionar el servicio'})
+    
+    # Verificar si ya existe una cita para el mismo cliente y servicio
+    existing_appointment = Appointment.query.filter_by(
+        customer_id=body_appointment['customer_id'],
+        service_id=body_appointment['service_id']
+    ).first()
+
+    if existing_appointment:
+        return jsonify({'msg': 'Ya tienes una cita programada para este servicio.'}), 400
+    
+    # Verificar si la fecha existe en notifications
+    existing_notification = Notifications.query.filter_by(appointment_date=body_appointment['appointment_date']).first()
+    if not existing_notification:
+        return jsonify({'msg': 'El appointment_date debe existir en notifications'}), 400
+
+    # Crear nueva cita
+    new_appointment = Appointment(
+        order_date = body_appointment['order_date'],
+        appointment_time = body_appointment['appointment_time'],
+        customer_id = body_appointment['customer_id'],
+        employee_id = body_appointment['employee_id'],
+        service_id = body_appointment['service_id'],
+        appointment_state_id = body_appointment['appointment_state_id'],
+        appointment_date = body_appointment['appointment_date']
+    )
+    
+    db.session.add(new_appointment)
+    db.session.commit()
+
+    return jsonify({'msg': 'Se ha creado tu reserva exitosamente'})
+
+@app.route('/api/appointment', methods=['PUT'])
+@jwt_required()
+def put_appointment():
+    body_appointment = request.get_json(silent=True)
+    if body_appointment is None:
+        return jsonify({'msg': 'Debes enviar los siguientes campos opcionales:',
+                        'campos': {
+                            'order_date': 'opcional',
+                            'appointment_time': 'opcional',
+                            'employee_id': 'opcional',
+                            'service_id': 'opcional'
+                        }}), 400
+
+    # Obtener el correo electrónico del usuario autenticado
+    current_user_email = get_jwt_identity()
+
+    # Verificar si el usuario es un cliente o un empleado
+    customer_update_app = Customer.query.filter_by(email=current_user_email).first()
+    employee_update_app = Employee.query.filter_by(email=current_user_email).first()
+
+    if customer_update_app is None and employee_update_app is None:
+        return jsonify({'msg': 'Usuario no encontrado'}), 404
+
+    # Verificar que el appointment_id está en el request
+    if 'appointment_id' not in body_appointment:
+        return jsonify({'msg': 'Debes enviar el appointment_id de la cita que quieres actualizar'}), 400
+
+    # Buscar la cita a modificar, ya sea por customer_id o employee_id
+    appointment = None
+    if customer_update_app:
+        appointment = Appointment.query.filter_by(id=body_appointment['appointment_id'], customer_id=customer_update_app.id).first()
+    elif employee_update_app:
+        appointment = Appointment.query.filter_by(id=body_appointment['appointment_id'], employee_id=employee_update_app.id).first()
+
+    if appointment is None:
+        return jsonify({'msg': 'Cita no encontrada o no tienes permiso para modificar esta cita'}), 404
+
+    # Actualizar los campos opcionales si están presentes en el request
+    if 'order_date' in body_appointment:
+        appointment.order_date = body_appointment['order_date']
+
+    if 'appointment_time' in body_appointment:
+        appointment.appointment_time = body_appointment['appointment_time']
+
+    if 'employee_id' in body_appointment:
+        existing_employee = Employee.query.filter_by(id=body_appointment['employee_id']).first()
+        if existing_employee is None:
+            return jsonify({'msg': 'Empleado no encontrado'}), 404
+        appointment.employee_id = body_appointment['employee_id']
+
+    if 'service_id' in body_appointment:
+        existing_service = Services.query.filter_by(id=body_appointment['service_id']).first()
+        if existing_service is None:
+            return jsonify({'msg': 'Servicio no encontrado'}), 404
+        appointment.service_id = body_appointment['service_id']
+
+    db.session.commit()
+
+    return jsonify({'msg': 'Cita actualizada exitosamente'})          
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

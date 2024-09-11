@@ -1,48 +1,76 @@
 .servicios {
     position: relative;
-    width: 70%;
-    height: 100vh;
+    width: 90%; 
+    height: auto;
     background: white;
     margin: 0 auto;
-    margin-top: 200px;
+    margin-top: 100px;
+    padding-bottom: 50px;
 }
 
 .serviciosColumn {
     padding: 20px;
-    position: absolute;
-    left: 43%;
-    transform: translate(-50%, 0);
+    position: relative; 
     text-align: center;
-    margin-top: 100px;
-    width: 90%;
+    margin-top: 50px;
+    width: 90%; 
 }
 
 .text-main {
-    margin-top: 50px;
-   margin-left: 33%;
-   margin-right: 33%;
-    
+    margin: 50px auto;
+    text-align: center;
+    width: 60%; 
 }
 
-.comb {
-    font-size: 50px;
+.img-fluid-servicios {
+    width: 100%; 
+    height: auto;
+    max-width: 115px;
 }
 
-.scissors {
-    font-size: 50px;
+
+@media (max-width: 1200px) {
+    .text-main {
+        width: 80%; 
+    }
 }
 
 @media (max-width: 768px) {
+    .servicios {
+        margin-top: 50px; 
+    }
+
+    .serviciosColumn {
+        padding: 10px; 
+    }
+
     .text-main {
-    margin-left: 27%;
-    margin-right: 27%;
+        width: 90%; 
+    }
+
+    .row {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .col-lg-3,
+    .col-md-6 {
+        max-width: 100%; 
+        text-align: center; 
+    }
+
+    .img-fluid-servicios {
+        max-width: 120px;
     }
 }
 
 @media (max-width: 425px) {
     .text-main {
-        margin-left: 9%;
-        margin-right: 9%;
+        width: 95%; 
     }
 
+    .img-fluid-servicios {
+        max-width: 100px; 
+    }
 }
