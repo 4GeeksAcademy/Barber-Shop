@@ -10,7 +10,7 @@ const Header = () => {
         <div className="titleheader">
           <h1 className='display-1 fw-bold'>THE ULTIMATE CONVENIENCE FOR BUSY PEOPLE</h1>
           <h3>Experience the Convenience of in-Home Barber Services</h3>
-          <Link to="/book-appointment"> {/* Link para redirigir a BookAppointment */}
+          <Link to="/book-appointment"> {/* Link para redirigir a BookAppointment. */}
             <button>BOOK AN APPOINTMENT</button>
           </Link>
         </div>

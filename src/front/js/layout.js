@@ -15,17 +15,29 @@ import BookAppointment_Services from "./component/BookAppointment_Services";
 import BookAppointment_Date from "./component/BookAppointment_Date";
 
 
-//create your first component
+import { Login } from "./pages/Login";
+
+import "../styles/home.css";
+
+import BookAppointment from "./component/BookAppointment"; // Importar el componente BookAppointment
+import BookAppointment_Proffesional from "./component/BookAppointment_Proffesional"; 
+import BookAppointment_Services from "./component/BookAppointment_Services"; 
+import BookAppointment_Date from "./component/BookAppointment_Date";
+
+
+
+//create your first component.
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     return (
-        <div>
+        <div className="contenedor-page">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
+                        <Route element={<Login />} path="/login"/>
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         

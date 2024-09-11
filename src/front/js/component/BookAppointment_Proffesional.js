@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate
+import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate.
 
 const professionals = [
   { id: 1, name: 'James Mitchell', available: true, hours: 'Available' },

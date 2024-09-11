@@ -4,7 +4,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const SalonInfo = () => {
-  const navigate = useNavigate(); // Hook para redireccionar
+  const navigate = useNavigate(); // Hook para redireccionar.
 
   return (
     <Container className="my-4 p-3 shadow-sm border rounded bg-light">
