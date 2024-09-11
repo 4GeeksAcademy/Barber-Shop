@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate.
 
 const professionals = [
   { id: 1, name: 'James Mitchell', available: true, hours: 'Available' },
@@ -9,15 +10,17 @@ const professionals = [
   { id: 5, name: 'William Bennett', available: true, hours: 'Holyday' },
   { id: 6, name: 'Sophia Harris', available: false, hours: 'Day Off' }
 ];
+
 const BookAppointment_Proffesional = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
+  const navigate = useNavigate(); // Usamos el hook useNavigate
 
   const selectedColor = '#FFD700'; // Dorado menos intenso
 
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Available':
-        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde.  suave
+        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde suave
       case 'Day Off':
         return { backgroundColor: '#f8d7da', color: '#721c24' }; // Rojo suave
       case 'Holyday':
@@ -27,8 +30,16 @@ const BookAppointment_Proffesional = () => {
     }
   };
 
+  const handleContinue = () => {
+    if (selectedProfessional) {
+      navigate('/book-appointment-services'); // Navega a la siguiente página si se selecciona un profesional
+    } else {
+      alert("Please select a professional before continuing.");
+    }
+  };
+
   return (
-    <div className="container mt-5" style={{ paddingBottom: '80px' }}> {/* Agregado padding-bottom */}
+    <div className="container mt-5" style={{ paddingBottom: '80px' }}>
       <div className="row">
         {/* Profesionales */}
         <div className="col-md-8">
@@ -38,15 +49,15 @@ const BookAppointment_Proffesional = () => {
             {professionals.map(pro => (
               <li
                 key={pro.id}
-                className={`list-group-item d-flex justify-content-between align-items-center`}
+                className="list-group-item d-flex justify-content-between align-items-center"
                 style={{
-                  cursor: pro.hours === 'Available' ? 'pointer' : 'not-allowed', // Desactiva la selección para los no disponibles
-                  backgroundColor: selectedProfessional === pro.id ? '#fff9e6' : '', // Fondo dorado suave cuando está seleccionado
-                  border: selectedProfessional === pro.id ? '1px solid #FFD700' : '', // Borde dorado
+                  cursor: pro.hours === 'Available' ? 'pointer' : 'not-allowed',
+                  backgroundColor: selectedProfessional === pro.id ? '#fff9e6' : '',
+                  border: selectedProfessional === pro.id ? '1px solid #FFD700' : '',
                   fontSize: '1.2rem',
-                  opacity: pro.hours === 'Available' ? 1 : 0.6 // Reduce la opacidad de los no disponibles
+                  opacity: pro.hours === 'Available' ? 1 : 0.6
                 }}
-                onClick={() => pro.hours === 'Available' && setSelectedProfessional(pro.id)} // Solo selecciona si está disponible
+                onClick={() => pro.hours === 'Available' && setSelectedProfessional(pro.id)}
               >
                 <div className="d-flex align-items-center">
                   {selectedProfessional === pro.id && (
@@ -54,10 +65,7 @@ const BookAppointment_Proffesional = () => {
                   )}
                   {pro.name}
                 </div>
-                <span
-                  className="badge"
-                  style={getBadgeStyle(pro.hours)} // Aplicamos el estilo en función del estado
-                >
+                <span className="badge" style={getBadgeStyle(pro.hours)}>
                   {pro.hours}
                 </span>
               </li>
@@ -67,22 +75,24 @@ const BookAppointment_Proffesional = () => {
 
         {/* Resumen */}
         <div className="col-md-4">
-          <div className="card" style={{ backgroundColor: '#F0F0F0' }}> {/* Fondo gris claro */}
-            <div style={{
-              backgroundColor: '#E0E0E0', // Fondo similar al original
-              padding: '20px',
-              display: 'flex',
-              justifyContent: 'center'
-            }}>
+          <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
+            <div
+              style={{
+                backgroundColor: '#E0E0E0',
+                padding: '20px',
+                display: 'flex',
+                justifyContent: 'center'
+              }}
+            >
               <img
                 src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 className="card-img-top"
                 alt="Location"
                 style={{
-                  width: '100%', // Ajustamos la imagen al 100% del contenedor
-                  height: '200px', // Mantiene la altura
-                  objectFit: 'cover', // Evita la deformación de la imagen
-                  objectPosition: 'center' // Centra la imagen
+                  width: '100%',
+                  height: '200px',
+                  objectFit: 'cover',
+                  objectPosition: 'center'
                 }}
               />
             </div>
@@ -96,8 +106,8 @@ const BookAppointment_Proffesional = () => {
                 </div>
               )}
               <p><strong>Total:</strong> EUR 0,00</p>
-              <button className="btn btn-warning w-100 mb-2">Continue</button>
-              <button className="btn btn-secondary w-100">Back</button>
+              <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button> {/* Actualizar onClick */}
+              <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment')}>Back</button>
             </div>
           </div>
         </div>
