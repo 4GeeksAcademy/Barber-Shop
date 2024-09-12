@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../store/appContext'; // Importar el contexto
 
 const services = [
     { id: 1, name: 'Haircut - Premier Stylist', price: 15.00, duration: '1h' },
@@ -13,7 +14,9 @@ const services = [
 
 const BookAppointment_Services = () => {
   const [selectedService, setSelectedService] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0); // Estado para el precio total
   const navigate = useNavigate();
+  const { store } = useContext(Context); // Obtener el contexto
 
   const handleContinue = () => {
     if (selectedService) {
@@ -40,7 +43,10 @@ const BookAppointment_Services = () => {
                   border: selectedService === service.id ? '1px solid #FFD700' : '',
                   fontSize: '1.2rem'
                 }}
-                onClick={() => setSelectedService(service.id)}
+                onClick={() => {
+                  setSelectedService(service.id);
+                  setTotalPrice(service.price); // Actualiza el precio total
+                }}
               >
                 <div className="d-flex flex-column">
                   <div className="d-flex align-items-center">
@@ -89,13 +95,21 @@ const BookAppointment_Services = () => {
             <div className="card-body">
               <h5 className="card-title">Vurve - Bangalore</h5>
               <p className="card-text">MG Road, Bangalore</p>
+              {/* Mostrar el profesional seleccionado */}
+              {store.selectedProfessional && (
+                <div>
+                  <p><strong>Professional: {store.selectedProfessional.name}</strong></p>
+                  <p>{store.selectedProfessional.hours}</p>
+                </div>
+              )}
+              {/* Mostrar el servicio seleccionado */}
               {selectedService && (
                 <div>
                   <p><strong>{services.find(service => service.id === selectedService).name}</strong></p>
                   <p>EUR {services.find(service => service.id === selectedService).price.toFixed(2)}</p>
                 </div>
               )}
-              <p><strong>Total:</strong> EUR 0,00</p>
+              <p><strong>Total:</strong> EUR {totalPrice.toFixed(2)}</p> {/* Mostrar precio total */}
               <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>
               <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment-proffesional')}>Back</button>
             </div>
@@ -105,5 +119,5 @@ const BookAppointment_Services = () => {
     </div>
   );
 };
-//.
+
 export default BookAppointment_Services;

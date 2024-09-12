@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate.
+import { Context } from '../store/appContext'; // Ruta corregida del appContext
 
 const professionals = [
   { id: 1, name: 'James Mitchell', available: true, hours: 'Available' },
   { id: 2, name: 'Ethan Carter', available: true, hours: 'Available' },
   { id: 3, name: 'Emily Anderson', available: true, hours: 'Available' },
   { id: 4, name: 'Olivia Parker', available: true, hours: 'Available' },
-  { id: 5, name: 'William Bennett', available: true, hours: 'Holyday' },
+  { id: 5, name: 'William Bennett', available: true, hours: 'Holiday' },
   { id: 6, name: 'Sophia Harris', available: false, hours: 'Day Off' }
 ];
 
 const BookAppointment_Proffesional = () => {
   const [selectedProfessional, setSelectedProfessional] = useState(null);
   const navigate = useNavigate(); // Usamos el hook useNavigate
+  const { store, actions } = useContext(Context); // Uso del contexto
 
   const selectedColor = '#FFD700'; // Dorado menos intenso
 
@@ -23,7 +25,7 @@ const BookAppointment_Proffesional = () => {
         return { backgroundColor: '#d4edda', color: '#155724' }; // Verde suave
       case 'Day Off':
         return { backgroundColor: '#f8d7da', color: '#721c24' }; // Rojo suave
-      case 'Holyday':
+      case 'Holiday':
         return { backgroundColor: '#e2e3e5', color: '#6c757d' }; // Gris
       default:
         return {};
@@ -32,6 +34,8 @@ const BookAppointment_Proffesional = () => {
 
   const handleContinue = () => {
     if (selectedProfessional) {
+      // Guardar el profesional seleccionado en el contexto
+      actions.selectProfessional(professionals.find(pro => pro.id === selectedProfessional));
       navigate('/book-appointment-services'); // Navega a la siguiente página si se selecciona un profesional
     } else {
       alert("Please select a professional before continuing.");
@@ -97,6 +101,7 @@ const BookAppointment_Proffesional = () => {
               />
             </div>
             <div className="card-body">
+              {/* El nombre del salón es estático */}
               <h5 className="card-title">Vurve - Bangalore</h5>
               <p className="card-text">MG Road, Bangalore</p>
               {selectedProfessional && (
