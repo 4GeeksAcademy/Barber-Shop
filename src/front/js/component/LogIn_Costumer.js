@@ -29,7 +29,7 @@ const LogIn_Customers = () => {
           <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
             <div style={{ backgroundColor: '#E0E0E0', padding: '20px', display: 'flex', justifyContent: 'center' }}>
               <img
-                src="https://images.unsplash.com/photo-1532710093739-9470acff878f?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://images.unsplash.com/photo-1630411997548-24ab48df1678?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 className="card-img-top"
                 alt="Location"
                 style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }}
