@@ -9,17 +9,17 @@ const services = [
     { id: 3, name: 'Salon Director Cut', price: 20.00, duration: '1,5h' },
     { id: 4, name: 'Vurve Director Cut', price: 17.00, duration: '1h' },
     { id: 5, name: 'Hair Trim', price: 14.00, duration: '1h' },
-    { id: 6, name: 'Kids Cut (Below 5 years)', price: 11.00, duration: '0,5' }
+    { id: 6, name: 'Kids Cut (Below 5 years)', price: 11.00, duration: '0,5h' }
 ];
 
 const BookAppointment_Services = () => {
   const [selectedService, setSelectedService] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0); // Estado para el precio total
   const navigate = useNavigate();
-  const { store } = useContext(Context); // Obtener el contexto
+  const { store, actions } = useContext(Context); // Obtener el contexto
 
   const handleContinue = () => {
     if (selectedService) {
+      actions.selectService(services.find(service => service.id === selectedService)); // Guardar el servicio en el store
       navigate('/book-appointment-date');
     } else {
       alert("Please select a service before continuing.");
@@ -43,10 +43,7 @@ const BookAppointment_Services = () => {
                   border: selectedService === service.id ? '1px solid #FFD700' : '',
                   fontSize: '1.2rem'
                 }}
-                onClick={() => {
-                  setSelectedService(service.id);
-                  setTotalPrice(service.price); // Actualiza el precio total
-                }}
+                onClick={() => setSelectedService(service.id)}
               >
                 <div className="d-flex flex-column">
                   <div className="d-flex align-items-center">
@@ -95,21 +92,18 @@ const BookAppointment_Services = () => {
             <div className="card-body">
               <h5 className="card-title">Vurve - Bangalore</h5>
               <p className="card-text">MG Road, Bangalore</p>
-              {/* Mostrar el profesional seleccionado */}
               {store.selectedProfessional && (
                 <div>
                   <p><strong>Professional: {store.selectedProfessional.name}</strong></p>
                   <p>{store.selectedProfessional.hours}</p>
                 </div>
               )}
-              {/* Mostrar el servicio seleccionado */}
               {selectedService && (
                 <div>
                   <p><strong>{services.find(service => service.id === selectedService).name}</strong></p>
                   <p>EUR {services.find(service => service.id === selectedService).price.toFixed(2)}</p>
                 </div>
               )}
-              <p><strong>Total:</strong> EUR {totalPrice.toFixed(2)}</p> {/* Mostrar precio total */}
               <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>
               <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment-proffesional')}>Back</button>
             </div>

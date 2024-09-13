@@ -3,6 +3,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	  store: {
 		selectedSalon: null,
 		selectedProfessional: null,
+		selectedService: null, // Añadir el servicio seleccionado
 	  },
 	  actions: {
 		selectSalon: (salon) => {
@@ -11,8 +12,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 		selectProfessional: (professional) => {
 		  setStore({ selectedProfessional: professional });
 		},
+		selectService: (service) => { // Acción para seleccionar el servicio
+		  setStore({ selectedService: service });
+		},
 	  }
 	};
   };
   
   export default getState;
+  
