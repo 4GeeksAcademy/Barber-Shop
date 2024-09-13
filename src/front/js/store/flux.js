@@ -1,25 +1,28 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			professional:[]
+
+
+
+
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
+			getProfessional: async () => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/employees")
+					const data = await resp.json()
+					setStore({ professional: data.professional })
+					// don't forget to return something, that is how the async resolves
+					console.log(data);
+					
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
 			},
+
 
 			getMessage: async () => {
 				try{
