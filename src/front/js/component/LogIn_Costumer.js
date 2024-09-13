@@ -1,4 +1,3 @@
-// LogIn_Customers.js
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext'; 
@@ -15,7 +14,10 @@ const LogIn_Customers = () => {
           <h2>Create account to continue</h2>
 
           <div className="btn-group-vertical w-100">
-            <button className="btn btn-warning mb-3">Sign up with email</button>
+            {/* Al hacer clic en este botón, se navega a la página de registro */}
+            <button className="btn btn-warning mb-3" onClick={() => navigate('/sign-up')}>
+              Sign up with email
+            </button>
             <button className="btn btn-primary mb-3">Continue with Facebook</button>
             <button className="btn btn-danger mb-3">Continue with Google</button>
           </div>
