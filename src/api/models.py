@@ -154,9 +154,11 @@ class Appointment(db.Model):
             "id": self.id,
             "customer_id": self.customer_id,
             "employee_id": self.employee_id,
-            "order_date": self.order_date,
-            "appointment_date": self.appointment_date,
-            "appointment_time": self.appointment_time,
+            # Convierte a formato ISO 8601
+            "order_date": self.order_date.isoformat() if self.order_date else None,
+            "appointment_date": self.appointment_date.isoformat() if self.appointment_date else None,
+            # Convierte el campo Time a cadena de formato HH:MM:SS
+            "appointment_time": self.appointment_time.strftime('%H:%M:%S') if self.appointment_time else None,
             "appointment_state_id": self.appointment_state_id,
             "service_id": self.service_id
         }
