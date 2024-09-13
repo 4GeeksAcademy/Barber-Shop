@@ -19,8 +19,10 @@ import BookAppointment_Proffesional from "./component/BookAppointment_Proffesion
 import BookAppointment_Services from "./component/BookAppointment_Services";
 import BookAppointment_Date from "./component/BookAppointment_Date";
 import LogIn_Costumer from "./component/LogIn_Costumer";
-import SignUpPage from "./component/LogIn_Costumer_SignUp";  // Ruta corregida
+import SignUpPage from "./component/LogIn_Costumer_SignUp";  
 import { Login_Costumer_2 } from "./component/LogIn_Costumer_2";
+import ReviewAndConfirm from "./component/BookAppointment_Resume"; // Nueva ruta importada
+import BookAppointment_Confirm from "./component/BookAppointment_Confirm";
 
 //create your first component.
 const Layout = () => {
@@ -52,11 +54,16 @@ const Layout = () => {
                         {/* Ruta para LogIn_Customers */}
                         <Route element={<LogIn_Costumer />} path="/login-customers" />
 
-                        {/* Ruta para LogIn_Customers */}
+                        {/* Ruta para LogIn_Customers correo y contraseña */}
                         <Route element={<Login_Costumer_2 />} path="/login-customers-2" />
 
                         {/* Ruta para Sign Up Page */}
                         <Route element={<SignUpPage />} path="/sign-up" />
+
+                        {/* Ruta para la página de revisión y confirmación */}
+                        <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
+
+                        <Route element={<BookAppointment_Confirm/>} path="/book-appointment-confirm" />
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />

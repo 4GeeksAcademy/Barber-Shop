@@ -58,8 +58,11 @@ const ReviewAndConfirm = () => {
               <p>
                 <strong>Total:</strong> EUR {store.selectedService?.price.toFixed(2)}
               </p>
-              <button className="btn btn-warning w-100 mt-3" onClick={() => alert('Booking Confirmed!')}>
+              <button className="btn btn-warning w-100 mt-3" onClick={() => navigate('/book-appointment-confirm')}>
                 Book now
+              </button>
+              <button className="btn btn-secondary w-100 mt-3" onClick={() => navigate('/login-customers')}>
+                Back
               </button>
             </div>
           </div>

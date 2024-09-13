@@ -123,7 +123,7 @@ const SignUpPage = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-warning w-100">Create account</button>
+            <button type="submit" className="btn btn-warning w-100" onClick={() => navigate('/book-appointment-resume')}>Create account</button>
           </form>
 
           <p className="text-center mt-3">
