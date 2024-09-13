@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Context } from '../store/appContext'; 
+import { Context } from '../store/appContext';
 
-const LogIn_Customers = () => {
+const ReviewAndConfirm = () => {
   const navigate = useNavigate();
   const { store } = useContext(Context);
 
@@ -10,19 +10,22 @@ const LogIn_Customers = () => {
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
       <div className="row">
         <div className="col-md-8">
-          <h3>Step 3 of 3</h3>
-          <h2>Create account to continue</h2>
-
-          <div className="btn-group-vertical w-100">
-            {/* Al hacer clic en este botón, se navega a la página de registro */}
-            <button className="btn btn-warning mb-3" onClick={() => navigate('/sign-up')}>
-              Sign up with email
-            </button>
-            <button className="btn btn-primary mb-3">Continue with Facebook</button>
-            <button className="btn btn-danger mb-3">Continue with Google</button>
+          <h5>Step 3 of 3</h5>
+          <h2>Review and confirm</h2>
+          <div className="card p-4" style={{ backgroundColor: '#F0F0F0' }}>
+            <h5>Cancellation policy</h5>
+            <p>
+              Cancel for free anytime in advance, otherwise you will be charged{' '}
+              <strong>100%</strong> of the service price for not showing up.
+            </p>
+            <h5>Add booking notes</h5>
+            <p>Include comments or requests about your booking</p>
+            <textarea
+              className="form-control"
+              rows="4"
+              placeholder="Add your comments here..."
+            ></textarea>
           </div>
-
-          <p>Already have an account? <a href="#" onClick={() => navigate('/login-customers-2')}>Log in now</a></p>
         </div>
 
         <div className="col-md-4">
@@ -39,21 +42,25 @@ const LogIn_Customers = () => {
             <div className="card-body">
               <h5 className="card-title">Vurve - Bangalore</h5>
               <p className="card-text">MG Road, Bangalore</p>
-              {store.selectedProfessional && (
-                <div>
-                  <p><strong>Professional: {store.selectedProfessional.name}</strong></p>
-                  <p>{store.selectedProfessional.hours}</p>
-                </div>
-              )}
+              <p>
+                <strong>Sun 16 July 2023 at 5:00pm</strong>
+              </p>
+              <p>1h duration, ends at 6:00pm</p>
               {store.selectedService && (
                 <div>
-                  <p><strong>Service: {store.selectedService.name}</strong></p>
+                  <p>
+                    <strong>{store.selectedService.name}</strong>
+                  </p>
                   <p>Duration: {store.selectedService.duration}</p>
                   <p>EUR {store.selectedService.price.toFixed(2)}</p>
                 </div>
               )}
-              <p><strong>Total:</strong> EUR {store.selectedService?.price.toFixed(2)}</p>
-              <button className="btn btn-secondary w-100 mt-3" onClick={() => navigate('/book-appointment-date')}>Back</button>
+              <p>
+                <strong>Total:</strong> EUR {store.selectedService?.price.toFixed(2)}
+              </p>
+              <button className="btn btn-warning w-100 mt-3" onClick={() => alert('Booking Confirmed!')}>
+                Book now
+              </button>
             </div>
           </div>
         </div>
@@ -62,4 +69,4 @@ const LogIn_Customers = () => {
   );
 };
 
-export default LogIn_Customers;
+export default ReviewAndConfirm;
