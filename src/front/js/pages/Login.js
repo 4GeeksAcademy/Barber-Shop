@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../../styles/footer.css";
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const form = {
-        "email": email,
-        "password": password
-    };
+    const [rememberMe, setRememberMe] = useState(false);
 
+    useEffect(() => {
+        const rememberedEmail = localStorage.getItem('rememberedEmail');
+        const rememberedPassword = localStorage.getItem('rememberedPassword');
+        const rememberedCheck = localStorage.getItem('rememberMeCheck') === 'true';
+
+        if (rememberedEmail && rememberedPassword && rememberedCheck) {
+            setEmail(rememberedEmail);
+            setPassword(rememberedPassword);
+            setRememberMe(rememberedCheck);
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -18,12 +26,21 @@ export const Login = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(form),
+            body: JSON.stringify({ email, password }),
         })
         .then(response => response.json())
         .then(data => {
             if (data.jwt_token){
                 localStorage.setItem('jwt_token', data.jwt_token);
+                if (rememberMe) {
+                    localStorage.setItem('rememberedEmail', email);
+                    localStorage.setItem('rememberedPassword', password);
+                    localStorage.setItem('rememberMeCheck', rememberMe);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                    localStorage.removeItem('rememberedPassword');
+                    localStorage.removeItem('rememberMeCheck');
+                }
             }
             console.log('Success:', data);
         })
@@ -61,7 +78,13 @@ export const Login = () => {
                         />
                     </div>
                     <div className="mb-3 form-check">
-                        <input type="checkbox" className="form-check-input" id="rememberMeCheck" />
+                        <input 
+                            type="checkbox" 
+                            className="form-check-input" 
+                            id="rememberMeCheck" 
+                            checked={rememberMe} 
+                            onChange={(e) => setRememberMe(e.target.checked)} 
+                        />
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
                     <button type="submit" className="btn-login">Login</button>
