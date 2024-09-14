@@ -14,7 +14,8 @@
     background-color: #fff;
 }
 .btn-login{
-    background-color: rgb(224, 219, 115);
+    background-color: #F2C94C;
     border-radius: 8px;
     width: 100%;
+    font-weight: 800;
 }

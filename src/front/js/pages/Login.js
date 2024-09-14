@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../../styles/footer.css";
+import { Link } from 'react-router-dom';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -87,7 +88,9 @@ export const Login = () => {
                         />
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
-                    <button type="submit" className="btn-login">Login</button>
+                    <Link to={"/book-appointment-confirm"}>
+                    <button type="submit" className=" btn btn-login">Login</button>
+                    </Link>
                 </form>
             </div>
         </div>
