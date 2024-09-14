@@ -313,7 +313,7 @@ def register_employee():
        return jsonify({'msg':'Debes enviar el campo job_position'}), 400
     if 'salary' not in body:
        return jsonify({'msg':'Debes enviar el campo salary'}), 400
-
+    
     # Verificar si el email ya está registrado
     existing_employee = Employee.query.filter_by(email=body['email']).first()
     if existing_employee:
