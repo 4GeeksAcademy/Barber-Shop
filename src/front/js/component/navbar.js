@@ -18,7 +18,7 @@ export const Navbar = () => {
           <img
             src="https://res.cloudinary.com/drigqgirt/image/upload/v1725545065/z85szc7sniccil8xdega.png"
             alt="Logo"
-            style={{ width: "50px", height: "50px" }}
+            style={{ width: "85px", height: "80px" }}
           />
         </Link>
         <button
