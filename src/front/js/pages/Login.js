@@ -88,7 +88,7 @@ export const Login = () => {
                         />
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
-                    <Link to={"/book-appointment-confirm"}>
+                    <Link to={"/dashboard"}>
                     <button type="submit" className=" btn btn-login">Login</button>
                     </Link>
                 </form>

@@ -23,13 +23,14 @@ import SignUpPage from "./component/LogIn_Costumer_SignUp";
 import { Login_Costumer_2 } from "./component/LogIn_Costumer_2";
 import ReviewAndConfirm from "./component/BookAppointment_Resume"; // Nueva ruta importada
 import BookAppointment_Confirm from "./component/BookAppointment_Confirm";
+import Dashboard from "./pages/Dashboard";
 
 //create your first component.
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     return (
-        <div className="contenedor-page">
+        <div className="contenedor-page" >
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
@@ -60,17 +61,23 @@ const Layout = () => {
                         {/* Ruta para Sign Up Page */}
                         <Route element={<SignUpPage />} path="/sign-up" />
 
+                        {/* ruta Dashboard */}
+                        <Route element={<Dashboard />} path="/dashboard" />
+
                         {/* Ruta para la página de revisión y confirmación */}
+
                         <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
 
                         <Route element={<BookAppointment_Confirm/>} path="/book-appointment-confirm" />
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
+
+                        
                     </Routes>
                     
                 </ScrollToTop>
-                <Footer />
+               <Footer /> 
             </BrowserRouter>
         </div>
     );
