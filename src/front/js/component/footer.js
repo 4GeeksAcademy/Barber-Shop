@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 export const Footer = () => (
 	<footer>
-		<nav className="navbar footer bg-dark">
+		<nav className="navbar fixed-bottom footer bg-dark">
 			<div className="container-fluid">
 				<p className="text ms-2 mt-3"><i className="bi bi-c-circle">  </i>Copyrigth Barber Shop 2024 - All rigth reserved </p>
 				<div className="icon">
