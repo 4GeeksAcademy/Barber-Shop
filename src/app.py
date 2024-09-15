@@ -109,6 +109,7 @@ def users():
     users = User.query.all()
     users_serialized = [user.serialize() for user in users]
     return jsonify(users_serialized)
+
 # sirve para que inicien los clientes y los empleados.
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -506,6 +507,13 @@ def deactivate_employee():
 
 
 #Customer
+@app.route('/api/customers', methods=['GET'])
+def get_customers():
+    customers = Customer.query.all()
+    customers_serialized = [customer.serialize() for customer in customers]
+    return jsonify(customers_serialized)
+
+
 @app.route('/api/customer_register', methods=['POST'])
 def customer_register():
     body = request.get_json(silent=True)
