@@ -35,11 +35,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			//fetch Customer
-			getProfessional: async () => {
+			getCustomer: async () => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/customers")
 					const data = await resp.json()
-					setStore({ professional: data})
+					setStore({ customer: data})
 					console.log(data)
 					return data;
 				} catch (error) {

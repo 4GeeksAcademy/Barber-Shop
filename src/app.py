@@ -288,11 +288,11 @@ def register_employee():
                            'email':'requerido',
                            'password':'requerido',
                            'phone': 'requerido',
-                           'date_of_birth': 'requerido',
-                           'address': 'requerido',
-                           'hire_date': 'requerido',
-                           'job_position': 'requerido',
-                           'salary': 'requerido'
+                           'date_of_birth':'opcional',
+                           'address': 'opcional',
+                           'hire_date': 'opcional',
+                           'job_position': 'opcional',
+                           'salary': 'opcional'
                        }}), 400
     if 'name' not in body:
        return jsonify({'msg':'Debes enviar el campo name'}), 400
@@ -305,20 +305,20 @@ def register_employee():
     if 'phone' not in body:
        return jsonify({'msg':'Debes enviar el campo phone'}), 400
     if 'date_of_birth' not in body:
-       return jsonify({'msg':'Debes enviar el campo date_of_birth'}), 400
+        body['date_of_birth'] = None
     if 'address' not in body:
-       return jsonify({'msg':'Debes enviar el campo address'}), 400
+        body['address']= None
     if 'hire_date' not in body:
-       return jsonify({'msg':'Debes enviar el campo hire_date'}), 400
+        body['hire_date']=None
     if 'job_position' not in body:
-       return jsonify({'msg':'Debes enviar el campo job_position'}), 400
+        body['job_position']=None
     if 'salary' not in body:
-       return jsonify({'msg':'Debes enviar el campo salary'}), 400
+        body['salary']=None
     
     # Verificar si el email ya está registrado
     existing_employee = Employee.query.filter_by(email=body['email']).first()
     if existing_employee:
-        return jsonify({'msg':'El email ya está registrado como empleado.'}), 400
+        return jsonify({'msg':'El email ya está registrado.'}), 400
 
     # Crear el usuario en la tabla User
     pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
@@ -348,10 +348,10 @@ def register_employee():
     db.session.add(new_employee)
     db.session.commit()
 
-    access_token = create_access_token(identity=new_user.email)
+    # access_token = create_access_token(identity=new_user.email)
     return jsonify({
        'Msg':'¡El empleado ha sido creado!',
-       'jwt_token': access_token
+    #    'jwt_token': access_token
     }), 201
 
 #para modificar o actualizar los datos un empleado
