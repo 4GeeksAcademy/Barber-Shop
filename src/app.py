@@ -261,6 +261,11 @@ def register_first_admin():
        'jwt_token': access_token
     }), 201
 
+@app.route('/api/employees', methods=['GET'])
+def get_employees():
+    employees = Employee.query.all()
+    employees_serialized = [employee.serialize() for employee in employees]
+    return jsonify(employees_serialized)
 
 # para registrar un empleado solo lo puede hacer un empleado administrador
 @app.route('/api/register_employee', methods=['POST'])
@@ -308,7 +313,7 @@ def register_employee():
        return jsonify({'msg':'Debes enviar el campo job_position'}), 400
     if 'salary' not in body:
        return jsonify({'msg':'Debes enviar el campo salary'}), 400
-
+    
     # Verificar si el email ya está registrado
     existing_employee = Employee.query.filter_by(email=body['email']).first()
     if existing_employee:
@@ -916,7 +921,6 @@ def put_appointment():
         return jsonify({'msg': 'Cita actualizada exitosamente, pero hubo un problema al enviar las notificaciones por correo.'}), 500
 
     return jsonify({'msg': 'Cita actualizada exitosamente y las notificaciones por correo se han enviado.'})
-
 
 #appointment_delete
 @app.route('/api/delete_appointment', methods=['DELETE'])
