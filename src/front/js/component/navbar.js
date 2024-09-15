@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css"; 
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 //este es el nabvar definitivo
@@ -46,6 +46,11 @@ export const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/login" onClick={toggleNavbar}>
                 Login
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
+                Dashboard
               </Link>
             </li>
           </ul>
