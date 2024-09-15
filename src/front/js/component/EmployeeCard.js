@@ -7,7 +7,7 @@ const EmployeeCard = props => {
             <div className="card mb-3" style={{ maxWidth: '540px' }}>
                 <div className="row g-0">
                     <div className="col-md-4">
-                        <img src="ruta-de-tu-imagen.jpg" className="img-fluid rounded-start" alt="Descripción de la imagen" />
+                        <img src="https://xsgames.co/randomusers/avatar.php?g=male" className="img-fluid rounded-start" alt="Descripción de la imagen" />
                     </div>
                     <div className="col-md-8">
                         <div className="card-body">

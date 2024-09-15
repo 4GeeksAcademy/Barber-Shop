@@ -18,24 +18,29 @@ const Dashboard = () => {
     };
 
     return (
-        <div>
-            <h1>Dashboard</h1>
-            <div className="nav nav-tabs">
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab1')}>Employees</button>
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab2')}>Customers</button>
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab3')}>Appointment</button>
+        <div className='container'>
+            <h1 className='mt-3'>Dashboard</h1>
+            <div className="nav nav-tabs mt-3">
+                <button className="m-auto nav-item" onClick={() => handleTabClick('tab1')}>All Employees</button>
+                <button className="m-auto nav-item" onClick={() => handleTabClick('tab2')}>All Customers</button>
+                <button className="m-auto nav-item" onClick={() => handleTabClick('tab3')}>All Appointment</button>
             </div>
-            <div className="content">
+            <div className="content mt-3">
                 {activeTab === 'tab1' && <div>
                     <EmployeeCard />
                 </div>}
                 {activeTab === 'tab2' && <div>
-                    <CustomerCard/>
+                    <CustomerCard />
                 </div>}
                 {activeTab === 'tab3' && <div>
                     Aqui componente Appointment
-                    </div>}
+                </div>}
+            </div >
+            <div className="container">
+                <button>Register employee</button>
+                <button>Register Customer</button>
             </div>
+
         </div>
     )
 }
