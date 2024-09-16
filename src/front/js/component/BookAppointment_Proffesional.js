@@ -13,6 +13,7 @@ const BookAppointment_Proffesional = () => {
     
   },[]);
 
+
   const getBadgeStyle = (status) => {
     switch (status) {
       case 'Available':
@@ -26,17 +27,20 @@ const BookAppointment_Proffesional = () => {
     }
   };
 
+  const selectedProfessional = store.selectedProfessional;
+  console.log( selectedProfessional);
+
   const handleContinue = () => {
     if (store.selectedProfessional) {
       // Guardar el profesional seleccionado en el contexto
-      actions.selectProfessional(store.professional.find(pro => pro.id === store.selectedProfessional));
+      actions.selectProfessional(store.professional.find(pro => pro.id === store.selectedProfessional.id));
       navigate('/book-appointment-services'); // Navega a la siguiente página si se selecciona un profesional
     } else {
       alert("Please select a professional before continuing.");
     }
   };
-  const selectedProfessional = store.selectedProfessional;
-  
+ 
+
   return (
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
       <div className="row">
@@ -74,14 +78,13 @@ const BookAppointment_Proffesional = () => {
 
       {/* SummaryCard */}
       <SummaryCard
-        profeName={selectedProfessional ? selectedProfessional.name : ''}
-        profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-        services={null} 
-        time={null} 
-        date={null}
-        handleContinue={handleContinue} 
-      />
-        
+  profeName={selectedProfessional ? selectedProfessional.name : ''}
+  profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+  serviName={store.selectedService ? store.selectedService.service_name : ''}
+  serviPrice={store.selectedService ? store.selectedService.price : ''}
+  handleContinue={handleContinue}
+  backRoute='/book-appointment'
+/>
       </div>
     </div>
   );

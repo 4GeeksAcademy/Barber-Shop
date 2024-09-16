@@ -702,6 +702,106 @@ def deactivate_customer():
     }), 200
 
 
+#SERVICES
+@app.route('/api/services', methods=['GET'])
+def get_services():
+    services = Services.query.all()
+    return jsonify([service.serialize() for service in services]), 200
+
+@app.route('/api/new_services', methods=['POST'])
+def create_service():
+    data = request.get_json(silent=True)
+
+    if data is None:
+        return jsonify({'msg': 'Debes enviar los siguientes campos:',
+                        'campos':{
+                            'price': 'requerido',
+                            'service_name': 'requerido'
+                        }}),400
+
+    service_name = data.get('service_name')
+    price = data.get('price')
+    
+    if not service_name or not price:
+        return jsonify({"msg": "El servicio y el precio son requeridos"}), 400
+
+    new_service = Services(service_name=service_name, price=price)
+    db.session.add(new_service)
+    db.session.commit()
+    
+    return jsonify({'msg': 'El servicio ha sido creado exitosamente'}), 201
+
+@app.route('/api/update_services', methods=['PUT'])
+@jwt_required()
+def update_service():
+    # Obtener el email del usuario autenticado
+    current_user_email = get_jwt_identity()
+    
+    # Buscar al empleado con el email proporcionado y verificar si es un admin activo
+    employee = Employee.query.filter_by(email=current_user_email).first()
+    
+    # Verificar si el empleado existe y si es admin activo
+    if not employee or not employee.admin_is_active:
+        return jsonify({"msg": "No autorizado para actualizar servicios"}), 403
+
+    # Obtener los datos para la actualización
+    data = request.get_json(silent=True)
+    
+    # Obtener el id del servicio desde el body
+    service_id = data.get('id')
+    
+    if not service_id:
+        return jsonify({"msg": "Se requiere el ID del servicio"}), 400
+
+    # Buscar el servicio a actualizar por ID
+    service = Services.query.get(service_id)
+
+    if not service:
+        return jsonify({"msg": "Servicio no encontrado"}), 404
+
+    # Actualizar el servicio solo si es necesario
+    service.service_name = data.get('service_name', service.service_name)
+    service.price = data.get('price', service.price)
+
+    # Guardar los cambios en la base de datos
+    db.session.commit()
+
+    return jsonify({"msg": "Servicio modificado correctamente"}), 200
+  
+@app.route('/api/delete_services', methods=['DELETE'])
+@jwt_required()
+def delete_service():
+    # Obtener el email del usuario autenticado
+    current_user_email = get_jwt_identity()
+    
+    # Buscar al empleado con el email proporcionado y verificar si es un admin activo
+    employee = Employee.query.filter_by(email=current_user_email).first()
+    
+    # Verificar si el empleado existe y si es admin activo
+    if not employee or not employee.admin_is_active:
+        return jsonify({"msg": "No autorizado para eliminar servicios"}), 403
+
+    # Obtener los datos para la eliminación
+    data = request.get_json(silent=True)
+    
+    # Obtener el id del servicio desde el body
+    service_id = data.get('id')
+    
+    if not service_id:
+        return jsonify({"msg": "Se requiere el ID del servicio"}), 400
+
+    # Buscar el servicio a eliminar por ID
+    service = Services.query.get(service_id)
+
+    if not service:
+        return jsonify({"msg": "Servicio no encontrado"}), 404
+    
+    service_name = service.service_name
+
+    db.session.delete(service)
+    db.session.commit()
+    
+    return jsonify({"msg": f"Servicio de {service_name} eliminado"}), 200
 
 #appointment_GET
 @app.route('/api/appointments', methods=['GET'])
