@@ -42,6 +42,10 @@ const Layout = () => {
                         {/* Ruta para seleccionar BookAppointment */}
                         <Route element={<BookAppointment />} path="/book-appointment" />
 
+
+                        {/* Ruta para seleccionar servicios */}
+                        <Route element={<BookAppointment />} path="/book-appointment" />
+
                         {/* Ruta para seleccionar profesionales */}
                         <Route element={<BookAppointment_Proffesional />} path="/book-appointment-proffesional" />
 
