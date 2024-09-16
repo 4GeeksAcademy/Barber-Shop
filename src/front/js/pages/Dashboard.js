@@ -21,9 +21,9 @@ const Dashboard = () => {
         <div className='container'>
             <h1 className='mt-3'>Dashboard</h1>
             <div className="nav nav-tabs mt-3">
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab1')}>All Employees</button>
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab2')}>All Customers</button>
-                <button className="m-auto nav-item" onClick={() => handleTabClick('tab3')}>All Appointment</button>
+                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab1')}>All Employees</button>
+                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab2')}>All Customers</button>
+                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab3')}>All Appointment</button>
             </div>
             <div className="content mt-3">
                 {activeTab === 'tab1' && <div>
@@ -36,9 +36,9 @@ const Dashboard = () => {
                     Aqui componente Appointment
                 </div>}
             </div >
-            <div className="container">
-                <button>Register employee</button>
-                <button>Register Customer</button>
+            <div className="container d-flex justify-content-evenly ">
+                <button className='m-auto btn btn-warning fw-bold ' type='submit'>Register employee</button>
+                <button className='m-auto btn btn-warning fw-bold ' type='submit'>Register Customer</button>
             </div>
 
         </div>
