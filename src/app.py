@@ -292,6 +292,7 @@ def register_employee():
                            'address': 'opcional',
                            'hire_date': 'opcional',
                            'job_position': 'opcional',
+                           'status':'Aviable is default',
                            'salary': 'opcional'
                        }}), 400
     if 'name' not in body:
@@ -314,6 +315,8 @@ def register_employee():
         body['job_position']=None
     if 'salary' not in body:
         body['salary']=None
+    if 'status' not in body:
+        body['status']= 'Available'
     
     # Verificar si el email ya está registrado
     existing_employee = Employee.query.filter_by(email=body['email']).first()
@@ -342,6 +345,7 @@ def register_employee():
         hire_date=body['hire_date'],
         job_position=body['job_position'],
         salary=body['salary'],
+        status=body['status'],
         is_active=True,
         admin_is_active=False  # Por defecto, el empleado no es administrador
     )
@@ -370,7 +374,8 @@ def update_employee():
                            'update_phone': 'opcional',
                            'update_address': 'opcional',
                            'update_job_position': 'opcional',
-                           'update_salary': 'opcional'
+                           'update_salary': 'opcional',
+                           'update_status':'este es para cambiar si esta Aviable, Holiday o Day Off',
                        }}), 400
 
     current_user_email = get_jwt_identity()
@@ -386,7 +391,8 @@ def update_employee():
                            'update_phone': 'opcional',
                            'update_address': 'opcional',
                            'update_job_position': 'opcional',
-                           'update_salary': 'opcional'
+                           'update_salary': 'opcional',
+                           'update_status':'este es para cambiar si esta Aviable, Holiday o Day Off',
                        }}), 404
 
     current_user = User.query.filter_by(email=current_user_email).first()
@@ -413,6 +419,8 @@ def update_employee():
         employee_update.job_position = body['update_job_position']
     if 'update_salary' in body:
         employee_update.salary = body['update_salary']
+    if 'update_status'in body:
+        employee_update.status = body['update_status']
     
     db.session.commit()
 
