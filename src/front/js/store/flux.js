@@ -9,7 +9,9 @@ const getState = ({ getStore, getActions, setStore }) => {
      		selectedService: savedState.selectedService || null, // Añadir el servicio seleccionado
 			//fetch employee
 			professional: [],
+			customer: [],
 			services:[]
+
 		},
 		actions: {
 			selectSalon: (salon) => {
@@ -25,9 +27,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ ...store, selectedService: service });
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
+
 			selectCustomer: (customer)=>{
 				const store = getStore();
 				setStore({ ...store, selectCustomer: customer});
+        localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
 
 			//fetch Employee
@@ -35,7 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/employees")
 					const data = await resp.json()
-					setStore({ professional: data})
+					setStore({ professional: data })
 					console.log(data)
 					return data;
 				} catch (error) {
@@ -48,7 +52,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/customers")
 					const data = await resp.json()
-					setStore({ customer: data})
+					setStore({ customer: data })
 					console.log(data)
 					return data;
 				} catch (error) {

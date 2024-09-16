@@ -11,7 +11,7 @@ const BookAppointment_Proffesional = () => {
   useEffect(()=>{
     actions.getProfessional()
     
-  },[])
+  },[]);
 
 
   const getBadgeStyle = (status) => {

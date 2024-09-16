@@ -21,9 +21,10 @@ import BookAppointment_Date from "./component/BookAppointment_Date";
 import LogIn_Costumer from "./component/LogIn_Costumer";
 import SignUpPage from "./component/LogIn_Costumer_SignUp";  
 import { Login_Costumer_2 } from "./component/LogIn_Costumer_2";
-import ReviewAndConfirm from "./component/BookAppointment_Resume"; // Nueva ruta importada
+import ReviewAndConfirm from "./component/BookAppointment_Resume"; 
 import BookAppointment_Confirm from "./component/BookAppointment_Confirm";
 import Dashboard from "./pages/Dashboard";
+import UpdateEmployeeCard from "./component/UpdateEmployeeCard";
 
 //create your first component.
 const Layout = () => {
@@ -68,8 +69,10 @@ const Layout = () => {
                         {/* ruta Dashboard */}
                         <Route element={<Dashboard />} path="/dashboard" />
 
-                        {/* Ruta para la página de revisión y confirmación */}
+                        {/* Ruta para actualizar datos de empleado desde el dashboard */}
+                        <Route element={<UpdateEmployeeCard />} path="/update-employee" />
 
+                        {/* Ruta para la página de revisión y confirmación */}
                         <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
 
                         <Route element={<BookAppointment_Confirm/>} path="/book-appointment-confirm" />
