@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
 
-const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, time, date, handleContinue, backRoute }) => {
+const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTime, selectDate, handleContinue, backRoute }) => {
   const navigate = useNavigate(); // Usamos el hook useNavigate
 
   return (
@@ -43,7 +43,18 @@ const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, time, da
               <p><strong>Service: </strong>{serviName}</p>
             </div>
           )}
+          {selectTime && (
+            <div>
+              <p><strong>Time: </strong>{selectTime}</p>
+            </div>
+          )}
+          {selectDate && (
+            <div>
+              <p><strong>Date: </strong>{selectDate}</p>
+            </div>
+          )}
           <p><strong>Total:</strong> EUR {serviPrice ? serviPrice : '0,00'}</p>
+
           <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>
           <button className="btn btn-secondary w-100" onClick={() => navigate(backRoute)}>Back</button>
         </div>

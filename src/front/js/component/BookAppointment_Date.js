@@ -2,16 +2,15 @@ import React, { useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext'; // Importar el contexto
+import SummaryCard from './summaryCard';
 
 const timeslots = [
-  "4:00pm", "5:00pm", "6:00pm", "7:00pm", "8:00pm", "9:00pm", "10:00pm"
+  "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", 
 ];
 
 const BookAppointment_Date = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
   const navigate = useNavigate();
-  const { store } = useContext(Context); // Obtener el contexto
+  const { store, actions } = useContext(Context); // Obtener el contexto
 
   const handleContinue = () => {
     if (selectedDate && selectedTime) {
@@ -21,6 +20,11 @@ const BookAppointment_Date = () => {
     }
   };
 
+  const selectedProfessional = store.selectedProfessional;   
+  const selectedService= store.selectedService;
+  const selectedDate = store.selectedDate;
+  const selectedTime = store.selectedTime;
+  
   return (
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
       <div className="row">
@@ -40,7 +44,7 @@ const BookAppointment_Date = () => {
                       cursor: 'pointer',
                       fontSize: '1.2rem'
                     }}
-                    onClick={() => setSelectedTime(time)}
+                    onClick={() => actions.selectTime(time)}
                   >
                     {time}
                   </li>
@@ -54,7 +58,7 @@ const BookAppointment_Date = () => {
                 type="date"
                 className="form-control"
                 value={selectedDate || ""}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => actions.selectDate(e.target.value)}
                 style={{
                   fontSize: '1.2rem',
                   padding: '10px',
@@ -67,7 +71,7 @@ const BookAppointment_Date = () => {
           </div>
         </div>
 
-        <div className="col-md-4">
+        {/* <div className="col-md-4">
           <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
             <div
               style={{
@@ -120,7 +124,20 @@ const BookAppointment_Date = () => {
               <button className="btn btn-secondary w-100" onClick={() => navigate('/book-appointment-services')}>Back</button>
             </div>
           </div>
-        </div>
+        </div> */}
+
+<SummaryCard
+  profeName={selectedProfessional ? selectedProfessional.name : ''}
+  profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+  serviName={selectedService ? selectedService.service_name : ''}
+  serviPrice={selectedService ? selectedService.price : ''}
+  selectTime={selectedTime ? selectedTime : ''}
+  selectDate={selectedDate ? selectedDate : ''}
+  handleContinue={handleContinue}
+  backRoute='/book-appointment-services'
+/>
+
+
       </div>
     </div>
   );

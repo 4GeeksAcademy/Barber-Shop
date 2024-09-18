@@ -10,8 +10,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//fetch employee
 			professional: [],
 			customer: [],
-			services:[]
-
+			services:[],
+			selectedDate: "",
+			selectedTime: "",
+			selectCustomer: ""
 		},
 		actions: {
 			selectSalon: (salon) => {
@@ -27,7 +29,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ ...store, selectedService: service });
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
-
+			selectDate: (date) => {
+				const store = getStore();
+				setStore({ ...store, selectedDate: date });
+				localStorage.setItem('appState', JSON.stringify(getStore()));
+			},
+			selectTime: (time) => {
+				const store = getStore();
+				setStore({ ...store, selectedTime: time });
+				localStorage.setItem('appState', JSON.stringify(getStore()));
+			},
 			selectCustomer: (customer)=>{
 				const store = getStore();
 				setStore({ ...store, selectCustomer: customer});
