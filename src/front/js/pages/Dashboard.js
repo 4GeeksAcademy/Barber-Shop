@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import BookAppointment_Proffesional from '../component/BookAppointment_Proffesional';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate.
@@ -9,13 +9,19 @@ import CustomerCard from '../component/CustomerCard';
 import BookAppointment from '../component/BookAppointment';
 
 
+
 const Dashboard = () => {
     const { store, actions } = useContext(Context);
     const [activeTab, setActiveTab] = useState("tab1");
-
+    const navigate = useNavigate();
     useEffect(() => {
-        actions.getProfessional(),
-            actions.getCustomer()
+        if (localStorage.getItem("jwt_token")){
+            actions.getProfessional(),
+                actions.getCustomer()
+        } else{ navigate("/login")
+
+        }
+       
     }, []);
 
     const handleTabClick = (tab) => {
@@ -62,9 +68,9 @@ const Dashboard = () => {
                                     <td>{professional.status}</td>
                                     <td>{professional.appointment}</td>
                                     <td>
-                                        <button className="btn">
+                                        <Link to=""><button className="btn">
                                             <i className="bi bi-pencil-square"></i>
-                                        </button>
+                                        </button></Link>
                                     </td>
                                     <td>
                                         <button className="btn">

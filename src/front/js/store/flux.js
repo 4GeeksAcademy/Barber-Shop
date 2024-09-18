@@ -34,6 +34,8 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
 
+			
+
 			//fetch Employee
 			getProfessional: async () => {
 				try {

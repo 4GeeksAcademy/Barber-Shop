@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Context } from '../store/appContext';
-
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 
 const EmployeeCard = props => {
     const { store, actions } = useContext(Context);
@@ -21,7 +21,12 @@ const EmployeeCard = props => {
                                 <p className="card-text">{pro.email}</p>
                                 <p className="card-text">{pro.phone}</p>
                                 <p className="card-text">{pro.status}</p>
-                                
+                                <Link to="/update-employee">
+                                <button className="btn">
+                                    <i className="bi bi-pencil-square"></i>
+                                </button>
+                                </Link>
+
                                 <p className="card-text"><small className="text-body-secondary">Last updated 3 mins ago</small></p>
                             </div>
                         </div>
