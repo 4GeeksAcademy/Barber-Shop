@@ -9,7 +9,10 @@ const getState = ({ getStore, getActions, setStore }) => {
      		selectedService: savedState.selectedService || null, // Añadir el servicio seleccionado
 			//fetch employee
 			professional: [],
-			services:[]
+			services:[],
+			selectedDate: "",
+			selectedTime: "",
+			selectCustomer: ""
 		},
 		actions: {
 			selectSalon: (salon) => {
@@ -23,6 +26,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 			selectService: (service) => { // Acción para seleccionar el servicio
 				const store = getStore();
 				setStore({ ...store, selectedService: service });
+				localStorage.setItem('appState', JSON.stringify(getStore()));
+			},
+			selectDate: (date) => {
+				const store = getStore();
+				setStore({ ...store, selectedDate: date });
+				localStorage.setItem('appState', JSON.stringify(getStore()));
+			},
+			selectTime: (time) => {
+				const store = getStore();
+				setStore({ ...store, selectedTime: time });
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
 			selectCustomer: (customer)=>{
