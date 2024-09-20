@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
+import SummaryCard from './summaryCard';
 
 const BookAppointment_Proffesional = () => {
   const navigate = useNavigate();
