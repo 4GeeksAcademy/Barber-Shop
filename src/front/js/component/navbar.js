@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Context } from '../store/appContext';
 
 
 //este es el nabvar definitivo
 export const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { actions, store } = useContext(Context);
 
   const toggleNavbar = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const handleLogout = () => {
+    setIsExpanded(!isExpanded);
+    actions.logout()
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,16 +50,27 @@ export const Navbar = () => {
                 Contacts
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login" onClick={toggleNavbar}>
-                Login
-              </Link>
-            </li>
+            {store.auth === true ? (
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/" onClick={handleLogout}>
+                  Logout
+                </Link>
+              </li>) : (
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/login" onClick={toggleNavbar}>
+                  Login
+                </Link>
+              </li>
+            )}
+
             <li className="nav-item">
               <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
                 Dashboard
               </Link>
             </li>
+
           </ul>
         </div>
       </div>

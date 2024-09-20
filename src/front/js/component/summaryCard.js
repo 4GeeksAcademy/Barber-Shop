@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
+const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTime,
+  selectDate, handleContinue, backRoute, showContinueButton }) => {
 
-const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTime, selectDate, handleContinue, backRoute }) => {
-  const navigate = useNavigate(); // Usamos el hook useNavigate
+  const navigate = useNavigate();
 
   return (
     <div className="col-md-4">
@@ -30,7 +31,7 @@ const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTi
           />
         </div>
         <div className="card-body">
-          {/* El nombre del salón es estático */}
+
           <h5 className="card-title">Vurve - Bangalore</h5>
           <p className="card-text">MG Road, Bangalore</p>
           {profeName && (
@@ -55,7 +56,8 @@ const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTi
           )}
           <p><strong>Total:</strong> EUR {serviPrice ? serviPrice : '0,00'}</p>
 
-          <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>
+          {showContinueButton && (
+            <button className="btn btn-warning w-100 mb-2" onClick={handleContinue}>Continue</button>)}
           <button className="btn btn-secondary w-100" onClick={() => navigate(backRoute)}>Back</button>
         </div>
       </div>

@@ -1,5 +1,3 @@
-// BookAppointment_Confirm.js
-
 import React, { useContext } from 'react';
 import { Context } from '../store/appContext';
 
@@ -37,7 +35,7 @@ const BookAppointment_Confirm = () => {
                   <p>Duration: {store.selectedService.duration}</p>
                   <p>Taxes: {store.selectedService.taxes ? `EUR ${store.selectedService.taxes}` : 'N/A'}</p>
                   <p>
-                    <strong>Total: EUR {store.selectedService.price.toFixed(2)}</strong>
+                    <strong>Total: EUR {store.selectedService.price}</strong>
                   </p>
                 </div>
               )}

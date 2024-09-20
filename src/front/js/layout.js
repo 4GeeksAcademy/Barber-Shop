@@ -19,12 +19,15 @@ import BookAppointment_Proffesional from "./component/BookAppointment_Proffesion
 import BookAppointment_Services from "./component/BookAppointment_Services";
 import BookAppointment_Date from "./component/BookAppointment_Date";
 import LogIn_Costumer from "./component/LogIn_Costumer";
-import SignUpPage from "./component/LogIn_Costumer_SignUp";  
+import SignUpPage from "./component/LogIn_Costumer_SignUp";
 import { Login_Costumer_2 } from "./component/LogIn_Costumer_2";
-import ReviewAndConfirm from "./component/BookAppointment_Resume"; 
+import ReviewAndConfirm from "./component/BookAppointment_Resume";
 import BookAppointment_Confirm from "./component/BookAppointment_Confirm";
 import Dashboard from "./pages/Dashboard";
 import UpdateEmployeeCard from "./component/UpdateEmployeeCard";
+import PasswordResetRequest from "./component/PasswordResetRequest";
+import PasswordReset from "./component/PasswordReset";
+
 
 //create your first component.
 const Layout = () => {
@@ -75,16 +78,19 @@ const Layout = () => {
                         {/* Ruta para la página de revisión y confirmación */}
                         <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
 
-                        <Route element={<BookAppointment_Confirm/>} path="/book-appointment-confirm" />
+                        <Route element={<BookAppointment_Confirm />} path="/book-appointment-confirm" />
+
+                        <Route element={<PasswordResetRequest />} path="/password-reset-request" />
+                        <Route element={<PasswordReset />} path="/reset-password/:token" />
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
 
-                        
+
                     </Routes>
-                    <Footer /> 
+                    <Footer />
                 </ScrollToTop>
-               
+
             </BrowserRouter>
         </div>
     );

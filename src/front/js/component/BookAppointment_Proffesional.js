@@ -1,17 +1,16 @@
 import React, { useState, useContext, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate.
-import { Context } from '../store/appContext'; // Ruta corregida del appContext
-import SummaryCard from './summaryCard';
+import { useNavigate } from 'react-router-dom';
+import { Context } from '../store/appContext';
 
 const BookAppointment_Proffesional = () => {
-  const navigate = useNavigate(); // Usamos el hook useNavigate
-  const { store, actions } = useContext(Context); // Uso del contexto
+  const navigate = useNavigate();
+  const { store, actions } = useContext(Context);
 
-  useEffect(()=>{
+  useEffect(() => {
     actions.getProfessional()
-    
-  },[]);
+
+  }, []);
 
 
   const getBadgeStyle = (status) => {
@@ -28,18 +27,17 @@ const BookAppointment_Proffesional = () => {
   };
 
   const selectedProfessional = store.selectedProfessional;
-  console.log( selectedProfessional);
+  console.log(selectedProfessional);
 
   const handleContinue = () => {
     if (store.selectedProfessional) {
-      // Guardar el profesional seleccionado en el contexto
+
       actions.selectProfessional(store.professional.find(pro => pro.id === store.selectedProfessional.id));
-      navigate('/book-appointment-services'); // Navega a la siguiente página si se selecciona un profesional
+      navigate('/book-appointment-services');
     } else {
       alert("Please select a professional before continuing.");
     }
   };
- 
 
   return (
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
@@ -49,42 +47,43 @@ const BookAppointment_Proffesional = () => {
           <h3>Step 1 of 3</h3>
           <h2>Select Professional</h2>
           <ul className="list-group">
-            {store.professional.map((pro,index) => (
+            {store.professional.map((pro, index) => (
               <li
-              key={index}
-              className="list-group-item d-flex justify-content-between align-items-center"
-              style={{
-                cursor: pro.status === 'Available' ? 'pointer' : 'not-allowed',
-                backgroundColor: selectedProfessional && selectedProfessional.id === pro.id ? '#fff9e6' : '',
-                border: selectedProfessional && selectedProfessional.id === pro.id ? '1px solid #FFD700' : '',
-                fontSize: '1.2rem',
-                opacity: pro.status === 'Available' ? 1 : 0.6
-              }}
-              onClick={() => pro.status === 'Available' && actions.selectProfessional(pro)}
-            >
-              <div className="d-flex align-items-center">
-                {selectedProfessional && selectedProfessional.id === pro.id && (
-                  <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
-                )}
-                {pro.name} {pro.last_name}
-              </div>
-              <span className="badge" style={getBadgeStyle(pro.status)}>
-                {pro.status}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+                key={index}
+                className="list-group-item d-flex justify-content-between align-items-center"
+                style={{
+                  cursor: pro.status === 'Available' ? 'pointer' : 'not-allowed',
+                  backgroundColor: selectedProfessional && selectedProfessional.id === pro.id ? '#fff9e6' : '',
+                  border: selectedProfessional && selectedProfessional.id === pro.id ? '1px solid #FFD700' : '',
+                  fontSize: '1.2rem',
+                  opacity: pro.status === 'Available' ? 1 : 0.6
+                }}
+                onClick={() => pro.status === 'Available' && actions.selectProfessional(pro)}
+              >
+                <div className="d-flex align-items-center">
+                  {selectedProfessional && selectedProfessional.id === pro.id && (
+                    <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
+                  )}
+                  {pro.name} {pro.last_name}
+                </div>
+                <span className="badge" style={getBadgeStyle(pro.status)}>
+                  {pro.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {/* SummaryCard */}
-      <SummaryCard
-  profeName={selectedProfessional ? selectedProfessional.name : ''}
-  profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-  serviName={store.selectedService ? store.selectedService.service_name : ''}
-  serviPrice={store.selectedService ? store.selectedService.price : ''}
-  handleContinue={handleContinue}
-  backRoute='/book-appointment'
-/>
+        {/* SummaryCard */}
+        <SummaryCard
+          profeName={selectedProfessional ? selectedProfessional.name : ''}
+          profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+          serviName={store.selectedService ? store.selectedService.service_name : ''}
+          serviPrice={store.selectedService ? store.selectedService.price : ''}
+          handleContinue={handleContinue}
+          backRoute='/book-appointment'
+          showContinueButton={true}
+        />
       </div>
     </div>
   );
