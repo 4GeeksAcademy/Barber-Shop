@@ -74,10 +74,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			selectCustomer: (customer) => {
 				const store = getStore();
 				setStore({ ...store, selectCustomer: customer });
-			
-
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
+
 			//fetch Employee
 			getProfessional: async () => {
 				try {

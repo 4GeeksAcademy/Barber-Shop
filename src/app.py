@@ -139,11 +139,20 @@ def login():
     password_db = bcrypt.check_password_hash(user.password, body['password'])
     if not password_db:
        return jsonify({'msg':'Email o contraseña incorrecta'}), 400
-    
+    customer = Customer.query.filter_by(user_id = user.id).first()
+    if not customer:   
+        access_token = create_access_token(identity=user.email)
+        return jsonify({
+        'Msg':'Todos los datos están ok',
+        'jwt_token': access_token,
+        'type':'employee'
+        }), 200
+
     access_token = create_access_token(identity=user.email)
     return jsonify({
        'Msg':'Todos los datos están ok',
-       'jwt_token': access_token
+       'jwt_token': access_token,
+       'type':'customer'
     }), 200
 
 # Paso 1: Solicitar restablecimiento de contraseña
