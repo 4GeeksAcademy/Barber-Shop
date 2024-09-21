@@ -68,7 +68,7 @@ export const Login = () => {
 
     return (
         <div className='bodyPage'>
-            <div className='bodyCard'>
+            <div className='bodyCard mt-5'>
                 <h1>Login</h1>
                 <h6 className='fs-6 fw-lighter mt-3'>Login to access your travelwise account</h6>
                 <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
