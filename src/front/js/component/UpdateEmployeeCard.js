@@ -7,6 +7,8 @@ import { Alert } from 'react-bootstrap';
 const UpdateEmployeeCard = ({ onUpdate }) => {
     const location = useLocation();
     const { employee } = location.state || {};
+    
+    const { store, actions } = useContext(Context);
 
     const [name, setName] = useState(employee?.name || '');
     const [lastName, setLastName] = useState(employee?.last_name || '');
@@ -28,7 +30,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
         }
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = async () => {
         const updatedEmployee = {
             email: employee.email, // Email original para identificar al empleado
             update_name: name,
@@ -46,7 +48,10 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
             updatedEmployee.update_password = password;
         }
 
-        onUpdate(updatedEmployee);
+        const result = await actions.updateEmployee(updatedEmployee);
+        if (result) {
+            onUpdate(updatedEmployee);
+        }
     };
 
     return (
