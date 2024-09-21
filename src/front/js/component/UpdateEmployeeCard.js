@@ -1,24 +1,32 @@
 import React, { useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Context } from '../store/appContext'; 
-import { Link } from 'react-router-dom';
+import { Context } from '../store/appContext';
+import { Link, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
-const UpdateEmployeeCard = ({ employee = {} }) => {
-    const [name, setName] = useState(employee.name || '');
-    const [lastName, setLastName] = useState(employee.last_name || '');
-    const [email, setEmail] = useState(employee.email || '');
+
+const UpdateEmployeeCard = ({ onUpdate }) => {
+    const location = useLocation();
+    const { employee } = location.state || {};
+
+    const [name, setName] = useState(employee?.name || '');
+    const [lastName, setLastName] = useState(employee?.last_name || '');
+    const [email, setEmail] = useState(employee?.email || '');
     const [password, setPassword] = useState('');
     const [pass1, setPass1] = useState('');
-    const [pass2, setPass2]= useState('');
-    const [phone, setPhone] = useState(employee.phone || '');
-    const [address, setAddress] = useState(employee.address || '');
-    const [jobPosition, setJobPosition] = useState(employee.job_position || '');
-    const [salary, setSalary] = useState(employee.salary || '');
-    const [status, setStatus] = useState(employee.status || '');
+    const [pass2, setPass2] = useState('');
+    const [phone, setPhone] = useState(employee?.phone || '');
+    const [address, setAddress] = useState(employee?.address || '');
+    const [jobPosition, setJobPosition] = useState(employee?.job_position || '');
+    const [salary, setSalary] = useState(employee?.salary || '');
+    const [status, setStatus] = useState(employee?.status || '');
 
-    const chancePassword = ()=>{
-       pass1 === pass2? setPassword : Alert("The password does not match!")
-    }
+    const changePassword = () => {
+        if (pass1 === pass2) {
+            setPassword(pass1);
+        } else {
+            Alert("The passwords do not match!");
+        }
+    };
 
     const handleUpdate = () => {
         const updatedEmployee = {
@@ -42,26 +50,27 @@ const UpdateEmployeeCard = ({ employee = {} }) => {
     };
 
     return (
-        <div className="card">
+        <div className="container card mt-3 mb-3">
             <div className="card-body">
-                <h5 className="card-title">Actualizar Datos del Empleado</h5>
-                <div className="mb-5">
-                    <label className="form-label">Name</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Last Name</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                    />
+                <h5 className="card-title">Update Employee Information</h5>
+                <div className="mb-3 row ">
+                    <div className='col'>
+                        <label className="form-label ">Name</label>
+                        <input
+                            type="text"
+                            className="form-control col"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)} />
+
+                    </div>
+                    <div className='col'>
+                        <label className="form-label ">Last Name</label>
+                        <input
+                            type="text"
+                            className="form-control col"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)} />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Email</label>
@@ -72,35 +81,68 @@ const UpdateEmployeeCard = ({ employee = {} }) => {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={pass1}
-                        onChange={(e) => setPass1(e.target.value)}
-                    />
+                <div className='row'>
+                    <div className="mb-3 col">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control col"
+                            value={pass1}
+                            onChange={(e) => setPass1(e.target.value)} />
+                    </div>
+                    <div className="mb-3 col">
+                        <label className="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            className="form-control col"
+                            value={pass2}
+                            onChange={(e) => setPass2(e.target.value)} />
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Confirm Password</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={pass2}
-                        onChange={(e) => setPass2(e.target.value)}
-                    />
+                <div className='row'>
+                    <div className="mb-3 col">
+                        <label className="form-label">Phone</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3 col ">
+                        <label className="form-label">Job Position</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={jobPosition}
+                            onChange={(e) => setJobPosition(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3 col">
+                        <label className="form-label">Salary</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={salary}
+                            onChange={(e) => setSalary(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3 col">
+                        <label className="form-label">Status</label>
+                        <select
+                            className="form-control"
+                            value={status}
+                            onChange={(e) => setStatus(e.target.value)}
+                        >
+                            <option value="available">Available</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="dayOff">Day Off</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div className="mb-3">
-                    <label className="form-label">Teléfono</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Dirección</label>
+                    <label className="form-label">Address</label>
                     <input
                         type="text"
                         className="form-control"
@@ -108,36 +150,19 @@ const UpdateEmployeeCard = ({ employee = {} }) => {
                         onChange={(e) => setAddress(e.target.value)}
                     />
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Puesto de Trabajo</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={jobPosition}
-                        onChange={(e) => setJobPosition(e.target.value)}
-                    />
+
+                <div className='d-grid gap-2 d-md-flex justify-content-md-end'>
+                    <Link to="/dashboard">
+                        <button className="btn btn-secondary" onClick={handleUpdate}>
+                            Update
+                        </button>
+                    </Link>
+                    <Link to="/dashboard">
+                        <button className="btn btn-primary">
+                            Cancel
+                        </button>
+                    </Link>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Salario</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={salary}
-                        onChange={(e) => setSalary(e.target.value)}
-                    />
-                </div>
-                <div className="mb-3">
-                    <label className="form-label">Estado</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                    />
-                </div>
-                <Link to="/dashboard"><button className="btn btn-primary " style={{marginBottom: "80px"}} onClick={handleUpdate}>
-                    Actualizar
-                </button></Link>
             </div>
         </div>
     );
