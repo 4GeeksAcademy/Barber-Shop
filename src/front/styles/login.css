@@ -2,9 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
 }
 .bodyCard{ 
+    margin-top: auto;
     background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;

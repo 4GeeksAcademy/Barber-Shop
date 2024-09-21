@@ -13,15 +13,21 @@ import BookAppointment from '../component/BookAppointment';
 const Dashboard = () => {
     const { store, actions } = useContext(Context);
     const [activeTab, setActiveTab] = useState("tab1");
+
     const navigate = useNavigate();
+    const handleEdit = (employee) => {
+        navigate('/update-employee', { state: { employee } });
+    };
+
     useEffect(() => {
-        if (localStorage.getItem("jwt_token")){
+        if (localStorage.getItem("jwt_token")) {
             actions.getProfessional(),
                 actions.getCustomer()
-        } else{ navigate("/login")
+        } else {
+            navigate("/login")
 
         }
-       
+
     }, []);
 
     const handleTabClick = (tab) => {
@@ -36,14 +42,14 @@ const Dashboard = () => {
                 <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab2')}>All Customers</button>
                 <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab3')}>All Appointment</button>
             </div>
-            <div className="content mt-3">
+            <div className="content mt-3 card-group">
                 {activeTab === 'tab1' && <div>
                     <EmployeeCard />
                 </div>}
                 {activeTab === 'tab2' && <div>
                     <CustomerCard />
                 </div>}
-                {activeTab === 'tab3' && <div>
+                {activeTab === 'tab3' && <div className='container'>
                     <table class="table">
 
                         <thead>

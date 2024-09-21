@@ -1,3 +1,5 @@
+import UpdateEmployeeCard from "../component/UpdateEmployeeCard";
+
 const getState = ({ getStore, getActions, setStore }) => {
 
 	const savedState = JSON.parse(localStorage.getItem('appState')) || {};
@@ -7,10 +9,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			selectedSalon: null,
 			selectedProfessional: savedState.selectedProfessional || null, 
 			selectedService: savedState.selectedService || null, 
-			//fetch employee
+			
 			professional: [],
 			customer: [],
 			services: [],
+
 			selectedDate: savedState.selectDate || "",
 			selectedTime: savedState.selectedTime || "",
 			selectCustomer: savedState.selectCustomer || "",
@@ -88,6 +91,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+			UpdateEmployee: async ()=>{
+				try{
+					const resp = await fetch(process.env.BACKEND_URL +"/api/update_employee",{
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						},
+						body: JSON.stringify({ email })
+					});
+
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.msg || 'Error enviando solicitud de restablecimiento de contraseña');
+					}
+					const data = await resp.json()
+					setStore({ professional: data})
+					return data;
+				} catch (error) {
+					console.log("Error loading message from backend", error);
+				}			
+			},
 			//fetch Customer Bernardo
 			getCustomer: async () => {
 				try {
@@ -153,10 +179,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			postSignupCustomer: async (customerData) => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_register", {
-						method: "POST",
-						body: JSON.stringify(customerData),
-						headers: { "Content-Type": "application/json" }
-
+						 
 					})
 					if (!resp.ok) {
 						const errorData = await resp.json();
