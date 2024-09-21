@@ -2,40 +2,33 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import "../../styles/footer.css";
+import SummaryCard from './summaryCard';
 
 export const Login_Costumer_2 = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { store } = useContext(Context);
+    const [errorMessage, setErrorMessage] = useState('');
+    const { store, actions } = useContext(Context);
     const navigate = useNavigate();
 
     const form = {
         "email": email,
         "password": password
     };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const success = await actions.loginCustomer(form);
+        if (success) {
+            navigate("/book-appointment-resume"); // Navegar a dashboard después del login exitoso
+        } else {
+            setErrorMessage("Login incorrecto. Por favor, verifica tus credenciales.")
+        }
+    }
+    const selectedProfessional = store.selectedProfessional;
+    const selectedService = store.selectedService;
+    const selectedDate = store.selectedDate;
+    const selectedTime = store.selectedTime;
 
-        fetch(process.env.BACKEND_URL + "/api/login", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(form),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.jwt_token){
-                localStorage.setItem('jwt_token', data.jwt_token);
-            }
-            console.log('Success:', data);
-            navigate("/dashboard"); // Navegar a dashboard después del login exitoso
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    };
 
     return (
         <div className='container mt-5'>
@@ -47,24 +40,24 @@ export const Login_Costumer_2 = () => {
                         <form className='mt-3' style={{ width: "100%" }} onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="emailLogin" className="form-label">Email address</label>
-                                <input 
-                                    type="email" 
-                                    className="form-control" 
-                                    id="emailLogin" 
-                                    aria-describedby="emailHelp" 
-                                    value={email} 
-                                    onChange={(e) => setEmail(e.target.value)} 
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    id="emailLogin"
+                                    aria-describedby="emailHelp"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                                 <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="passwordLogin" className="form-label">Password</label>
-                                <input 
-                                    type="password" 
-                                    className="form-control" 
-                                    id="passwordLogin" 
-                                    value={password} 
-                                    onChange={(e) => setPassword(e.target.value)} 
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="passwordLogin"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                 />
                             </div>
                             <div className="mb-3 form-check">
@@ -72,37 +65,31 @@ export const Login_Costumer_2 = () => {
                                 <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                             </div>
                             <button type="submit" className="btn-login">Login</button>
+                            {
+                                errorMessage && (
+                                    <div className="alert alert-danger mt-3" role="alert">
+                                        {errorMessage}
+                                    </div>
+                                )
+                            }
+                            <div className='mt-3'>
+                                <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
+                            </div>
                         </form>
                     </div>
                 </div>
 
-                <div className="col-md-4">
-                    <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
-                        <div style={{ backgroundColor: '#E0E0E0', padding: '20px', display: 'flex', justifyContent: 'center' }}>
-                            <img
-                                src="https://images.unsplash.com/photo-1532710093739-9470acff878f?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                className="card-img-top"
-                                alt="Location"
-                                style={{ width: '100%', height: '200px', objectFit: 'cover', objectPosition: 'center' }}
-                            />
-                        </div>
+                <SummaryCard
+                    profeName={selectedProfessional ? selectedProfessional.name : ''}
+                    profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+                    serviName={selectedService ? selectedService.service_name : ''}
+                    serviPrice={selectedService ? selectedService.price : ''}
+                    selectTime={selectedTime ? selectedTime : ''}
+                    selectDate={selectedDate ? selectedDate : ''}
 
-                        <div className="card-body">
-                            <h5 className="card-title">Vurve - Bangalore</h5>
-                            <p className="card-text">MG Road, Bangalore</p>
-                            <p><strong>Sun 16 July 2023 at 5:00pm</strong></p>
-                            <p>1h duration, ends at 6:00pm</p>
-                            {store.selectedService && (
-                                <div>
-                                    <p><strong>{store.selectedService.name}</strong></p>
-                                    <p>Duration: {store.selectedService.duration}</p>
-                                    <p>EUR {store.selectedService.price.toFixed(2)}</p>
-                                </div>
-                            )}
-                            <p><strong>Total:</strong> EUR {store.selectedService?.price.toFixed(2)}</p>
-                        </div>
-                    </div>
-                </div>
+                    backRoute='/login-customers'
+                    showContinueButton={false}
+                />
             </div>
         </div>
     );

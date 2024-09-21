@@ -1,28 +1,28 @@
 import React, { useState, useContext, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { Context } from '../store/appContext'; // Importar el contexto
+import { Context } from '../store/appContext';
 import SummaryCard from './summaryCard';
 
 const BookAppointment_Services = () => {
   const navigate = useNavigate();
-  const { store, actions } = useContext(Context); // Obtener el contexto
+  const { store, actions } = useContext(Context);
 
-useEffect(()=>{
-actions.getServices()
-},[]) 
+  useEffect(() => {
+    actions.getServices()
+  }, [])
 
   const handleContinue = () => {
     if (selectedService) {
-      actions.selectService(store.services.find(service => service.id === selectedService)); // Guardar el servicio en el store
+      actions.selectService(store.services.find(service => service.id === selectedService.id));
       navigate('/book-appointment-date');
     } else {
       alert("Please select a service before continuing.");
     }
   };
   const selectedProfessional = store.selectedProfessional;
-   
-  const selectedService= store.selectedService;
+
+  const selectedService = store.selectedService;
 
   return (
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
@@ -50,7 +50,7 @@ actions.getServices()
                     )}
                     {service.service_name}
                   </div>
-                  </div>
+                </div>
                 <div className="d-flex align-items-center">
                   <span className="badge bg-secondary me-3">
                     EUR {service.price}
@@ -62,14 +62,15 @@ actions.getServices()
         </div>
 
 
-<SummaryCard
-  profeName={selectedProfessional ? selectedProfessional.name : ''}
-  profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-  serviName={selectedService ? selectedService.service_name : ''}
-  serviPrice={selectedService ? selectedService.price : ''}
-  handleContinue={handleContinue}
-   backRoute='/book-appointment-proffesional'
-/>
+        <SummaryCard
+          profeName={selectedProfessional ? selectedProfessional.name : ''}
+          profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+          serviName={selectedService ? selectedService.service_name : ''}
+          serviPrice={selectedService ? selectedService.price : ''}
+          handleContinue={handleContinue}
+          backRoute='/book-appointment-proffesional'
+          showContinueButton={true}
+        />
 
       </div>
     </div>

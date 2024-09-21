@@ -132,6 +132,7 @@ def login():
        return jsonify({'msg':'Debes enviar el campo password'}), 400
 
     user = User.query.filter_by(email=body['email']).first()
+
     if user is None:
         return jsonify({'msg':'Email o contraseña incorrecta'}), 400
 
@@ -171,6 +172,15 @@ def request_password_reset():
     # Generar un token de restablecimiento de contraseña
     expires = datetime.timedelta(hours=1)
     reset_token = create_access_token(identity=user.email, expires_delta=expires)
+
+    reset_url = f"http://localhost:3000/reset-password/{reset_token}" 
+    try:
+        msg = Message('Restablecimiento de contraseña', recipients=[body['email']])
+        msg.body = f'Para restablecer tu contraseña, haz clic en el siguiente enlace: {reset_url}'
+        mail.send(msg)
+    except Exception as e:
+        return jsonify({'msg': 'Error al enviar el correo electrónico'}), 500
+
 
     # Enviar el token al email del usuario (aquí solo se muestra el token)
     # En un entorno real, deberías enviar un email con un enlace que contenga el token
@@ -865,9 +875,9 @@ def post_appointment():
         return jsonify({'msg': 'Ya tienes una cita programada para este servicio.'}), 400
     
     # Verificar existencia en notifications
-    notification_exists = Notifications.query.filter_by(appointment_date=body_appointment['appointment_date']).first()
-    if not notification_exists:
-        return jsonify({'msg': 'El appointment_date debe existir en notifications'}), 400
+    # notification_exists = Notifications.query.filter_by(appointment_date=body_appointment['appointment_date']).first()
+    # if not notification_exists:
+    #     return jsonify({'msg': 'El appointment_date debe existir en notifications'}), 400
 
     # Crear nueva cita
     new_appointment = Appointment(
@@ -1167,6 +1177,18 @@ def send_email(subject, recipients, body, sender):
     msg.sender = sender
     mail.send(msg) 
     
+@app.route('/api/get_customer_id', methods=['GET'])
+@jwt_required()
+def get_customer_id():
+    current_user = get_jwt_identity() 
+    customer = Customer.query.filter_by(email=current_user).first()  # Buscar el cliente en la base de datos
+
+    if customer:
+        return jsonify(customer_id=customer.id), 200
+    else:
+        return jsonify({"msg": "Customer not found"}), 404
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

@@ -2,19 +2,21 @@ import React, { useState, useContext } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
+import SummaryCard from "./summaryCard";
 
 const SignUpPage = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
+    last_name: '',
     email: '',
-    phoneNumber: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
 
   const navigate = useNavigate();
-  const { store } = useContext(Context); // Obtener el contexto
+  const { store, actions } = useContext(Context);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,11 +31,29 @@ const SignUpPage = () => {
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
     } else {
-      // Lógica de envío del formulario
-      console.log("Form submitted", formData);
-      navigate('/confirmation');
+
+      const customerData = {
+        name: formData.name,
+        last_name: formData.last_name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password
+      };
+
+      actions.postSignupCustomer(customerData)
+        .then(() => {
+          navigate('/book-appointment-resume')
+        })
+        .catch(error => {
+          console.error("Error submitting form:", error);
+        })
     }
   };
+
+  const selectedProfessional = store.selectedProfessional;
+  const selectedService = store.selectedService;
+  const selectedDate = store.selectedDate;
+  const selectedTime = store.selectedTime;
 
   return (
     <div className="container mt-5" style={{ paddingBottom: '80px' }}>
@@ -42,35 +62,35 @@ const SignUpPage = () => {
         <div className="col-md-8">
           <h3>Step 3 of 3</h3>
           <h2>Create account to continue</h2>
-          
+
           <form onSubmit={handleSubmit}>
             <div className="row">
               <div className="col-md-6 mb-3">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="name">First Name</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className="col-md-6 mb-3">
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="last_name">Last Name</label>
                 <input
                   type="text"
                   className="form-control"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
+                  id="last_name"
+                  name="last_name"
+                  value={formData.last_name}
                   onChange={handleInputChange}
                   required
                 />
               </div>
             </div>
-            
+
             <div className="mb-3">
               <label htmlFor="email">Email</label>
               <input
@@ -83,15 +103,15 @@ const SignUpPage = () => {
                 required
               />
             </div>
-            
+
             <div className="mb-3">
-              <label htmlFor="phoneNumber">Phone Number</label>
+              <label htmlFor="phone">Phone Number</label>
               <input
                 type="text"
                 className="form-control"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
+                id="phone"
+                name="phone"
+                value={formData.phone}
                 onChange={handleInputChange}
                 required
               />
@@ -123,67 +143,24 @@ const SignUpPage = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-warning w-100" onClick={() => navigate('/book-appointment-resume')}>Create account</button>
+            <button type="submit" className="btn btn-warning w-100" onClick={() => { }}>Create account</button>
           </form>
 
           <p className="text-center mt-3">
-            Already have an account? <a href="/login" className="text-danger">Login</a>
+            Already have an account? <a href="/login-customers-2" className="text-danger">Login</a>
           </p>
         </div>
 
-        {/* Cuadro de resumen */}
-        <div className="col-md-4">
-          <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
-            <div
-              style={{
-                backgroundColor: '#E0E0E0',
-                padding: '20px',
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1559470353-ba688e957f34?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                className="card-img-top"
-                alt="Location"
-                style={{
-                  width: '100%',
-                  height: '200px',
-                  objectFit: 'cover',
-                  objectPosition: 'center'
-                }}
-              />
-            </div>
-            <div className="card-body">
-              <h5 className="card-title">Vurve - Bangalore</h5>
-              <p className="card-text">MG Road, Bangalore</p>
-              {store.selectedProfessional && (
-                <div>
-                  <p><strong>Professional: {store.selectedProfessional.name}</strong></p>
-                  <p>{store.selectedProfessional.hours}</p>
-                </div>
-              )}
-              {store.selectedService && (
-                <div>
-                  <p><strong>Service: {store.selectedService.name}</strong></p>
-                  <p>Duration: {store.selectedService.duration}</p>
-                  <p>EUR {store.selectedService.price.toFixed(2)}</p>
-                </div>
-              )}
-              {store.selectedDate && (
-                <div>
-                  <p><strong>Date: {new Date(store.selectedDate).toLocaleDateString()}</strong></p>
-                </div>
-              )}
-              {store.selectedTime && (
-                <div>
-                  <p><strong>Time: {store.selectedTime}</strong></p>
-                </div>
-              )}
-              <p><strong>Total:</strong> EUR {store.selectedService?.price.toFixed(2)}</p>
-            </div>
-          </div>
-        </div>
+        <SummaryCard
+          profeName={selectedProfessional ? selectedProfessional.name : ''}
+          profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+          serviName={selectedService ? selectedService.service_name : ''}
+          serviPrice={selectedService ? selectedService.price : ''}
+          selectTime={selectedTime ? selectedTime : ''}
+          selectDate={selectedDate ? selectedDate : ''}
+          backRoute='/login-customers'
+          showContinueButton={false}
+        />
       </div>
     </div>
   );
