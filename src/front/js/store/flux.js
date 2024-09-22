@@ -4,11 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 	return {
 		store: {
-			selectedSalon: null,
-
-			
-
-
+			selectedSalon: null,		
 			selectedProfessional:  null,
 			selectedService: null,
 			//fetch employee

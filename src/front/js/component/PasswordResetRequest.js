@@ -17,50 +17,32 @@ const PasswordResetRequest = () => {
         await actions.postPasswordResetRequest(email)
     };
 
-    const selectedProfessional = store.selectedProfessional;
-    const selectedService = store.selectedService;
-    const selectedDate = store.selectedDate;
-    const selectedTime = store.selectedTime;
-
     return (
-        <div className='container mt-5'>
-            <div className="row">
-                <div className="col-md-8 mt-5 mb-5">
-                    <div className='passResetRequ text-center text-black fs-4 text'>
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <div>
-                                    <label htmlFor="email">Email</label>
-                                </div>
-                                <input
-                                    placeholder='example@gmail.com'
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className='mt-5'>
-                                <button type="submit">Send request</button>
-
-                            </div>
-                        </form>
+        <div className='bodyPage mt-5'>
+            <form className='bodyCard ' style={{ width: "25rem" }} onSubmit={handleSubmit}>
+                <h1 className='text-center'>Reset your password.</h1>
+                <h6 className='fs-6 fw-lighter mt-3'>Please enter your email to reset your password.</h6>
+                <div className='mt-3'>
+                    <div>
+                        <label htmlFor="email">Email</label>
                     </div>
+                    <input
+                        className="form-control mt-3"
+                        placeholder='example@gmail.com'
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className='mt-5'>
+                    <button className='btn btn-resetPass' type="submit">Send request</button>
 
                 </div>
-                <SummaryCard
-                    profeName={selectedProfessional ? selectedProfessional.name : ''}
-                    profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-                    serviName={selectedService ? selectedService.service_name : ''}
-                    serviPrice={selectedService ? selectedService.price : ''}
-                    selectTime={selectedTime ? selectedTime : ''}
-                    selectDate={selectedDate ? selectedDate : ''}
-                    backRoute='/login-customers-2'
-                    showContinueButton={false}
-                />
-            </div>
+            </form>
         </div>
+
     );
 };
 

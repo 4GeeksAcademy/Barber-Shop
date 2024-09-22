@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
-import "../../styles/footer.css";
+import "../../styles/login.css";
 import SummaryCard from './summaryCard';
 
 export const Login_Costumer_2 = () => {
@@ -21,7 +21,7 @@ export const Login_Costumer_2 = () => {
         if (success) {
             navigate("/book-appointment-resume"); // Navegar a dashboard después del login exitoso
         } else {
-            setErrorMessage("Login incorrecto. Por favor, verifica tus credenciales.")
+            setErrorMessage("Incorrect username or password")
         }
     }
     const selectedProfessional = store.selectedProfessional;
@@ -33,13 +33,13 @@ export const Login_Costumer_2 = () => {
     return (
         <div className='container mt-5'>
             <div className="row">
-                <div className="col-md-8">
+                <div className="bodyPage col-md-8">
                     <div className='bodyCard'>
                         <h1>Login</h1>
-                        <h6 className='fs-6 fw-lighter mt-3'>Login to access your travelwise account</h6>
-                        <form className='mt-3' style={{ width: "100%" }} onSubmit={handleSubmit}>
+                        <h6 className='fs-6 fw-lighter mt-3'>Login to access your Barber Shop account</h6>
+                        <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
                             <div className="mb-3">
-                                <label htmlFor="emailLogin" className="form-label">Email address</label>
+                                <label htmlFor="emailLogin" className="form-label">Email</label>
                                 <input
                                     type="email"
                                     className="form-control"
@@ -64,7 +64,7 @@ export const Login_Costumer_2 = () => {
                                 <input type="checkbox" className="form-check-input" id="rememberMeCheck" />
                                 <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                             </div>
-                            <button type="submit" className="btn-login">Login</button>
+                            <button type="submit" className="btn btn-login">Login</button>
                             {
                                 errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">
@@ -72,7 +72,7 @@ export const Login_Costumer_2 = () => {
                                     </div>
                                 )
                             }
-                            <div className='mt-3'>
+                            <div className='text-center mt-3'>
                                 <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
                             </div>
                         </form>

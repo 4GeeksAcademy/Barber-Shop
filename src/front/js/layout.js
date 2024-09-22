@@ -28,6 +28,7 @@ import UpdateEmployeeCard from "./component/UpdateEmployeeCard";
 import PasswordResetRequest from "./component/PasswordResetRequest";
 import PasswordReset from "./component/PasswordReset";
 import SignUp from "./pages/SignUp";
+import DashboardCustomer from "./pages/DashboardCustomer";
 
 
 //create your first component.
@@ -74,6 +75,7 @@ const Layout = () => {
 
                         {/* ruta Dashboard */}
                         <Route element={<Dashboard />} path="/dashboard" />
+                        <Route element={<DashboardCustomer />} path="/dashboard-customer/:selectCustomer" />
 
                         {/* Ruta para actualizar datos de empleado desde el dashboard */}
                         <Route element={<UpdateEmployeeCard />} path="/update-employee" />

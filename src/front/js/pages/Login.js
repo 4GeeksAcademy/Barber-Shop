@@ -7,6 +7,7 @@ export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,14 +34,14 @@ export const Login = () => {
         })
             .then(response => {
                 console.log(response);
-             
-                return response.json().then(data => ({code:response.status, data}))
+
+                return response.json().then(data => ({ code: response.status, data }))
             })
 
-            .then(({code, data}) => {
+            .then(({ code, data }) => {
                 if (code == 400) {
                     alert(data.msg);
-                    
+
                 }
                 if (data.jwt_token) {
                     if (rememberMe) {
@@ -54,14 +55,16 @@ export const Login = () => {
                     }
                     localStorage.setItem('jwt_token', data.jwt_token);
                     if (data.type === "employee") {
-                            navigate("/dashboard");
-                    }//else navigate a dashboard de customer
-                    
+                        navigate("/dashboard");
+                    } else {
+                        navigate("/dashboard-customer");
+                    }
                 }
-                
+
                 console.log('Success:', data);
             })
             .catch((error) => {
+                setErrorMessage("Incorrect username or password");
                 console.error('Error:', error);
             });
     };
@@ -106,12 +109,21 @@ export const Login = () => {
                     </div>
 
                     <button type="submit" className=" btn btn-login">Login</button>
-
+                    {
+                        errorMessage && (
+                            <div className="alert alert-danger mt-3" role="alert">
+                                {errorMessage}
+                            </div>
+                        )
+                    }
+                    <div className='mt-3'>
+                        <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
+                    </div>
                 </form>
-                
-        <p className="text-center mt-3">
-        Don’t have an account? <a href="/register" className="text-danger">Sign Up</a>
-        </p>
+
+                <p className="text-center mt-3">
+                    Don’t have an account? <a href="/register" className="text-danger">Sign Up</a>
+                </p>
             </div>
         </div>
     )
