@@ -2,24 +2,29 @@ import UpdateEmployeeCard from "../component/UpdateEmployeeCard";
 
 const getState = ({ getStore, getActions, setStore }) => {
 
-	const savedState = JSON.parse(localStorage.getItem('appState')) || {};
-
 	return {
 		store: {
 			selectedSalon: null,
-			selectedProfessional: savedState.selectedProfessional || null,
-			selectedService: savedState.selectedService || null,
+
+			
+
+
+			selectedProfessional:  null,
+			selectedService: null,
+			//fetch employee
 
 			professional: [],
 			customer: [],
 			services: [],
-
-			selectedDate: savedState.selectDate || "",
-			selectedTime: savedState.selectedTime || "",
-			selectCustomer: savedState.selectCustomer || "",
+			selectedDate:"",
+			selectedTime:"",
+			selectCustomer:  "",
 			messageAppointment: "",
 			token: localStorage.getItem('jwt_token') || null,
 			auth: !!localStorage.getItem('jwt_token'),
+
+			appointment_id: null
+
 
 		},
 		actions: {
@@ -77,6 +82,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			selectCustomer: (customer) => {
 				const store = getStore();
 				setStore({ ...store, selectCustomer: customer });
+
+
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
 
@@ -176,6 +183,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await resp.json()
 					console.log('Reserva exitosa', data)
+					setStore({ appointment_id: data.appointment_id })
+		
 					return data;
 				} catch (error) {
 					console.log("Error en registrar la reserva:'", error)
@@ -203,15 +212,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log('Registro exitoso', data);
 			
 					if (data.jwt_token) {
+
 						getActions().setToken(data.jwt_token);
 					}
-			
+
 					// Almacenar el customer_id en selectCustomer
 					setStore({ selectCustomer: data.customer_id });
-			
+
 					// Guardar el estado actualizado en localStorage
 					localStorage.setItem('appState', JSON.stringify(getStore()));
-			
+
 					console.log('Customer ID almacenado:', data.customer_id);
 					return data;
 				} catch (error) {
@@ -332,6 +342,45 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error:", error);
 				}
 			},
+
+
+			deleteAppointment: async (appointmentId) => {
+				const token = store.token;
+				try {
+					const response = await fetch(process.env.BACKEND_URL + '/api/delete_appointment', {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							"Authorization": `Bearer ${token}`,  // Asegúrate de que el token JWT está almacenado
+						},
+						body: JSON.stringify({ appointment_id: appointmentId })  // Asegúrate de que envías el appointment_id
+					});
+
+					if (!response.ok) {
+						const errorMessage = await response.json();
+						throw new Error(errorMessage.msg || "Error al cancelar la cita");
+					}
+
+					const result = await response.json();
+					return result;
+
+				} catch (error) {
+					console.error("Error al cancelar la cita:", error);
+					throw error;
+				}
+			},
+			resetAppointmentState: () => {
+				setStore({
+					selectedService: null,
+					selectedProfessional: null,
+					selectedDate: null,
+					selectedTime: null,
+					appointment_id: null
+				});
+			}
+			
+			
+
 		}
 	};
 };

@@ -5,7 +5,7 @@ const Contact = () => {
     return (
         
 
-        <div className="contact">
+        <div id="contact" className="contact">
             <img
                 src="https://res.cloudinary.com/dc87bxiqf/image/upload/v1725630270/Hero_Footer_s8c7ry.png"
                 className="img-fluid-contact"
