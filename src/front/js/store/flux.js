@@ -5,9 +5,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			selectedSalon: null,
+
+			
+
+
 			selectedProfessional:  null,
 			selectedService: null,
 			//fetch employee
+
 			professional: [],
 			customer: [],
 			services: [],
@@ -17,7 +22,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			messageAppointment: "",
 			token: localStorage.getItem('jwt_token') || null,
 			auth: !!localStorage.getItem('jwt_token'),
+
 			appointment_id: null
+
 
 		},
 		actions: {
@@ -91,29 +98,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			UpdateEmployee: async ()=>{
-				try{
-					const resp = await fetch(process.env.BACKEND_URL +"/api/update_employee",{
+			updateEmployee: async (updatedEmployee) => {
+				const store = getStore();
+				const token = store.token; // Obtener el token del estado global
+			
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/update_employee", {
 						method: 'PUT',
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}`
+							'Authorization': `Bearer ${token}` // Usar el token del estado global
 						},
-						body: JSON.stringify({ email })
+						body: JSON.stringify(updatedEmployee)
 					});
-
-
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.msg || 'Error enviando solicitud de restablecimiento de contraseña');
+			
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						throw new Error(errorData.msg || 'Error enviando solicitud de actualización de empleado');
 					}
-					const data = await resp.json()
-					setStore({ professional: data})
+			
+					const data = await resp.json();
+					const updatedProfessionals = store.professional.map(pro =>
+						pro.email === updatedEmployee.email ? { ...pro, ...updatedEmployee } : pro
+					);
+					setStore({ professional: updatedProfessionals });
 					return data;
 				} catch (error) {
 					console.log("Error loading message from backend", error);
-				}			
+					return null; // Retornar null en caso de error
+				}
 			},
+			
 			//fetch Customer Bernardo
 			getCustomer: async () => {
 				try {
@@ -141,6 +156,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			postAppointment: async () => {
 				const store = getStore()
 				console.log(store.selectCustomer);
+
 
 				try {
 					const appointmentData = {
@@ -180,15 +196,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 			postSignupCustomer: async (customerData) => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_register", {
-						 
-					})
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(customerData)
+					});
+			
 					if (!resp.ok) {
 						const errorData = await resp.json();
-						throw new Error(errorData.msg || 'error al registrar el usuario');
+						throw new Error(errorData.msg || 'Error al registrar el usuario');
 					}
-
-					const data = await resp.json()
-					console.log('Registro exitoso', data)
+			
+					const data = await resp.json();
+					console.log('Registro exitoso', data);
+			
 					if (data.jwt_token) {
 
 						getActions().setToken(data.jwt_token);
@@ -203,10 +225,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log('Customer ID almacenado:', data.customer_id);
 					return data;
 				} catch (error) {
-					console.log("Error en el registro:'", error)
+					console.log("Error en el registro:", error);
 					throw error;
 				}
 			},
+			
 			//fetch PasswordResetRequest
 			postPasswordResetRequest: async (email) => {
 				try {
@@ -319,6 +342,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error:", error);
 				}
 			},
+
+
 			deleteAppointment: async (appointmentId) => {
 				const token = store.token;
 				try {
@@ -355,6 +380,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 			
 			
+
 		}
 	};
 };

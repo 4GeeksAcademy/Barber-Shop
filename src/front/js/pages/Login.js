@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../../styles/footer.css";
+import "../../styles/login.css";
 import { useNavigate, Link } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 
@@ -70,10 +70,10 @@ export const Login = () => {
         <div className='bodyPage'>
             <div className='bodyCard mt-5'>
                 <h1>Login</h1>
-                <h6 className='fs-6 fw-lighter mt-3'>Login to access your travelwise account</h6>
+                <h6 className='fs-6 fw-lighter mt-3'>Login to access your Barber Shop account</h6>
                 <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="emailLogin" className="form-label">Email address</label>
+                        <label htmlFor="emailLogin" className="form-label">Email</label>
                         <input
                             type="email"
                             className="form-control"
@@ -108,6 +108,10 @@ export const Login = () => {
                     <button type="submit" className=" btn btn-login">Login</button>
 
                 </form>
+                
+        <p className="text-center mt-3">
+        Don’t have an account? <a href="/register" className="text-danger">Sign Up</a>
+        </p>
             </div>
         </div>
     )
