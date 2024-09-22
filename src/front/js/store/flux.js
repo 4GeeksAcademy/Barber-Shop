@@ -186,7 +186,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//fetch signupCustomer
 			postSignupCustomer: async (customerData) => {
 				try {
-					const resp = await fetch(`${process.env.BACKEND_URL}/api/customer_register`, {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_register", {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json'

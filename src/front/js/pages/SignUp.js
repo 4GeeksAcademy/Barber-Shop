@@ -34,7 +34,7 @@ const SignUp = () => {
 
       try {
         await actions.postSignupCustomer(customerData);
-        navigate('/dashboard');
+        navigate('/book-appointment-resume');
       } catch (error) {
         console.error("Error submitting form:", error);
       }
