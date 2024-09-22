@@ -20,12 +20,15 @@ const PasswordReset = () => {
     };
 
     return (
-        <div className='passReset text-center text-black fs-3 text'>
-            <form onSubmit={handleSubmit}>
-                <div>
+        <div className='bodyPage mt-5'>
+
+            <form className='bodyCard' style={{ width: "25rem" }} onSubmit={handleSubmit}>
+                <h1 className='text-center'>Let’s create a new password</h1>
+                <h6 className='fs-6 fw-lighter mt-3'>Please enter your new password.</h6>
+                <div className='mt-3'>
                     <label htmlFor="newPassword">New password</label>
                     <div>
-                        <input
+                        <input className="form-control mt-3"
                             type="password"
                             id="newPassword"
                             value={newPassword}
@@ -38,6 +41,7 @@ const PasswordReset = () => {
                     <label htmlFor="confirmPassword">Confirm password</label>
                     <div>
                         <input
+                            className="form-control mt-3"
                             type="password"
                             id="confirmPassword"
                             value={confirmPassword}
@@ -47,7 +51,7 @@ const PasswordReset = () => {
                     </div>
                 </div>
                 <div className='text-center'>
-                    <button className='mt-5' type="submit">
+                    <button className='btn-login btn mt-5' type="submit">
                         Reset password</button>
                 </div>
             </form>

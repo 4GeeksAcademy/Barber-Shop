@@ -4,7 +4,7 @@ import "../../styles/servicios.css"
 const Servicios = () => {
     return (
         <>
-            <div className='text-main'>
+            <div id="services" className='text-main'>
                 <h1 className='fw-bold text-center'>BROWSE OUR SERVICES</h1>
                 <h5 className='text-center lh-lg'>At Barbershop Petro, we are proud to provide exceptional service in a welcoming and professional environment. Whether you need a haircut, beard trim, or any other men's styling service, our team of experts is here to make sure you leave completely satisfied</h5>
             </div>

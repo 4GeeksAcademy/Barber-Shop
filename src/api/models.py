@@ -90,7 +90,7 @@ class Customer(db.Model):
     __tablename__ = 'customer'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
-    name = db.Column(db.String(100), unique=False, nullable=False)
+    name = db.Column(db.String(100), unique=False, nullable=True)
     last_name = db.Column(db.String(100), unique=False, nullable=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), unique=False, nullable=False)

@@ -547,23 +547,22 @@ def customer_register():
     if body is None:
        return jsonify({'msg':'Debes enviar los siguientes campos:',
                        'campos':{
-                           'name' :'requerido',
-                           'last_name': 'requerido',
+                           'name' :'opcional',
+                           'last_name': 'opcional',
                            'email':'requerido',
                            'password':'requerido',
-                           'phone': 'requerido'
+                           'phone': 'opcional'
                        }}), 400
-    if 'name' not in body:
-       return jsonify({'msg':'Debes enviar el campo name'}), 400
-    if 'last_name' not in body:
-       return jsonify({'msg':'Debes enviar el campo last_name'}), 400
     if 'email' not in body:
        return jsonify({'msg':'Debes enviar el campo email'}), 400
     if 'password' not in body:
        return jsonify({'msg':'Debes enviar el campo password'}), 400
+    if 'name' not in body:
+        body['name']= None
+    if 'last_name' not in body:
+        body['last_name']= None
     if 'phone' not in body:
-       return jsonify({'msg':'Debes enviar el campo phone'}), 400
-
+        body['phone']= None
     # Verificar si el email ya está registrado
     existing_customer = Customer.query.filter_by(email=body['email']).first()
     if existing_customer:
@@ -900,6 +899,7 @@ def post_appointment():
     employee_name = employee.name
     service_name = service.service_name
 
+    appointment_id = new_appointment.id
     # Crear y enviar correos electrónicos
     try:
         # Correo al cliente
@@ -936,7 +936,7 @@ def post_appointment():
         print("Error al enviar correos:", e)
         return jsonify({'msg': 'Se ha creado tu reserva exitosamente, pero hubo un problema al enviar las notificaciones por correo.'}), 500
 
-    return jsonify({'msg': 'Se ha creado tu reserva exitosamente y las notificaciones por correo se han enviado.'})
+    return jsonify({'msg': 'Se ha creado tu reserva exitosamente y las notificaciones por correo se han enviado.', 'appointment_id': appointment_id})
 
 #appointment_PUT
 @app.route('/api/update_appointment', methods=['PUT'])

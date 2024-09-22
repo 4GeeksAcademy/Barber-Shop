@@ -8,7 +8,7 @@ const SummaryCard = ({ profeName, profeLastName, serviName, serviPrice, selectTi
   const navigate = useNavigate();
 
   return (
-    <div className="col-md-4">
+    <div className="col-md-4 mt-5">
       <div className="card" style={{ backgroundColor: '#F0F0F0' }}>
         <div
           style={{

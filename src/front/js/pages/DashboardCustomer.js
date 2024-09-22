@@ -4,11 +4,11 @@ import BookAppointment_Proffesional from '../component/BookAppointment_Proffesio
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
-import EmployeeCard from '../component/EmployeeCard';
+
 import CustomerCard from '../component/CustomerCard';
 import BookAppointment from '../component/BookAppointment';
 
-const Dashboard = () => {
+const DashboardCustomer = () => {
     const { store, actions } = useContext(Context);
     const [activeTab, setActiveTab] = useState("tab1");
 
@@ -30,15 +30,7 @@ const Dashboard = () => {
     return (
         <div className='container'>
             <h1 className='mt-3'>Dashboard</h1>
-            <div className="nav nav-tabs mt-3">
-                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab1')}>All Employees</button>
-                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab2')}>All Customers</button>
-                <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab3')}>All Appointments</button>
-            </div>
-            <div className="content mt-3 card-group">
-                {activeTab === 'tab1' && <div><EmployeeCard /></div>}
-                {activeTab === 'tab2' && <div><CustomerCard /></div>}
-                {activeTab === 'tab3' && (
+           <CustomerCard/>
                     <div className='container'>
                         <table className="table">
                             <thead>
@@ -73,14 +65,14 @@ const Dashboard = () => {
                             </tbody>
                         </table>
                     </div>
-                )}
-            </div>
+              
+        
             <div className="container d-flex justify-content-evenly">
                 <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Employee</button>
                 <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Customer</button>
             </div>
-        </div>
+        </div >
     );
 };
 
-export default Dashboard;
+export default DashboardCustomer;

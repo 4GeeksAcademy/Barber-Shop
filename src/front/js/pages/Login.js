@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../../styles/footer.css";
+import "../../styles/login.css";
 import { useNavigate, Link } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 
@@ -7,6 +7,7 @@ export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,14 +34,14 @@ export const Login = () => {
         })
             .then(response => {
                 console.log(response);
-             
-                return response.json().then(data => ({code:response.status, data}))
+
+                return response.json().then(data => ({ code: response.status, data }))
             })
 
-            .then(({code, data}) => {
+            .then(({ code, data }) => {
                 if (code == 400) {
                     alert(data.msg);
-                    
+
                 }
                 if (data.jwt_token) {
                     if (rememberMe) {
@@ -54,14 +55,16 @@ export const Login = () => {
                     }
                     localStorage.setItem('jwt_token', data.jwt_token);
                     if (data.type === "employee") {
-                            navigate("/dashboard");
-                    }//else navigate a dashboard de customer
-                    
+                        navigate("/dashboard");
+                    } else {
+                        navigate("/dashboard-customer");
+                    }
                 }
-                
+
                 console.log('Success:', data);
             })
             .catch((error) => {
+                setErrorMessage("Incorrect username or password");
                 console.error('Error:', error);
             });
     };
@@ -70,10 +73,10 @@ export const Login = () => {
         <div className='bodyPage'>
             <div className='bodyCard mt-5'>
                 <h1>Login</h1>
-                <h6 className='fs-6 fw-lighter mt-3'>Login to access your travelwise account</h6>
+                <h6 className='fs-6 fw-lighter mt-3'>Login to access your Barber Shop account</h6>
                 <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label htmlFor="emailLogin" className="form-label">Email address</label>
+                        <label htmlFor="emailLogin" className="form-label">Email</label>
                         <input
                             type="email"
                             className="form-control"
@@ -106,8 +109,21 @@ export const Login = () => {
                     </div>
 
                     <button type="submit" className=" btn btn-login">Login</button>
-
+                    {
+                        errorMessage && (
+                            <div className="alert alert-danger mt-3" role="alert">
+                                {errorMessage}
+                            </div>
+                        )
+                    }
+                    <div className='mt-3'>
+                        <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
+                    </div>
                 </form>
+
+                <p className="text-center mt-3">
+                    Don’t have an account? <a href="/register" className="text-danger">Sign Up</a>
+                </p>
             </div>
         </div>
     )
