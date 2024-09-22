@@ -18,6 +18,14 @@ export const Navbar = () => {
     actions.logout()
   }
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId)
+      if (section){
+        section.scrollIntoView({ behavior: "smooth"})
+      }
+      setIsExpanded
+    
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
@@ -40,15 +48,34 @@ export const Navbar = () => {
         </button>
         <div className={`collapse navbar-collapse justify-content-end ${isExpanded ? "show" : ""}`} id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link" to="/services" onClick={toggleNavbar}>
+
+          {/* Servicios */}
+          <li className="nav-item">
+              <a
+                href="#services"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("services");
+                }}
+              >
                 Services
-              </Link>
+              </a>
             </li>
+            {/* Contact */}
             <li className="nav-item">
-              <Link className="nav-link" to="/contact" onClick={toggleNavbar}>
-                Contacts
-              </Link>
+              <a
+                href="#contact"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("contact");
+                }}
+              >
+                Contact
+              </a>
+
+
             </li>
             {store.auth === true ? (
 

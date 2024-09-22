@@ -5,46 +5,47 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			selectedSalon: null,
-			selectedProfessional: savedState.selectedProfessional || null, 
-			selectedService: savedState.selectedService || null, 
+			selectedProfessional:  null,
+			selectedService: null,
 			//fetch employee
 			professional: [],
 			customer: [],
 			services: [],
-			selectedDate: savedState.selectDate || "",
-			selectedTime: savedState.selectedTime || "",
-			selectCustomer: savedState.selectCustomer || "",
+			selectedDate:"",
+			selectedTime:"",
+			selectCustomer:  "",
 			messageAppointment: "",
-			token: localStorage.getItem('jwt_token') || null, 
-            auth: !!localStorage.getItem('jwt_token'), 
+			token: localStorage.getItem('jwt_token') || null,
+			auth: !!localStorage.getItem('jwt_token'),
+			appointment_id: null
 
 		},
 		actions: {
 			setToken: (token) => {
-                if (token) {
-                    localStorage.setItem('jwt_token', token);
-                    setStore({
-                        token: token,
-                        auth: true,
-                    });
-                } else {
-                    localStorage.removeItem('jwt_token');
-                    setStore({
-                        token: null,
-                        auth: false,
-                    });
-                }
-            },
+				if (token) {
+					localStorage.setItem('jwt_token', token);
+					setStore({
+						token: token,
+						auth: true,
+					});
+				} else {
+					localStorage.removeItem('jwt_token');
+					setStore({
+						token: null,
+						auth: false,
+					});
+				}
+			},
 			// Cerrar sesión
-            logout: () => {
-                localStorage.removeItem('jwt_token');
-                setStore({
-                    token: null,
-                    auth: false,
-                    selectCustomer: null, 
-                });
-                console.log("Usuario desconectado");
-            },
+			logout: () => {
+				localStorage.removeItem('jwt_token');
+				setStore({
+					token: null,
+					auth: false,
+					selectCustomer: null,
+				});
+				console.log("Usuario desconectado");
+			},
 
 			selectSalon: (salon) => {
 				setStore({ selectedSalon: salon });
@@ -54,7 +55,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ ...store, selectedProfessional: professional });
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
-			selectService: (service) => { 
+			selectService: (service) => {
 				const store = getStore();
 				setStore({ ...store, selectedService: service });
 				localStorage.setItem('appState', JSON.stringify(getStore()));
@@ -74,7 +75,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			selectCustomer: (customer) => {
 				const store = getStore();
 				setStore({ ...store, selectCustomer: customer });
-			
+
 
 				localStorage.setItem('appState', JSON.stringify(getStore()));
 			},
@@ -100,7 +101,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-		
+
 			//fetch Services
 			getServices: async () => {
 				try {
@@ -116,7 +117,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			postAppointment: async () => {
 				const store = getStore()
 				console.log(store.selectCustomer);
-				
 
 				try {
 					const appointmentData = {
@@ -127,7 +127,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						service_id: store.selectedService.id,
 						appointment_state_id: true,
 						appointment_date: store.selectedDate
-						
+
 					}
 					console.log('Datos de la cita:', appointmentData);
 					const resp = await fetch(process.env.BACKEND_URL + "/api/new_appointment", {
@@ -143,6 +143,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await resp.json()
 					console.log('Reserva exitosa', data)
+					setStore({ appointment_id: data.appointment_id })
+		
 					return data;
 				} catch (error) {
 					console.log("Error en registrar la reserva:'", error)
@@ -167,16 +169,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await resp.json()
 					console.log('Registro exitoso', data)
 					if (data.jwt_token) {
-					
+
 						getActions().setToken(data.jwt_token);
 					}
-			
+
 					// Almacenar el customer_id en selectCustomer
 					setStore({ selectCustomer: data.customer_id });
-			
+
 					// Guardar el estado actualizado en localStorage
 					localStorage.setItem('appState', JSON.stringify(getStore()));
-			
+
 					console.log('Customer ID almacenado:', data.customer_id);
 					return data;
 				} catch (error) {
@@ -214,7 +216,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}` 
+							'Authorization': `Bearer ${token}`
 						},
 						body: JSON.stringify({ new_password: newPassword })
 					});
@@ -239,63 +241,99 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			//fetch login customer
 			loginCustomer: async (form) => {
-                try {
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': "application/json",
-                        },
-                        body: JSON.stringify(form),
-                    });
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
+						method: 'POST',
+						headers: {
+							'Content-Type': "application/json",
+						},
+						body: JSON.stringify(form),
+					});
 
-                    if (!resp.ok) {
-                        const errorData = await resp.json();
-                        throw new Error(errorData.msg || 'Error al autenticar usuario');
-                    }
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						throw new Error(errorData.msg || 'Error al autenticar usuario');
+					}
 
-                    const data = await resp.json();
-                   
-                    if (data.jwt_token) {
-                        getActions().setToken(data.jwt_token); 
-                        setStore({ selectCustomer: data.customer_id });
-                        console.log('Inicio de sesión exitoso');
-                        return true; // Retornar éxito
-                    }
+					const data = await resp.json();
 
-                    return false;
-                } catch (error) {
-                    console.error('Error:', error);
-                    return false;
-                }
-            },
+					if (data.jwt_token) {
+						getActions().setToken(data.jwt_token);
+						setStore({ selectCustomer: data.customer_id });
+						console.log('Inicio de sesión exitoso');
+						return true; // Retornar éxito
+					}
+
+					return false;
+				} catch (error) {
+					console.error('Error:', error);
+					return false;
+				}
+			},
 			getCustomerId: async () => {
-                const store = getStore();
-                const token = store.token; 
-                if (!token) {
-                    console.log("No se ha encontrado un token.");
-                    return;
-                }
+				const store = getStore();
+				const token = store.token;
+				if (!token) {
+					console.log("No se ha encontrado un token.");
+					return;
+				}
 
-                try {
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/get_customer_id", {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}` 
-                        }
-                    });
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/get_customer_id", {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${token}`
+						}
+					});
 
-                    if (!resp.ok) {
-                        throw new Error("Error al obtener el customer_id");
-                    }
+					if (!resp.ok) {
+						throw new Error("Error al obtener el customer_id");
+					}
 
-                    const data = await resp.json();
-                    setStore({ selectCustomer: data.customer_id });
-                    console.log("Customer ID obtenido", data);
-                } catch (error) {
-                    console.error("Error:", error);
-                }
-            },
+					const data = await resp.json();
+					setStore({ selectCustomer: data.customer_id });
+					console.log("Customer ID obtenido", data);
+				} catch (error) {
+					console.error("Error:", error);
+				}
+			},
+			deleteAppointment: async (appointmentId) => {
+				const token = store.token;
+				try {
+					const response = await fetch(process.env.BACKEND_URL + '/api/delete_appointment', {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							"Authorization": `Bearer ${token}`,  // Asegúrate de que el token JWT está almacenado
+						},
+						body: JSON.stringify({ appointment_id: appointmentId })  // Asegúrate de que envías el appointment_id
+					});
+
+					if (!response.ok) {
+						const errorMessage = await response.json();
+						throw new Error(errorMessage.msg || "Error al cancelar la cita");
+					}
+
+					const result = await response.json();
+					return result;
+
+				} catch (error) {
+					console.error("Error al cancelar la cita:", error);
+					throw error;
+				}
+			},
+			resetAppointmentState: () => {
+				setStore({
+					selectedService: null,
+					selectedProfessional: null,
+					selectedDate: null,
+					selectedTime: null,
+					appointment_id: null
+				});
+			}
+			
+			
 		}
 	};
 };

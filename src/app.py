@@ -891,6 +891,7 @@ def post_appointment():
     employee_name = employee.name
     service_name = service.service_name
 
+    appointment_id = new_appointment.id
     # Crear y enviar correos electrónicos
     try:
         # Correo al cliente
@@ -927,7 +928,7 @@ def post_appointment():
         print("Error al enviar correos:", e)
         return jsonify({'msg': 'Se ha creado tu reserva exitosamente, pero hubo un problema al enviar las notificaciones por correo.'}), 500
 
-    return jsonify({'msg': 'Se ha creado tu reserva exitosamente y las notificaciones por correo se han enviado.'})
+    return jsonify({'msg': 'Se ha creado tu reserva exitosamente y las notificaciones por correo se han enviado.', 'appointment_id': appointment_id})
 
 #appointment_PUT
 @app.route('/api/update_appointment', methods=['PUT'])
