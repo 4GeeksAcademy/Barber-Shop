@@ -7,7 +7,7 @@ import { Alert } from 'react-bootstrap';
 const UpdateEmployeeCard = ({ onUpdate }) => {
     const location = useLocation();
     const { employee } = location.state || {};
-    
+
     const { store, actions } = useContext(Context);
 
     const [name, setName] = useState(employee?.name || '');
@@ -26,34 +26,34 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
         if (pass1 === pass2) {
             setPassword(pass1);
         } else {
-            Alert("The passwords do not match!");
+            alert("The passwords do not match!");
         }
     };
 
-    const handleUpdate = async () => {
+    const handleUpdate = () => {
         const updatedEmployee = {
             email: employee.email, // Email original para identificar al empleado
-            update_name: name,
-            update_last_name: lastName,
-            update_email: email,
-            update_phone: phone,
-            update_address: address,
-            update_job_position: jobPosition,
-            update_salary: salary,
-            update_status: status
+            name: name,
+            last_name: lastName,
+            email: email,
+            phone: phone,
+            address: address,
+            job_position: jobPosition,
+            salary: salary,
+            status: status
         };
 
         // Solo agregar la contraseña si no está vacía
         if (password) {
-            updatedEmployee.update_password = password;
-        }
+            updatedEmployee.password = password;
+        };
+    
 
-        const result = await actions.updateEmployee(updatedEmployee);
-        if (result) {
+        actions.updateEmployee(updatedEmployee);
+        if (onUpdate) {
             onUpdate(updatedEmployee);
         }
-    };
-
+    };    
     return (
         <div className="container card mt-3 mb-3">
             <div className="card-body">

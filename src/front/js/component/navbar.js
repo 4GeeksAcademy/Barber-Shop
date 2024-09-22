@@ -50,6 +50,12 @@ export const Navbar = () => {
                 Contacts
               </Link>
             </li>
+             <li className="nav-item">
+              <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
+                Dashboard
+              </Link>
+            </li>
+
             {store.auth === true ? (
 
               <li className="nav-item">
@@ -65,12 +71,7 @@ export const Navbar = () => {
               </li>
             )}
 
-            <li className="nav-item">
-              <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
-                Dashboard
-              </Link>
-            </li>
-
+           
           </ul>
         </div>
       </div>

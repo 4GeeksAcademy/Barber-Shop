@@ -96,7 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const token = store.token; // Obtener el token del estado global
 			
 				try {
-					const resp = await fetch("https://glowing-giggle-g4xjjgqgv7qxcpgg5-3001.app.github.dev/api/update_employee", {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/update_employee", {
 						method: 'PUT',
 						headers: {
 							'Content-Type': 'application/json',
@@ -118,6 +118,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return data;
 				} catch (error) {
 					console.log("Error loading message from backend", error);
+					return null; // Retornar null en caso de error
 				}
 			},
 			
@@ -185,34 +186,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//fetch signupCustomer
 			postSignupCustomer: async (customerData) => {
 				try {
-					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_register", {
-
-					})
+					const resp = await fetch(`${process.env.BACKEND_URL}/api/customer_register`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(customerData)
+					});
+			
 					if (!resp.ok) {
 						const errorData = await resp.json();
-						throw new Error(errorData.msg || 'error al registrar el usuario');
+						throw new Error(errorData.msg || 'Error al registrar el usuario');
 					}
-
-					const data = await resp.json()
-					console.log('Registro exitoso', data)
+			
+					const data = await resp.json();
+					console.log('Registro exitoso', data);
+			
 					if (data.jwt_token) {
-
 						getActions().setToken(data.jwt_token);
 					}
-
+			
 					// Almacenar el customer_id en selectCustomer
 					setStore({ selectCustomer: data.customer_id });
-
+			
 					// Guardar el estado actualizado en localStorage
 					localStorage.setItem('appState', JSON.stringify(getStore()));
-
+			
 					console.log('Customer ID almacenado:', data.customer_id);
 					return data;
 				} catch (error) {
-					console.log("Error en el registro:'", error)
+					console.log("Error en el registro:", error);
 					throw error;
 				}
 			},
+			
 			//fetch PasswordResetRequest
 			postPasswordResetRequest: async (email) => {
 				try {

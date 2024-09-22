@@ -19,7 +19,7 @@ import BookAppointment_Proffesional from "./component/BookAppointment_Proffesion
 import BookAppointment_Services from "./component/BookAppointment_Services";
 import BookAppointment_Date from "./component/BookAppointment_Date";
 import LogIn_Costumer from "./component/LogIn_Costumer";
-import SignUpPage from "./component/LogIn_Costumer_SignUp";
+import SignUpPage from "./pages/SignUpPage"
 import { Login_Costumer_2 } from "./component/LogIn_Costumer_2";
 import ReviewAndConfirm from "./component/BookAppointment_Resume";
 import BookAppointment_Confirm from "./component/BookAppointment_Confirm";
@@ -27,6 +27,7 @@ import Dashboard from "./pages/Dashboard";
 import UpdateEmployeeCard from "./component/UpdateEmployeeCard";
 import PasswordResetRequest from "./component/PasswordResetRequest";
 import PasswordReset from "./component/PasswordReset";
+import SignUp from "./pages/SignUp";
 
 
 //create your first component.
@@ -69,6 +70,8 @@ const Layout = () => {
                         {/* Ruta para Sign Up Page */}
                         <Route element={<SignUpPage />} path="/sign-up" />
 
+                        <Route element={<SignUp />} path="/register"/>
+
                         {/* ruta Dashboard */}
                         <Route element={<Dashboard />} path="/dashboard" />
 
@@ -81,6 +84,7 @@ const Layout = () => {
                         <Route element={<BookAppointment_Confirm />} path="/book-appointment-confirm" />
 
                         <Route element={<PasswordResetRequest />} path="/password-reset-request" />
+
                         <Route element={<PasswordReset />} path="/reset-password/:token" />
 
                         {/* Ruta de fallback para 404 */}

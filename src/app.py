@@ -547,23 +547,17 @@ def customer_register():
     if body is None:
        return jsonify({'msg':'Debes enviar los siguientes campos:',
                        'campos':{
-                           'name' :'requerido',
-                           'last_name': 'requerido',
+                           'name' :'opcional',
+                           'last_name': 'opcional',
                            'email':'requerido',
                            'password':'requerido',
-                           'phone': 'requerido'
+                           'phone': 'opcional'
                        }}), 400
-    if 'name' not in body:
-       return jsonify({'msg':'Debes enviar el campo name'}), 400
-    if 'last_name' not in body:
-       return jsonify({'msg':'Debes enviar el campo last_name'}), 400
     if 'email' not in body:
        return jsonify({'msg':'Debes enviar el campo email'}), 400
     if 'password' not in body:
        return jsonify({'msg':'Debes enviar el campo password'}), 400
-    if 'phone' not in body:
-       return jsonify({'msg':'Debes enviar el campo phone'}), 400
-
+    
     # Verificar si el email ya está registrado
     existing_customer = Customer.query.filter_by(email=body['email']).first()
     if existing_customer:

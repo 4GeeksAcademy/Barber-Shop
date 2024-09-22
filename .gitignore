@@ -63,6 +63,8 @@ Thumbs.db
 node_modules/
 migrations/
 
+
+
 # webpack output
 dist/*
 !public/
