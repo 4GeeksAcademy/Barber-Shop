@@ -102,18 +102,19 @@ useEffect(() => {
               <img
                 src="https://images.unsplash.com/photo-1635611578109-4b9ce9525b13?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Location"
-                style={{ width: '150px', height: '150px', objectFit: 'cover', marginRight: '20px' }}
+                className="rounded-circle"
+                style={{ width: '120px', height: '120px', objectFit: 'cover', marginRight: '20px' }}
               />
               <div>
-                <h4>Vurve - Bangalore</h4>
-                <p>MG Road, Bangalore</p>
-                <p>Booking ref: #65742695</p>
+                <h4 style={{ fontSize: '20px', fontWeight: 'bold' }}>Vurve - Bangalore</h4>
+                <p className="text-muted" style={{ marginBottom: '0.2rem' }}>MG Road, Bangalore</p>
+                <p className="text-muted" style={{ marginBottom: '0.2rem' }}>Booking ref: #65742695</p>
               </div>
             </div>
 
-            <hr />
+            <hr className="mb-4" />
 
-            <div className="appointment-details">
+            <div className="appointment-details mb-4">
               {store.selectedService && (
                 <div>
                   <p><strong>Servicio: {store.selectedService.name}</strong></p> {/* Servicio que se hará el cliente */}
