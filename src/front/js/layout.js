@@ -87,7 +87,7 @@ const Layout = () => {
 
                         <Route element={<PasswordResetRequest />} path="/password-reset-request" />
 
-                        <Route element={<PasswordReset />} path="/reset-password/:token" />
+                        <Route element={<PasswordReset />} path="/reset-password" />
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />

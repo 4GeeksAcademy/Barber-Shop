@@ -3,18 +3,26 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import '../../styles/passwordReset.css'
 import { Context } from '../store/appContext';
+import { useSearchParams } from 'react-router-dom';
+
 
 const PasswordReset = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
     const { token } = useParams();
-
+    const { store, actions } = useContext(Context)
+    console.log(searchParams.get("token"));
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
             alert("Las contraseñas no coinciden");
             return;
+        }
+        else {actions.PasswordReset(searchParams.get("token"), newPassword)
+
         }
 
     };
