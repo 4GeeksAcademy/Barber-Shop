@@ -152,7 +152,8 @@ def login():
     return jsonify({
        'Msg':'Todos los datos están ok',
        'jwt_token': access_token,
-       'type':'customer'
+       'type':'customer',
+       'email': user.email
     }), 200
 
 # Paso 1: Solicitar restablecimiento de contraseña

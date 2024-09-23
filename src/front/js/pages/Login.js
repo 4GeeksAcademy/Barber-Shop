@@ -38,7 +38,7 @@ export const Login = () => {
                 return response.json().then(data => ({ code: response.status, data }))
             })
 
-            .then(({ code, data }) => {
+            .then(({ code, data }) =>{
                 if (code == 400) {
                     alert(data.msg);
 
@@ -54,6 +54,8 @@ export const Login = () => {
                         localStorage.removeItem('rememberMeCheck');
                     }
                     localStorage.setItem('jwt_token', data.jwt_token);
+                    localStorage.setItem('userType', data.type);
+                    localStorage.setItem('email', data.email);
                     if (data.type === "employee") {
                         navigate("/dashboard");
                     } else {

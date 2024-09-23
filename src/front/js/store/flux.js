@@ -299,6 +299,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					if (data.jwt_token) {
 						getActions().setToken(data.jwt_token);
+						console.log(data);
+						//bernardo
+						localStorage.setItem('jwt_token', data.jwt_token);
+						localStorage.setItem('userType', data.type);
+						localStorage.setItem('email', data.email);
+						//alberto
 						setStore({ selectCustomer: data.customer_id });
 						console.log('Inicio de sesión exitoso');
 						return true; // Retornar éxito
