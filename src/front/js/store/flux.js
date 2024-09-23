@@ -254,7 +254,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			//fetch PasswordReset
-			PasswordReset: async () => {
+			PasswordReset: async (token, newPassword) => {
 				try {
 					const response = await fetch(process.env.BACKEND_URL + '/api/reset_password', {
 						method: 'POST',

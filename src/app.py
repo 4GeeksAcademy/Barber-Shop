@@ -173,7 +173,8 @@ def request_password_reset():
     expires = datetime.timedelta(hours=1)
     reset_token = create_access_token(identity=user.email, expires_delta=expires)
 
-    reset_url = f"http://localhost:3000/reset-password/{reset_token}" 
+    reset_url = f"{os.getenv('FRONTEND_URL')}/reset-password?token={reset_token}" 
+    # reset_url = url_for(os.getenv('FRONTEND_URL'), token = reset_token)
     try:
         msg = Message('Restablecimiento de contraseña', recipients=[body['email']])
         msg.body = f'Para restablecer tu contraseña, haz clic en el siguiente enlace: {reset_url}'
