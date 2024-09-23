@@ -1,15 +1,20 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Context } from '../store/appContext';
+import { Login_Costumer_2 } from './LogIn_Costumer_2';
 
 
 const CustomerCard = props => {
     const { store, actions } = useContext(Context);
 
+    const userType = localStorage.getItem('userType');
+    const userEmail = localStorage.getItem('email');
 
     return (
         <div>
-            {store.customer.map((customer, index) => (
+            {store.customer.map((customer, index) => {
+                if ((userType == 'customer' && userEmail == customer.email) || (userType == 'employee'))
+                return(
                 <div className="card mb-3" style={{ maxWidth: '540px' }}>
                     <div className="row g-0">
                         <div className="col-md-4">
@@ -24,7 +29,7 @@ const CustomerCard = props => {
                         </div>
                     </div>
                 </div>
-            ))}
+            )})}
         </div>
     )
 }

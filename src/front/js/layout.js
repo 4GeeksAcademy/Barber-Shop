@@ -75,7 +75,7 @@ const Layout = () => {
 
                         {/* ruta Dashboard */}
                         <Route element={<Dashboard />} path="/dashboard" />
-                        <Route element={<DashboardCustomer />} path="/dashboard-customer/:selectCustomer" />
+                        <Route element={<DashboardCustomer />} path="/dashboard-customer" />
 
                         {/* Ruta para actualizar datos de empleado desde el dashboard */}
                         <Route element={<UpdateEmployeeCard />} path="/update-employee" />
