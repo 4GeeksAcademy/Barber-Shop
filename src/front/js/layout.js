@@ -29,6 +29,7 @@ import PasswordResetRequest from "./component/PasswordResetRequest";
 import PasswordReset from "./component/PasswordReset";
 import SignUp from "./pages/SignUp";
 import DashboardCustomer from "./pages/DashboardCustomer";
+import UpdateCustomerCard from "./component/UpdateCustomerCard";
 
 
 //create your first component.
@@ -79,7 +80,8 @@ const Layout = () => {
 
                         {/* Ruta para actualizar datos de empleado desde el dashboard */}
                         <Route element={<UpdateEmployeeCard />} path="/update-employee" />
-
+                        <Route element={<UpdateCustomerCard />} path="/update-customer" />
+                        
                         {/* Ruta para la página de revisión y confirmación */}
                         <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
 
