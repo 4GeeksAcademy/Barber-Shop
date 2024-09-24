@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Context } from '../store/appContext';
 
 
-//este es el nabvar definitivo
+//este es el navbar definitivo
 export const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { actions, store } = useContext(Context);
@@ -23,17 +23,17 @@ export const Navbar = () => {
       if (section){
         section.scrollIntoView({ behavior: "smooth"})
       }
-      setIsExpanded
-    
+      setIsExpanded(false)
   }
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"> {/* Agregado fixed-top */}
       <div className="container">
         <Link to="/" className="navbar-brand">
           <img
             src="https://res.cloudinary.com/drigqgirt/image/upload/v1725545065/z85szc7sniccil8xdega.png"
             alt="Logo"
-            style={{ width: "85px", height: "80px" }}
+            style={{ width: "50px", height: "50px" }}
           />
         </Link>
         <button
@@ -74,8 +74,6 @@ export const Navbar = () => {
               >
                 Contact
               </a>
-
-
             </li>
              <li className="nav-item">
               <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
@@ -84,13 +82,11 @@ export const Navbar = () => {
             </li>
 
             {store.auth === true ? (
-
               <li className="nav-item">
                 <Link className="nav-link" to="/" onClick={handleLogout}>
                   Logout
                 </Link>
               </li>) : (
-
               <li className="nav-item">
                 <Link className="nav-link" to="/login" onClick={toggleNavbar}>
                   Login
@@ -98,7 +94,6 @@ export const Navbar = () => {
               </li>
             )}
 
-           
           </ul>
         </div>
       </div>

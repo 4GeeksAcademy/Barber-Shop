@@ -27,7 +27,7 @@ const BookAppointment_Date = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <div className="container mt-5 mb-3 flex-grow-1">
+      <div className="container mt-2 mb-3 flex-grow-1">
         <div className="row mt-4">
           <div className="col-md-8">
             <h3 className="mb-3">Step 3 of 3</h3>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "../../styles/login.css";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
 
 export const Login = () => {
@@ -32,16 +31,10 @@ export const Login = () => {
             },
             body: JSON.stringify({ email, password }),
         })
-            .then(response => {
-                console.log(response);
-
-                return response.json().then(data => ({ code: response.status, data }))
-            })
-
-            .then(({ code, data }) =>{
-                if (code == 400) {
+            .then(response => response.json().then(data => ({ code: response.status, data })))
+            .then(({ code, data }) => {
+                if (code === 400) {
                     alert(data.msg);
-
                 }
                 if (data.jwt_token) {
                     if (rememberMe) {
@@ -62,8 +55,6 @@ export const Login = () => {
                         navigate("/dashboard-customer");
                     }
                 }
-
-                console.log('Success:', data);
             })
             .catch((error) => {
                 setErrorMessage("Incorrect username or password");
@@ -72,12 +63,12 @@ export const Login = () => {
     };
 
     return (
-        <div className='bodyPage'>
-            <div className='bodyCard mt-5'>
-                <h1>Login</h1>
-                <h6 className='fs-6 fw-lighter mt-3'>Login to access your Barber Shop account</h6>
-                <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
-                    <div className="mb-3">
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4 shadow" style={{ width: '35rem', marginTop: '-60px' }}> {/* Ancho mantenido, altura reducida */}
+                <h1 className="text-center h4">Login</h1> {/* Texto más pequeño */}
+                <h6 className="text-center fs-6 fw-lighter mt-3">Login to access your Barber Shop account</h6>
+                <form className="mt-3" onSubmit={handleSubmit}>
+                    <div className="mb-2"> {/* Se reduce el espacio entre campos */}
                         <label htmlFor="emailLogin" className="form-label">Email</label>
                         <input
                             type="email"
@@ -87,9 +78,8 @@ export const Login = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label htmlFor="passwordLogin" className="form-label">Password</label>
                         <input
                             type="password"
@@ -99,7 +89,7 @@ export const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <div className="mb-3 form-check">
+                    <div className="mb-2 form-check">
                         <input
                             type="checkbox"
                             className="form-check-input"
@@ -110,16 +100,14 @@ export const Login = () => {
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
 
-                    <button type="submit" className=" btn btn-login">Login</button>
-                    {
-                        errorMessage && (
-                            <div className="alert alert-danger mt-3" role="alert">
-                                {errorMessage}
-                            </div>
-                        )
-                    }
-                    <div className='mt-3'>
-                        <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
+                    <button type="submit" className="btn btn-warning w-100 mb-2">Login</button> {/* Botón reducido */}
+                    {errorMessage && (
+                        <Alert variant="danger" className="mt-2">
+                            {errorMessage}
+                        </Alert>
+                    )}
+                    <div className="mt-2">
+                        <p className="text-center">Reset password click <a href='/password-reset-request' className='text-danger'>here</a></p>
                     </div>
                 </form>
 
@@ -128,5 +116,5 @@ export const Login = () => {
                 </p>
             </div>
         </div>
-    )
-}
+    );
+};
