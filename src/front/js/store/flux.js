@@ -136,7 +136,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-
+			updateCustomer: async (updatedCustomer) => {
+				const store = getStore();
+				const token = store.token; // Obtener el token del estado global
+			
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_update", {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}` // Usar el token del estado global
+						},
+						body: JSON.stringify(updatedCustomer)
+					});
+			
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						throw new Error(errorData.msg || 'Error enviando solicitud de actualización de customer');
+					}
+			
+					const data = await resp.json();
+					const updatedProfessionals = store.customer.map(customer =>
+						customer.email === updatedCustomer.email ? { ...customer, ...updatedCustomer } : customer
+					);
+					setStore({ customer: updatedcustomers });
+					return data;
+				} catch (error) {
+					console.log("Error loading message from backend", error);
+					return null; // Retornar null en caso de error
+				}
+			},
+			
 			//fetch Services
 			getServices: async () => {
 				try {
