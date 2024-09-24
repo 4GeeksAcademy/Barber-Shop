@@ -91,8 +91,6 @@ const Layout = () => {
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
-
-
                     </Routes>
                     <Footer />
                 </ScrollToTop>
