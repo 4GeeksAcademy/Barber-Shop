@@ -3,10 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Context } from '../store/appContext';
 import { Link, useLocation } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateEmployeeCard = ({ onUpdate }) => {
     const location = useLocation();
     const { employee } = location.state || {};
+    const navigate = useNavigate()
 
     const { store, actions } = useContext(Context);
 
@@ -21,39 +23,62 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
     const [jobPosition, setJobPosition] = useState(employee?.job_position || '');
     const [salary, setSalary] = useState(employee?.salary || '');
     const [status, setStatus] = useState(employee?.status || '');
+    const [error, setError] = useState('');
 
-    const changePassword = (e) => {
-        if (pass1 === pass2) {
-            setPassword(pass1);
-        } else {
-            alert("The passwords do not match!");
+    const changePassword = () => {
+        if (pass1 !== pass2) {
+            throw new Error("The passwords do not match!"); // Lanza un error si no coinciden
+        }
+        return pass1; // Retorna la contraseña si coinciden
+    };
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setError(''); // Reinicia el mensaje de error
+
+        // Validación de contraseñas
+        if (pass1 !== pass2) {
+            setError("Las contraseñas no coinciden!"); // Muestra un mensaje de error
+            return; // Evita continuar si las contraseñas no coinciden
+        }
+
+        // Obtener el ID del empleado
+        const employeeId = await actions.fetchEmployeeId(employee.id); // Obtener el ID
+
+        if (!employeeId) {
+            setError("No se pudo obtener el ID del empleado.");
+            return;
+        }
+
+        let updatedEmployee = {
+            id: employeeId, // Añadir el ID del empleado
+            email: employee.email, // Email original para identificar al empleado
+            update_name: name,
+            update_last_name: lastName,
+            update_email: email,
+            update_phone: phone,
+            update_address: address,
+            update_job_position: jobPosition,
+            update_salary: salary,
+            update_status: status,
+            password: pass1 // Solo agregar la contraseña si coincide
+        };
+
+        updatedEmployee = Object.fromEntries(
+            Object.entries(updatedEmployee).filter(([_, value]) => value !== "" && value !== null)
+        );
+
+        try {
+            const result = await actions.updateEmployee(updatedEmployee);
+            if (result) {
+                navigate('/dashboard');
+            }
+        } catch (error) {
+            setError("Error al actualizar la información del empleado. Intente de nuevo."); // Mensaje de error en caso de fallo en el fetch
         }
     };
 
-    const handleUpdate = (e) => {
-        const updatedEmployee = {
-            email: employee.email, // Email original para identificar al empleado
-            name: name,
-            last_name: lastName,
-            email: email,
-            phone: phone,
-            address: address,
-            job_position: jobPosition,
-            salary: salary,
-            status: status
-        };
 
-        // Solo agregar la contraseña si no está vacía
-        if (password) {
-            updatedEmployee.password = password;
-        };
-    
-
-        actions.updateEmployee(updatedEmployee);
-        if (onUpdate) {
-            onUpdate(updatedEmployee);
-        }
-    };    
     return (
         <div className="container card mt-3 mb-3">
             <div className="card-body">
@@ -157,6 +182,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
                 </div>
 
                 <div className='d-grid gap-2 d-md-flex justify-content-md-end'>
+                {error && <Alert variant="danger">{error}</Alert>}
                     <Link to="/dashboard">
                         <button className="btn btn-secondary" onClick={handleUpdate}>
                             Update

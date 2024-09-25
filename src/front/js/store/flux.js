@@ -4,8 +4,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 	return {
 		store: {
-			selectedSalon: null,		
-			selectedProfessional:  null,
+			selectedSalon: null,
+			selectedProfessional: null,
 			selectedService: null,
 			//fetch employee
 
@@ -19,7 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			messageAppointment: "",
 			token: localStorage.getItem('jwt_token') || null,
 			auth: !!localStorage.getItem('jwt_token'),
-			userType:"",
+			userType: "",
 			appointment_id: null
 
 
@@ -95,10 +95,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+
 			updateEmployee: async (updatedEmployee) => {
 				const store = getStore();
 				const token = store.token; // Obtener el token del estado global
-			
+
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/update_employee", {
 						method: 'PUT',
@@ -108,15 +109,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(updatedEmployee)
 					});
-			
+
 					if (!resp.ok) {
 						const errorData = await resp.json();
+						console.error('Error data:', errorData);
 						throw new Error(errorData.msg || 'Error enviando solicitud de actualización de empleado');
 					}
-			
+
 					const data = await resp.json();
 					const updatedProfessionals = store.professional.map(pro =>
-						pro.email === updatedEmployee.email ? { ...pro, ...updatedEmployee } : pro
+						pro.id === updatedEmployee.id ? { ...pro, ...updatedEmployee } : pro
 					);
 					setStore({ professional: updatedProfessionals });
 					return data;
@@ -125,7 +127,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null; // Retornar null en caso de error
 				}
 			},
-			
+
 			//fetch Customer Bernardo
 			getCustomer: async () => {
 				try {
@@ -140,7 +142,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			updateCustomer: async (updatedCustomer) => {
 				const store = getStore();
 				const token = store.token; // Obtener el token del estado global
-			
+
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/customer_update", {
 						method: 'PUT',
@@ -150,12 +152,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(updatedCustomer)
 					});
-			
+
 					if (!resp.ok) {
 						const errorData = await resp.json();
 						throw new Error(errorData.msg || 'Error enviando solicitud de actualización de customer');
 					}
-			
+
 					const data = await resp.json();
 					const updatedProfessionals = store.customer.map(customer =>
 						customer.email === updatedCustomer.email ? { ...customer, ...updatedCustomer } : customer
@@ -167,7 +169,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null; // Retornar null en caso de error
 				}
 			},
-			
+			fetchEmployeeId: async () => {
+				const store = getStore();
+				const token = store.token;
+
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + '/api/get_employee_info', {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						throw new Error(errorData.msg || 'Error al obtener ID del empleado');
+					}
+
+					const data = await resp.json();
+					return data.id;
+				} catch (error) {
+					console.error("Error loading employee ID from backend", error);
+					return null;
+				}
+			},
+
 			//fetch Services
 			getServices: async () => {
 				try {
@@ -221,7 +247,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await resp.json()
 					console.log('Reserva exitosa', data)
 					setStore({ appointment_id: data.appointment_id })
-		
+
 					return data;
 				} catch (error) {
 					console.log("Error en registrar la reserva:'", error)
@@ -239,17 +265,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(customerData)
 					});
-			
+
 					if (!resp.ok) {
 						const errorData = await resp.json();
 						throw new Error(errorData.msg || 'Error al registrar el usuario');
 					}
-			
+
 					const data = await resp.json();
 					console.log('Registro exitoso', data);
-			
+
 					if (data.jwt_token) {
-						
+
 						getActions().setToken(data.jwt_token);
 					}
 
@@ -267,7 +293,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					throw error;
 				}
 			},
-			
+
 			//fetch PasswordResetRequest
 			postPasswordResetRequest: async (email) => {
 				try {
@@ -424,8 +450,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					appointment_id: null
 				});
 			}
-			
-			
+
+
 
 		}
 	};
