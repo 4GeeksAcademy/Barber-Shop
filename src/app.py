@@ -560,7 +560,7 @@ def customer_register():
     if 'password' not in body:
        return jsonify({'msg':'Debes enviar el campo password'}), 400
     if 'name' not in body:
-        body['name']= None
+        body['name']= body['email']
     if 'last_name' not in body:
         body['last_name']= None
     if 'phone' not in body:

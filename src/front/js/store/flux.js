@@ -12,6 +12,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			professional: [],
 			customer: [],
 			services: [],
+			appointments:[],
 			selectedDate:null,
 			selectedTime:null,
 			selectCustomer:null,
@@ -179,6 +180,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			//fetch appointment
+			getAppointments: async () => {
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/appointments")
+					const data = await resp.json()
+					setStore({ appoinments: data })
+					return data;
+				} catch (error) {
+					console.log("Error loading message from backend", error)
+				}
+			},
 			postAppointment: async () => {
 				const store = getStore()
 				console.log(store.selectCustomer);
