@@ -31,6 +31,7 @@ import SignUp from "./pages/SignUp";
 import DashboardCustomer from "./pages/DashboardCustomer";
 import UpdateCustomerCard from "./component/UpdateCustomerCard";
 import InactivityAlert from "./component/InactivityAlert";
+import SummaryCard from "./component/summaryCard";
 
 
 //create your first component.
@@ -91,6 +92,8 @@ const Layout = () => {
                         <Route element={<PasswordResetRequest />} path="/password-reset-request" />
 
                         <Route element={<PasswordReset />} path="/reset-password" />
+
+                        <Route element={<SummaryCard />} path="/sumarycard"/>
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />

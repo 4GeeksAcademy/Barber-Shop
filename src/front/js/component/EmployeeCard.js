@@ -27,7 +27,10 @@ const EmployeeCard = props => {
     const handleEdit = (employee) => {
         navigate('/update-employee', { state: { employee } });
     };
-
+    
+    const userType = localStorage.getItem('userType');
+    const userEmail = localStorage.getItem('email');
+    
     return (
         <div>
             {store.professional.map((employee, index) => (
