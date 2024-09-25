@@ -309,7 +309,7 @@ def register_employee():
                            'email':'requerido',
                            'password':'requerido',
                            'phone': 'requerido',
-                           'date_of_birth':'opcional',
+                           'date_of_birth':'YYYY-MM-DD Opcional',
                            'address': 'opcional',
                            'hire_date': 'opcional',
                            'job_position': 'opcional',

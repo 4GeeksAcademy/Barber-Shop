@@ -19,7 +19,32 @@ const UpdateCustomerCard = ({ onUpdate }) => {
     const [phone, setPhone] = useState(customer?.phone || '');
 
 
-    const changePassword = () => {
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setName({
+            ...name,
+            [name]: value,
+        });
+        setLastName({
+            ...lastName,
+            [name]: value,
+        });
+        setEmail({
+            ...email,
+            [name]: value,
+        });
+        setPassword({
+            ...password,
+            [name]: value,
+        });
+        setPhone({
+            ...phone,
+            [name]: value,
+        });
+    };
+
+
+    const changePassword = (e) => {
         if (pass1 === pass2) {
             setPassword(pass1);
         } else {
@@ -27,7 +52,7 @@ const UpdateCustomerCard = ({ onUpdate }) => {
         }
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = (e) => {
         const updatedCustomer = {
             email: customer.email,
             name: name,
@@ -41,10 +66,26 @@ const UpdateCustomerCard = ({ onUpdate }) => {
             updatedCustomer.password = password;
         };
 
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (formData.password !== formData.confirmPassword) {
+            alert("Passwords do not match");
+        } else {
+            const updatedCustomer = {
+                email: customer.email,
+                name: name,
+                last_name: lastName,
+                email: email,
+                phone: phone
+            };
 
-        actions.updateCustomer(updatedCustomer);
-        if (onUpdate) {
-            onUpdate(updatedCustomer);
+            try {
+                await actions.updateCustomer(updatedCustomer);
+                
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
         }
     };
     return (
@@ -106,15 +147,15 @@ const UpdateCustomerCard = ({ onUpdate }) => {
                             onChange={(e) => setPhone(e.target.value)}
                         />
                     </div>
-                   
+
                 </div>
                 <div className='d-grid gap-2 d-md-flex justify-content-md-end'>
-                    <Link to="/dashboard">
-                        <button className="btn btn-secondary" onClick={handleUpdate}>
+                    <Link to="/dashboard-customer">
+                        <button type='submit' className="btn btn-secondary" onClick={handleUpdate} >
                             Update
                         </button>
                     </Link>
-                    <Link to="/dashboard">
+                    <Link to="/dashboard-customer">
                         <button className="btn btn-primary">
                             Cancel
                         </button>

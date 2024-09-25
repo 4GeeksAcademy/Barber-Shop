@@ -18,7 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			messageAppointment: "",
 			token: localStorage.getItem('jwt_token') || null,
 			auth: !!localStorage.getItem('jwt_token'),
-
+			userType:"",
 			appointment_id: null
 
 
@@ -238,16 +238,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log('Registro exitoso', data);
 			
 					if (data.jwt_token) {
-
+						
 						getActions().setToken(data.jwt_token);
 					}
 
 					// Almacenar el customer_id en selectCustomer
 					setStore({ selectCustomer: data.customer_id });
-
+					setStore({ customer: data })
 					// Guardar el estado actualizado en localStorage
 					localStorage.setItem('appState', JSON.stringify(getStore()));
-
+					localStorage.setItem('email', data.email);
+					localStorage.setItem('userType', data.type);
 					console.log('Customer ID almacenado:', data.customer_id);
 					return data;
 				} catch (error) {
