@@ -171,7 +171,7 @@ def request_password_reset():
         return jsonify({'msg':'El email no está registrado'}), 404
 
     # Generar un token de restablecimiento de contraseña
-    expires = datetime.timedelta(hours=1)
+    expires = datetime.timedelta(minutes=5)
     reset_token = create_access_token(identity=user.email, expires_delta=expires)
 
     reset_url = f"{os.getenv('FRONTEND_URL')}/reset-password?token={reset_token}" 
@@ -1094,10 +1094,10 @@ def delete_appointment():
     print(employee_email)
 
     # Obtener el admin_id dinámicamente
-    admin = UserAdmin.query.filter_by(is_active=True).first()  # Obtener el primer admin activo
-    if not admin:
-        return jsonify({'msg': 'Admin no encontrado o no hay administradores activos'}), 404
-    admin_id = admin.id
+    # admin = UserAdmin.query.filter_by(is_active=True).first()  # Obtener el primer admin activo
+    # if not admin:
+    #     return jsonify({'msg': 'Admin no encontrado o no hay administradores activos'}), 404
+    # admin_id = admin.id
 
     # Eliminar la cita
     db.session.delete(appointment)
@@ -1112,7 +1112,7 @@ def delete_appointment():
         notification_customer = Notifications(
             customer_id=appointment.customer_id,
             employee_id=appointment.employee_id,
-            admin_id=admin_id,  # Usando el admin_id dinámico
+            # admin_id=admin_id,  # Usando el admin_id dinámico
             appointment_date=appointment.appointment_date,
             services=appointment.service_id
         )
@@ -1122,7 +1122,7 @@ def delete_appointment():
         notification_employee = Notifications(
             customer_id=appointment.customer_id,
             employee_id=appointment.employee_id,
-            admin_id=admin_id,  # Usando el admin_id dinámico
+            # admin_id=admin_id,  # Usando el admin_id dinámico
             appointment_date=appointment.appointment_date,
             services=appointment.service_id
         )

@@ -12,9 +12,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			professional: [],
 			customer: [],
 			services: [],
-			selectedDate:"",
-			selectedTime:"",
-			selectCustomer:  "",
+			selectedDate:null,
+			selectedTime:null,
+			selectCustomer:null,
 			messageAppointment: "",
 			token: localStorage.getItem('jwt_token') || null,
 			auth: !!localStorage.getItem('jwt_token'),
@@ -274,10 +274,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error(errorData.msg || 'Error enviando solicitud de restablecimiento de contraseña');
 					}
 
-					alert('Se ha enviado un enlace de restablecimiento de contraseña a tu email');
+					const data = await response.json();  // Convierte la respuesta en JSON
+					return { success: true, message: 'Se ha enviado un enlace de restablecimiento de contraseña a tu email' };  // Devuelve un objeto
 				} catch (error) {
 					console.error('Error:', error);
-					alert('Hubo un error al enviar la solicitud');
+					return { success: false, message: error.message };  // Devuelve el error capturado
 				}
 			},
 			//fetch PasswordReset
@@ -378,6 +379,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			deleteAppointment: async (appointmentId) => {
+				const store = getStore()
 				const token = store.token;
 				try {
 					const response = await fetch(process.env.BACKEND_URL + '/api/delete_appointment', {

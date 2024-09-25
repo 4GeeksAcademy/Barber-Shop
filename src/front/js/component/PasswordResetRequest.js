@@ -10,12 +10,19 @@ const PasswordResetRequest = () => {
     const { actions, store } = useContext(Context);
     const navigate = useNavigate();
 
-    console.log(email);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await actions.postPasswordResetRequest(email)
-    };
+    const response = await actions.postPasswordResetRequest(email)
+
+    if (response.success) {
+   
+        window.alert("A reset email has been sent to your email address.");
+        navigate('/login-customers-2');
+    } else {
+        window.alert("There was an error sending the email. Please try again.");
+    }
+};
+   
 
     return (
         <div className='bodyPage mt-5'>
