@@ -25,33 +25,21 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
     const [status, setStatus] = useState(employee?.status || '');
     const [error, setError] = useState('');
 
-    const changePassword = () => {
-        if (pass1 !== pass2) {
-            throw new Error("The passwords do not match!"); // Lanza un error si no coinciden
-        }
-        return pass1; // Retorna la contraseña si coinciden
-    };
-
     const handleUpdate = async (e) => {
         e.preventDefault();
-        setError(''); // Reinicia el mensaje de error
-
-        // Validación de contraseñas
-        if (pass1 !== pass2) {
-            setError("Las contraseñas no coinciden!"); // Muestra un mensaje de error
-            return; // Evita continuar si las contraseñas no coinciden
-        }
+        setError(''); 
 
         // Obtener el ID del empleado
-        const employeeId = await actions.fetchEmployeeId(employee.id); // Obtener el ID
+        const employeeId = await actions.fetchEmployeeId(employee.id);
 
         if (!employeeId) {
             setError("No se pudo obtener el ID del empleado.");
             return;
         }
 
+        // Prepara el objeto para actualizar
         let updatedEmployee = {
-            id: employeeId, // Añadir el ID del empleado
+            id: employeeId,
             email: employee.email, // Email original para identificar al empleado
             update_name: name,
             update_last_name: lastName,
@@ -61,7 +49,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
             update_job_position: jobPosition,
             update_salary: salary,
             update_status: status,
-            password: pass1 // Solo agregar la contraseña si coincide
+            ...(pass1 && pass1 === pass2 && { password: pass1 }) // Solo agregar la contraseña si está presente y coincide
         };
 
         updatedEmployee = Object.fromEntries(
@@ -74,7 +62,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
                 navigate('/dashboard');
             }
         } catch (error) {
-            setError("Error al actualizar la información del empleado. Intente de nuevo."); // Mensaje de error en caso de fallo en el fetch
+            setError("Error al actualizar la información del empleado. Intente de nuevo."); 
         }
     };
 
