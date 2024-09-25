@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../styles/login.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
 const SignUp = () => {
@@ -12,6 +12,7 @@ const SignUp = () => {
   });
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { store, actions } = useContext(Context);
 
   const handleInputChange = (e) => {
@@ -34,7 +35,11 @@ const SignUp = () => {
 
       try {
         await actions.postSignupCustomer(customerData);
-        navigate('/book-appointment-resume');
+        if (location.pathname === '/book-appointment-date') {
+          navigate('/book-appointment-resume');
+        } else {
+          navigate('/dashboard-customer');
+        }
       } catch (error) {
         console.error("Error submitting form:", error);
       }

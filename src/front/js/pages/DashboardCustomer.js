@@ -16,8 +16,10 @@ const DashboardCustomer = () => {
 
     useEffect(() => {
         if (localStorage.getItem("jwt_token")) {
-
+            actions.getCustomerId();
+           
             actions.getCustomer();
+           
         } else {
             navigate("/login");
         }
@@ -68,8 +70,9 @@ const DashboardCustomer = () => {
 
 
             <div className="container d-flex justify-content-evenly">
-                <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Employee</button>
-                <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Customer</button>
+                <Link to="/book-appointment"> {/* Link para redirigir a BookAppointment. */}
+                    <button className='btn btn-warning fw-bold'>BOOK AN APPOINTMENT</button>
+                </Link>
             </div>
         </div >
     );

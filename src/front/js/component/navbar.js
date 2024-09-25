@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Context } from '../store/appContext';
 
@@ -18,12 +18,15 @@ export const Navbar = () => {
     actions.logout()
   }
 
+  const userType = localStorage.getItem('userType'); //aqui defino el usuario para reenviar a un dashboard u otro
+  const userEmail = localStorage.getItem('email');
+
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId)
-      if (section){
-        section.scrollIntoView({ behavior: "smooth"})
-      }
-      setIsExpanded(false)
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" })
+    }
+    setIsExpanded(false)
   }
 
   return (
@@ -49,8 +52,8 @@ export const Navbar = () => {
         <div className={`collapse navbar-collapse justify-content-end ${isExpanded ? "show" : ""}`} id="navbarNav">
           <ul className="navbar-nav">
 
-          {/* Servicios */}
-          <li className="nav-item">
+            {/* Servicios */}
+            <li className="nav-item">
               <a
                 href="#services"
                 className="nav-link"
@@ -70,16 +73,21 @@ export const Navbar = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   scrollToSection("contact");
-                }}
-              >
-                Contact
-              </a>
+                }}>Contact</a>
             </li>
-             <li className="nav-item">
-              <Link to="/dashboard" className="nav-link" onClick={toggleNavbar} >
-                Dashboard
-              </Link>
-            </li>
+
+            {userType === "employee" ? (
+              <li className="nav-item">
+                <Link to="dashboard" className="nav-link" onClick={toggleNavbar} >
+                  Dashboard
+                </Link>
+              </li>) : (
+              <li className="nav-item">
+                <Link to="dashboard-customer" className="nav-link" onClick={toggleNavbar} >
+                  Dashboard
+                </Link>
+              </li>
+            )}
 
             {store.auth === true ? (
               <li className="nav-item">

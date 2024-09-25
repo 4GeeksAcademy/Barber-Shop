@@ -22,7 +22,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
     const [salary, setSalary] = useState(employee?.salary || '');
     const [status, setStatus] = useState(employee?.status || '');
 
-    const changePassword = () => {
+    const changePassword = (e) => {
         if (pass1 === pass2) {
             setPassword(pass1);
         } else {
@@ -30,7 +30,7 @@ const UpdateEmployeeCard = ({ onUpdate }) => {
         }
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = (e) => {
         const updatedEmployee = {
             email: employee.email, // Email original para identificar al empleado
             name: name,
