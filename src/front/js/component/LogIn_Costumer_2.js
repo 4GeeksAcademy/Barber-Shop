@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import "../../styles/footer.css";
@@ -24,6 +24,28 @@ export const Login_Costumer_2 = () => {
             setErrorMessage("Login incorrecto. Por favor, verifica tus credenciales.")
         }
     }
+
+    useEffect(() => {
+        // Guardar en localStorage cada vez que cambien
+        if (store.selectedProfessional) localStorage.setItem('selectedProfessional', JSON.stringify(store.selectedProfessional));
+        if (store.selectedService) localStorage.setItem('selectedService', JSON.stringify(store.selectedService));
+        if (store.selectedDate) localStorage.setItem('selectedDate', store.selectedDate);
+        if (store.selectedTime) localStorage.setItem('selectedTime', store.selectedTime);
+    }, [store.selectedProfessional, store.selectedService, store.selectedDate, store.selectedTime]);
+    
+    useEffect(() => {
+        // Cargar desde localStorage al montar el componente
+        const savedProfessional = localStorage.getItem('selectedProfessional');
+        const savedService = localStorage.getItem('selectedService');
+        const savedDate = localStorage.getItem('selectedDate');
+        const savedTime = localStorage.getItem('selectedTime');
+    
+        if (savedProfessional) actions.selectProfessional(JSON.parse(savedProfessional));
+        if (savedService) actions.selectService(JSON.parse(savedService));
+        if (savedDate) actions.selectDate(savedDate);
+        if (savedTime) actions.selectTime(savedTime);
+    }, []);
+
     const selectedProfessional = store.selectedProfessional;
     const selectedService = store.selectedService;
     const selectedDate = store.selectedDate;

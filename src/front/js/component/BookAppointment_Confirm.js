@@ -27,7 +27,7 @@ useEffect(() => {
     // Usa un pequeño timeout para asegurarte de que los datos se muestren antes de resetear el estado global
     const timer = setTimeout(() => {
         actions.resetAppointmentState();
-    }, 100);  // Espera 100ms antes de limpiar el store
+    }, 900000);  // Espera 100ms antes de limpiar el store
 
     // Limpia el timeout si el componente se desmonta
     return () => clearTimeout(timer);
@@ -52,6 +52,7 @@ useEffect(() => {
       await actions.deleteAppointment(store?.appointment_id);
       navigate('/');
     } catch (error) {
+      
       console.error("Error al cancelar la cita", error);
     }
   };
@@ -59,10 +60,11 @@ useEffect(() => {
   const handleReschedule = async () => {
     try {
       // Aquí llamamos la acción que cancela la cita
-      await actions.deleteAppointment(store.appointment_id);
+      await actions.deleteAppointment(store?.appointment_id);
       navigate('/book-appointment-date'); // Redirige a la página de selección de nueva cita
     } catch (error) {
       console.error("Error al cancelar y reprogramar la cita", error);
+     
     }
   };
 

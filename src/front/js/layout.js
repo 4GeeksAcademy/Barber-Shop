@@ -27,6 +27,9 @@ import Dashboard from "./pages/Dashboard";
 import UpdateEmployeeCard from "./component/UpdateEmployeeCard";
 import PasswordResetRequest from "./component/PasswordResetRequest";
 import PasswordReset from "./component/PasswordReset";
+import SignUp from "./pages/SignUp";
+import DashboardCustomer from "./pages/DashboardCustomer";
+import InactivityAlert from "./component/InactivityAlert";
 
 
 //create your first component.
@@ -90,8 +93,9 @@ const Layout = () => {
                     </Routes>
                     <Footer />
                 </ScrollToTop>
-
+                {/* <InactivityAlert /> */}
             </BrowserRouter>
+       
         </div>
     );
 };
