@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Context } from '../store/appContext';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,11 @@ import { useNavigate } from 'react-router-dom';
 const CustomerCard = props => {
     const navigate = useNavigate()
     const { store, actions } = useContext(Context);
+    useEffect(()=>{
+       actions.getCustomer();
+       
+
+    },[])
     const [customerDataCard, setCustomerDataCard]= useState({
         name:"",
         last_name:"",

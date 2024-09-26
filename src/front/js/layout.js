@@ -32,6 +32,7 @@ import DashboardCustomer from "./pages/DashboardCustomer";
 import UpdateCustomerCard from "./component/UpdateCustomerCard";
 import InactivityAlert from "./component/InactivityAlert";
 import SummaryCard from "./component/summaryCard";
+import EmployeeRegister from "./pages/EmployeeRegister";
 
 
 //create your first component.
@@ -75,6 +76,7 @@ const Layout = () => {
                         <Route element={<SignUpPage />} path="/sign-up" />
 
                         <Route element={<SignUp />} path="/register"/>
+                        <Route element={<EmployeeRegister/>} path="/employee-register"/>
 
                         {/* ruta Dashboard */}
                         <Route element={<Dashboard />} path="/dashboard" />

@@ -17,7 +17,9 @@ const injectContext = PassedComponent => {
       })
     );
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+      
+    }, []);
 
     return (
       <Context.Provider value={state}>
