@@ -2,13 +2,12 @@
 
 /* Espaciado general para que el footer no se superponga al contenido */
 .container-date {
-    padding-bottom: 100px; /* Espacio para evitar que el footer tape contenido */
+    padding-bottom: 120px; /* Espacio para evitar que el footer tape contenido */
   }
   
   /* En móviles, agregamos más espacio si es necesario */
   @media (max-width: 768px) {
     .container-date {
-      padding-bottom: 150px; /* Aumentamos el espacio para móviles */
+      padding-bottom: 155px; /* Aumentamos el espacio para móviles */
     }
   }
-  
