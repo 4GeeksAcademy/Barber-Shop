@@ -1,0 +1,58 @@
+
+.contact {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin-top: 20%;
+}
+
+.img-fluid-contact {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.titleMain {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: start;
+    color: white;
+    padding: 0 15px;
+    width: 100%;
+}
+
+
+.titleContact {
+    padding-top: 0%;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+}
+
+.img-fluid-contact-icono {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.5vw;
+    background-color: #F2C94C;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.map-container {
+    width: 100%;
+    height: 100vh;
+    max-height: 450px; 
+    overflow: hidden;
+    position: relative; 
+}

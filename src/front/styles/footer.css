@@ -1,0 +1,45 @@
+/* Estilos generales del footer */
+.footer {
+    position: fixed; /* Mantener el footer en la parte inferior */
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.968);
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(100%); /* Footer oculto inicialmente */
+    z-index: 1000; /* Asegura que el footer esté por encima de otros elementos */
+}
+
+/* Mostrar el footer cuando se hace scroll hasta el final */
+.footer.show {
+    transform: translateY(0); /* Muestra el footer */
+}
+
+/* Ocultar el footer cuando no se hace scroll hasta el final */
+.footer.hide {
+    transform: translateY(100%); /* Oculta el footer */
+}
+
+/* Mostrar el footer al pasar el ratón por encima */
+.footer:hover {
+    transform: translateY(0);
+}
+
+.text {
+    color: aliceblue;
+}
+
+.icon i {
+    color: aliceblue;
+}
+
+/* Asegurarse que el hover no interfiera en pantallas táctiles */
+@media (hover: none) {
+    .footer {
+        transform: translateY(100%); /* Mantener el footer oculto en pantallas táctiles */
+    }
+
+    /* Mostrar el footer cuando se hace scroll hasta el final en pantallas táctiles */
+    .footer.show {
+        transform: translateY(0);
+    }
+}
