@@ -325,7 +325,7 @@ def register_employee():
     if 'password' not in body:
        return jsonify({'msg':'Debes enviar el campo password'}), 400
     if 'phone' not in body:
-       return jsonify({'msg':'Debes enviar el campo phone'}), 400
+       body['phone'] = None
     if 'date_of_birth' not in body:
         body['date_of_birth'] = None
     if 'address' not in body:
@@ -343,7 +343,7 @@ def register_employee():
     existing_employee = Employee.query.filter_by(email=body['email']).first()
     if existing_employee:
         return jsonify({'msg':'El email ya está registrado.'}), 400
-
+    
     # Crear el usuario en la tabla User
     pw_hash = bcrypt.generate_password_hash(body['password']).decode('utf-8')
     new_user = User(

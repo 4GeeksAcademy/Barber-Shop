@@ -95,6 +95,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+			
+			postNewEmployee: async (newEmployee) => {
+				const store = getStore();
+				const token = store.token;
+			
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + "/api/register_employee", {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						},
+						body: JSON.stringify(newEmployee)
+					});
+			
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						console.error('Error data:', errorData);
+						throw new Error(errorData.msg || 'Error enviando solicitud de actualización de empleado');
+					}
+					const data = await resp.json();
+					setStore({ professional: newEmployee });
+					return data;
+				} catch (error) {
+					console.log("Error loading message from backend", error);
+					return null;
+				}
+			},
+			
 
 			updateEmployee: async (updatedEmployee) => {
 				const store = getStore();
@@ -210,7 +239,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + "/api/appointments")
 					const data = await resp.json()
-					setStore({ appoinments: data })
+					setStore({ appointments: data })
 					return data;
 				} catch (error) {
 					console.log("Error loading message from backend", error)
