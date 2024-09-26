@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
-import { Home } from "./pages/home";
+import { Home } from "./pages/home";  // Aquí se importa el componente Home que muestra Servicios
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
@@ -33,76 +33,70 @@ import UpdateCustomerCard from "./component/UpdateCustomerCard";
 import InactivityAlert from "./component/InactivityAlert";
 import SummaryCard from "./component/summaryCard";
 
-
-//create your first component.
+// Aquí se crean las rutas principales, incluida la que apunta a la sección de servicios
 const Layout = () => {
     const basename = process.env.BASENAME || "";
 
     return (
-        <div className="contenedor-page" >
+        <div className="contenedor-page">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                    <Navbar /> {/* Incluimos la Navbar */}
                     <Routes>
-                        <Route element={<Home />} path="/" />
+                        <Route element={<Home />} path="/" /> {/* Ruta para la home */}
                         <Route element={<Login />} path="/login" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
 
-                        {/* Ruta para seleccionar BookAppointment */}
+                        {/* Ruta para BookAppointment */}
                         <Route element={<BookAppointment />} path="/book-appointment" />
-
-
-                        {/* Ruta para seleccionar servicios */}
-                        <Route element={<BookAppointment />} path="/book-appointment" />
-
-                        {/* Ruta para seleccionar profesionales */}
-                        <Route element={<BookAppointment_Proffesional />} path="/book-appointment-proffesional" />
 
                         {/* Ruta para seleccionar servicios */}
                         <Route element={<BookAppointment_Services />} path="/book-appointment-services" />
 
-                        {/* Ruta para seleccionar la fecha */}
+                        {/* Ruta para seleccionar profesionales */}
+                        <Route element={<BookAppointment_Proffesional />} path="/book-appointment-proffesional" />
+
+                        {/* Ruta para seleccionar fecha */}
                         <Route element={<BookAppointment_Date />} path="/book-appointment-date" />
 
-                        {/* Ruta para LogIn_Customers */}
+                        {/* Ruta para iniciar sesión con clientes */}
                         <Route element={<LogIn_Costumer />} path="/login-customers" />
 
-                        {/* Ruta para LogIn_Customers correo y contraseña */}
+                        {/* Ruta para loguearse con correo y contraseña */}
                         <Route element={<Login_Costumer_2 />} path="/login-customers-2" />
 
-                        {/* Ruta para Sign Up Page */}
+                        {/* Ruta para la página de registro */}
                         <Route element={<SignUpPage />} path="/sign-up" />
 
-                        <Route element={<SignUp />} path="/register"/>
+                        <Route element={<SignUp />} path="/register" />
 
-                        {/* ruta Dashboard */}
+                        {/* Ruta para los dashboards */}
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<DashboardCustomer />} path="/dashboard-customer" />
 
-                        {/* Ruta para actualizar datos de empleado desde el dashboard */}
+                        {/* Ruta para actualizar empleado */}
                         <Route element={<UpdateEmployeeCard />} path="/update-employee" />
                         <Route element={<UpdateCustomerCard />} path="/update-customer" />
-                        
-                        {/* Ruta para la página de revisión y confirmación */}
+
+                        {/* Ruta para confirmar la cita */}
                         <Route element={<ReviewAndConfirm />} path="/book-appointment-resume" />
 
                         <Route element={<BookAppointment_Confirm />} path="/book-appointment-confirm" />
 
+                        {/* Rutas de recuperación de contraseña */}
                         <Route element={<PasswordResetRequest />} path="/password-reset-request" />
-
                         <Route element={<PasswordReset />} path="/reset-password" />
 
-                        <Route element={<SummaryCard />} path="/sumarycard"/>
+                        {/* Ruta de tarjeta de resumen */}
+                        <Route element={<SummaryCard />} path="/summarycard" />
 
                         {/* Ruta de fallback para 404 */}
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
-                    <Footer />
+                    <Footer /> {/* Incluimos el Footer */}
                 </ScrollToTop>
-                {/* <InactivityAlert /> */}
             </BrowserRouter>
-       
         </div>
     );
 };

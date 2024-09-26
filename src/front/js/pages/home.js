@@ -4,7 +4,7 @@ import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import Header from "../component/header";
 import InfoSection from "../component/infoSection";
-import Servicios from "../component/servicios";
+import Servicios from "../component/servicios"; // Este es el componente de Servicios
 import Contact from "../component/contact";
 
 export const Home = () => {
@@ -12,14 +12,10 @@ export const Home = () => {
 
 	return (
 		<div className="contenedor-page">
-			
-			<Header/>
-			<InfoSection/>
-			<Servicios/>
-			<Contact/>
-
-
-
+			<Header /> {/* Sección del encabezado */}
+			<InfoSection /> {/* Sección de información */}
+			<Servicios /> {/* Sección de Servicios */}
+			<Contact /> {/* Sección de Contacto */}
 		</div>
 	);
 };

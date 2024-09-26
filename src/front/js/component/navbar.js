@@ -3,8 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Context } from '../store/appContext';
 
-
-//este es el navbar definitivo
 export const Navbar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { actions, store } = useContext(Context);
@@ -15,22 +13,22 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     setIsExpanded(!isExpanded);
-    actions.logout()
-  }
+    actions.logout();
+  };
 
-  const userType = localStorage.getItem('userType'); //aqui defino el usuario para reenviar a un dashboard u otro
+  const userType = localStorage.getItem('userType');
   const userEmail = localStorage.getItem('email');
 
   const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId)
+    const section = document.getElementById(sectionId);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" })
+      section.scrollIntoView({ behavior: "smooth" });
     }
-    setIsExpanded(false)
-  }
+    setIsExpanded(false);
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark"> {/* Agregado fixed-top */}
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
         <Link to="/" className="navbar-brand">
           <img
@@ -51,39 +49,37 @@ export const Navbar = () => {
         </button>
         <div className={`collapse navbar-collapse justify-content-end ${isExpanded ? "show" : ""}`} id="navbarNav">
           <ul className="navbar-nav">
-
             {/* Servicios */}
             <li className="nav-item">
-              <a
-                href="#services"
+              <Link
+                to="/"
                 className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("services");
-                }}
+                onClick={() => scrollToSection("services")}
               >
                 Services
-              </a>
+              </Link>
             </li>
+
             {/* Contact */}
             <li className="nav-item">
-              <a
-                href="#contact"
+              <Link
+                to="/"
                 className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("contact");
-                }}>Contact</a>
+                onClick={() => scrollToSection("contact")}
+              >
+                Contact
+              </Link>
             </li>
 
             {userType === "employee" ? (
               <li className="nav-item">
-                <Link to="dashboard" className="nav-link" onClick={toggleNavbar} >
+                <Link to="dashboard" className="nav-link" onClick={toggleNavbar}>
                   Dashboard
                 </Link>
-              </li>) : (
+              </li>
+            ) : (
               <li className="nav-item">
-                <Link to="dashboard-customer" className="nav-link" onClick={toggleNavbar} >
+                <Link to="dashboard-customer" className="nav-link" onClick={toggleNavbar}>
                   Dashboard
                 </Link>
               </li>
@@ -94,14 +90,14 @@ export const Navbar = () => {
                 <Link className="nav-link" to="/" onClick={handleLogout}>
                   Logout
                 </Link>
-              </li>) : (
+              </li>
+            ) : (
               <li className="nav-item">
                 <Link className="nav-link" to="/login" onClick={toggleNavbar}>
                   Login
                 </Link>
               </li>
             )}
-
           </ul>
         </div>
       </div>
