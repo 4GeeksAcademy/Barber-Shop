@@ -35,9 +35,9 @@ const Dashboard = () => {
                 <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab2')}>All Customers</button>
                 <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab3')}>All Appointments</button>
             </div>
-            <div className="content mt-3 card-group">
-                {activeTab === 'tab1' && <div><EmployeeCard /></div>}
-                {activeTab === 'tab2' && <div><CustomerCard /></div>}
+            <div className="content mt-3 row card-group">
+                {activeTab === 'tab1' && <div className="col"><EmployeeCard /></div>}
+                {activeTab === 'tab2' && <div className="col"><CustomerCard /></div>}
                 {activeTab === 'tab3' && (
                     <div className='container'>
                         <table className="table">

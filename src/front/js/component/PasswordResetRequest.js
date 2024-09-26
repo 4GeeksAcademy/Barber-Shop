@@ -10,9 +10,17 @@ const PasswordResetRequest = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await actions.postPasswordResetRequest(email);
-    };
+    const response = await actions.postPasswordResetRequest(email)
 
+    if (response.success) {
+   
+        window.alert("A reset email has been sent to your email address.");
+        navigate('/login-customers-2');
+    } else {
+        window.alert("There was an error sending the email. Please try again.");
+    }
+};
+ 
     return (
         <div className="bodyPage mt-5">
             <form className="bodyCard card p-4 shadow-lg" style={{ width: "25rem" }} onSubmit={handleSubmit}>

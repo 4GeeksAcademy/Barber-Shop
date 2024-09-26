@@ -17,9 +17,14 @@ const PasswordReset = () => {
         if (newPassword !== confirmPassword) {
             alert("Las contraseñas no coinciden");
             return;
-        } else {
-            actions.PasswordReset(searchParams.get("token"), newPassword);
+        } 
+        else {actions.PasswordReset(searchParams.get("token"), newPassword)
+            setTimeout(() => {
+                window.close(); // Cerrar la ventana después de 5 segundos
+              }, 5000);
+          
         }
+
     };
 
     return (
