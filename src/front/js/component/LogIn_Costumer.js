@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import SummaryCard from './summaryCard';
+import "../../styles/LogIn_Costumer.css"; // Ruta actualizada para el archivo CSS
 
 const LogIn_Customers = () => {
   const navigate = useNavigate();
@@ -13,14 +14,13 @@ const LogIn_Customers = () => {
   const selectedTime = store.selectedTime;
 
   return (
-    <div className="container mt-5" style={{ paddingBottom: '80px' }}>
+    <div className="container container-login mt-5"> {/* Aplicamos la clase container-login */}
       <div className="row">
         <div className="col-md-8">
           <h3>Step 3 of 3</h3>
           <h2>Create account to continue</h2>
 
           <div className="btn-group-vertical w-100">
-
             <button className="btn btn-warning mb-3" onClick={() => navigate('/sign-up')}>
               Sign up with email
             </button>
@@ -41,7 +41,6 @@ const LogIn_Customers = () => {
           backRoute='/book-appointment-date'
           showContinueButton={false}
         />
-
       </div>
     </div>
   );

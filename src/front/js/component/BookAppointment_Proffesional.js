@@ -40,7 +40,7 @@ const BookAppointment_Proffesional = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100">
-      <div className="container mt-5 flex-grow-1"> {/* Eliminé el margen inferior aquí */}
+      <div className="container mt-1 flex-grow-1"> {/* Eliminé el margen inferior aquí */}
         <div className="row mt-4">
           {/* Profesionales */}
           <div className="col-md-8">
@@ -68,8 +68,9 @@ const BookAppointment_Proffesional = () => {
             </ul>
           </div>
 
-          {/* SummaryCard */}
+          {/* Muevo SummaryCard un poco hacia arriba con mt-3 */}
           <SummaryCard
+            className="mt-3"
             profeName={selectedProfessional ? selectedProfessional.name : ''}
             profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
             serviName={store.selectedService ? store.selectedService.service_name : ''}

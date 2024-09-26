@@ -9,8 +9,8 @@ const BookAppointment_Services = () => {
   const { store, actions } = useContext(Context);
 
   useEffect(() => {
-    actions.getServices()
-  }, [])
+    actions.getServices();
+  }, [actions]);
 
   const handleContinue = () => {
     if (selectedService) {
@@ -20,58 +20,58 @@ const BookAppointment_Services = () => {
       alert("Please select a service before continuing.");
     }
   };
-  const selectedProfessional = store.selectedProfessional;
 
+  const selectedProfessional = store.selectedProfessional;
   const selectedService = store.selectedService;
 
   return (
-    <div className="container mt-5" style={{ paddingBottom: '80px' }}>
-      <div className="row">
-        <div className="col-md-8">
-          <h3>Step 2 of 3</h3>
-          <h2>Select Services</h2>
-          <ul className="list-group">
-            {store.services.map((service, index) => (
-              <li
-                key={index}
-                className="list-group-item d-flex justify-content-between align-items-center"
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: selectedService === service.id ? '#fff9e6' : '',
-                  border: selectedService === service.id ? '1px solid #FFD700' : '',
-                  fontSize: '1.2rem'
-                }}
-                onClick={() => actions.selectService(service)}
-              >
-                <div className="d-flex flex-column">
-                  <div className="d-flex align-items-center">
-                    {selectedService && selectedService.id === service.id && (
-                      <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
-                    )}
-                    {service.service_name}
+    <div className="d-flex flex-column min-vh-100">
+      <div className="container mt-3 mb-5 flex-grow-1" style={{ paddingBottom: '80px' }}> {/* Espacio adicional en la parte inferior */}
+        <div className="row">
+          <div className="col-md-8">
+            <h3>Step 2 of 3</h3>
+            <h2>Select Services</h2>
+            <ul className="list-group">
+              {store.services.map((service, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex justify-content-between align-items-center"
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: selectedService === service.id ? '#fff9e6' : '',
+                    border: selectedService === service.id ? '1px solid #FFD700' : '',
+                    fontSize: '1.2rem',
+                  }}
+                  onClick={() => actions.selectService(service)}
+                >
+                  <div className="d-flex flex-column">
+                    <div className="d-flex align-items-center">
+                      {selectedService && selectedService.id === service.id && (
+                        <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
+                      )}
+                      {service.service_name}
+                    </div>
                   </div>
-                </div>
-                <div className="d-flex align-items-center">
-                  <span className="badge bg-secondary me-3">
-                    EUR {service.price}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <div className="d-flex align-items-center">
+                    <span className="badge bg-secondary me-3">
+                      EUR {service.price}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <SummaryCard
+            profeName={selectedProfessional ? selectedProfessional.name : ''}
+            profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+            serviName={selectedService ? selectedService.service_name : ''}
+            serviPrice={selectedService ? selectedService.price : ''}
+            handleContinue={handleContinue}
+            backRoute='/book-appointment-proffesional'
+            showContinueButton={true}
+          />
         </div>
-
-
-        <SummaryCard
-          profeName={selectedProfessional ? selectedProfessional.name : ''}
-          profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-          serviName={selectedService ? selectedService.service_name : ''}
-          serviPrice={selectedService ? selectedService.price : ''}
-          handleContinue={handleContinue}
-          backRoute='/book-appointment-proffesional'
-          showContinueButton={true}
-        />
-
       </div>
     </div>
   );

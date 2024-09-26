@@ -63,12 +63,12 @@ export const Login = () => {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4 shadow" style={{ width: '35rem', marginTop: '-60px' }}> {/* Ancho mantenido, altura reducida */}
-                <h1 className="text-center h4">Login</h1> {/* Texto más pequeño */}
+        <div className="d-flex justify-content-center align-items-start" style={{ paddingTop: '5rem', height: 'auto', minHeight: '100vh' }}> {/* Ajuste para reducir espacio inferior */}
+            <div className="card p-4 shadow" style={{ width: '90%', maxWidth: '30rem' }}>
+                <h1 className="text-center h4">Login</h1>
                 <h6 className="text-center fs-6 fw-lighter mt-3">Login to access your Barber Shop account</h6>
                 <form className="mt-3" onSubmit={handleSubmit}>
-                    <div className="mb-2"> {/* Se reduce el espacio entre campos */}
+                    <div className="mb-2">
                         <label htmlFor="emailLogin" className="form-label">Email</label>
                         <input
                             type="email"
@@ -100,7 +100,7 @@ export const Login = () => {
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
 
-                    <button type="submit" className="btn btn-warning w-100 mb-2">Login</button> {/* Botón reducido */}
+                    <button type="submit" className="btn btn-warning w-100 mb-2">Login</button>
                     {errorMessage && (
                         <Alert variant="danger" className="mt-2">
                             {errorMessage}
