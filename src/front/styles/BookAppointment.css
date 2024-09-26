@@ -1,0 +1,11 @@
+/* Espaciado general para que el footer no se superponga al contenido */
+.container-appointment {
+    padding-bottom: 100px; /* Espacio para evitar que el footer tape contenido */
+}
+
+/* En móviles, agregamos más espacio si es necesario */
+@media (max-width: 768px) {
+    .container-appointment {
+        padding-bottom: 150px; /* Aumentamos el espacio para móviles */
+    }
+}
