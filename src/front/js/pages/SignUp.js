@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "../../styles/login.css";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Context } from '../store/appContext';
 
@@ -45,16 +44,15 @@ const SignUp = () => {
       }
     }
   };
+
   useEffect(() => {
-    // Guardar en localStorage cada vez que cambien
     if (store.selectedProfessional) localStorage.setItem('selectedProfessional', JSON.stringify(store.selectedProfessional));
     if (store.selectedService) localStorage.setItem('selectedService', JSON.stringify(store.selectedService));
     if (store.selectedDate) localStorage.setItem('selectedDate', store.selectedDate);
     if (store.selectedTime) localStorage.setItem('selectedTime', store.selectedTime);
-}, [store.selectedProfessional, store.selectedService, store.selectedDate, store.selectedTime]);
+  }, [store.selectedProfessional, store.selectedService, store.selectedDate, store.selectedTime]);
 
-useEffect(() => {
-    // Cargar desde localStorage al montar el componente
+  useEffect(() => {
     const savedProfessional = localStorage.getItem('selectedProfessional');
     const savedService = localStorage.getItem('selectedService');
     const savedDate = localStorage.getItem('selectedDate');
@@ -64,14 +62,14 @@ useEffect(() => {
     if (savedService) actions.selectService(JSON.parse(savedService));
     if (savedDate) actions.selectDate(savedDate);
     if (savedTime) actions.selectTime(savedTime);
-}, []);
+  }, []);
 
   return (
-    <div className='bodyPage'>
-      <div className='bodyCard mt-5'>
-        <h1>Create account</h1>
-        <h6 className='fs-6 fw-lighter mt-3'>Sign up to access Barber Shop.</h6>
-        <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
+    <div className="container d-flex justify-content-center align-items-center min-vh-100">
+      <div className="w-100 p-4" style={{ maxWidth: "500px", boxShadow: "none", border: "none" }}> {/* Eliminamos el borde */}
+        <h1 className="text-center">Create account</h1>
+        <h6 className='fs-6 fw-lighter text-center mt-3'>Sign up to access Barber Shop.</h6>
+        <form className='mt-3' onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email">Email</label>
             <input
@@ -110,6 +108,7 @@ useEffect(() => {
               required
             />
           </div>
+
           <div className="mb-3 form-check">
             <input
               type="checkbox"
@@ -121,7 +120,7 @@ useEffect(() => {
             <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
           </div>
 
-          <button type="submit" className="btn btn-login">Create account</button>
+          <button type="submit" className="btn btn-login w-100">Create account</button>
         </form>
 
         <p className="text-center mt-3">

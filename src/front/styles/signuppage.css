@@ -1,10 +1,10 @@
 /* Estilos generales para el formulario */
 .container-login {
     padding-bottom: 100px;
-    width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
-    max-width: 100%; /* Evita que se desborde */
-    overflow-x: hidden; /* Evita que aparezca el scroll horizontal */
-    background-color: transparent; /* Elimina la franja blanca detrás del formulario */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: transparent;
 }
 
 /* Ajuste del formulario para dispositivos móviles */
@@ -13,7 +13,6 @@
         padding-bottom: 150px;
         padding-left: 15px;
         padding-right: 15px;
-        width: 100%; /* Asegura que el contenedor ocupe el 100% del ancho en móviles */
     }
 
     .col-12 {
@@ -22,11 +21,24 @@
     }
     
     .card {
-        margin: 0 auto; /* Asegura que las tarjetas se centren */
+        margin: 0 auto;
+        width: 100%;
     }
 }
 
-/* Asegurarse de que el contenedor de la imagen y la tarjeta se ajusten */
+@media (max-width: 576px) {
+    .col-12.col-md-6 {
+        max-width: 95%;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0 auto;
+    }
+
+    .container-login {
+        padding-bottom: 130px; 
+    }
+}
+
 .card-img-top {
     max-width: 100%;
     height: auto;
@@ -36,16 +48,14 @@
 body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Evita que aparezca el scroll horizontal en la página */
+    overflow-x: hidden;
 }
 
-/* Ajuste para el contenedor del formulario */
 .container {
     max-width: 100%;
     padding: 0 15px;
 }
 
-/* Evita el desbordamiento del contenido en pantallas pequeñas */
 html, body {
     width: 100%;
     overflow-x: hidden;

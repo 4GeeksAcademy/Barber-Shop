@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import SignUp from "./SignUp";
+import "../../styles/signuppage.css"; // Línea de importación del CSS
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -15,17 +16,19 @@ const SignUpPage = () => {
 
   return (
     <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center container-login">
-      <div className="form-card"> {/* Aplica la clase form-card */}
-        <div className="row justify-content-center align-items-center"> 
+      <div className="container mt-4 mb-5 pb-5">
+        <div className="row justify-content-center align-items-start">
           
           {/* Columna del formulario de registro */}
-          <div className="col-12 col-md-6" style={{ maxWidth: '500px', padding: '0 15px' }}>
-            <SignUp /> {/* Formulario de registro */}
+          <div className="col-12 col-md-6 col-lg-5"> {/* Ajustamos para dispositivos móviles */}
+            <div className="card w-100">
+              <SignUp />
+            </div>
           </div>
 
           {/* Columna del SummaryCard */}
-          <div className="col-12 col-md-4 mt-5 mt-md-0" style={{ maxWidth: '400px', padding: '0 15px' }}>
-            <div className="card bg-light">
+          <div className="col-12 col-md-4 mt-5 mt-md-0">
+            <div className="card bg-light w-100">
               <img
                 src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 className="card-img-top"
