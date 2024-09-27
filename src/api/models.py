@@ -49,7 +49,7 @@ class Employee(db.Model):
     password = db.Column(db.String(150), unique=False, nullable=False)
     date_of_birth = db.Column(DateTime, unique=False, nullable=True)
     address = db.Column(db.String(255), unique=False, nullable=True)
-    phone = db.Column(db.Integer, unique=True, nullable=False)
+    phone = db.Column(db.Integer, unique=True, nullable=True)
     hire_date = db.Column(DateTime, unique=False, nullable=True)
     job_position = db.Column(db.String(50), unique=False, nullable=True)
     is_active = db.Column(Boolean, unique=False, nullable=False)
@@ -137,17 +137,17 @@ class CustomerFav(db.Model):
             "employee_id": self.employee_id,
             "services_id": self.services_id
         }
-    
 class Appointment(db.Model):
     __tablename__ = 'appointment'  
     id = db.Column(db.Integer, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id = db.Column(db.Integer, ForeignKey('customer.id'), nullable=False)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), nullable=False)
     order_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     appointment_date = db.Column(db.DateTime, nullable=False)
     appointment_time = db.Column(db.Time, nullable=False)
     appointment_state_id = db.Column(db.Boolean, nullable=False)
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False)
+    
     customer = db.relationship("Customer", back_populates="appointments")
     employee = db.relationship("Employee", back_populates="appointments")
     service = db.relationship("Services", back_populates="appointments")
@@ -159,7 +159,9 @@ class Appointment(db.Model):
         return {
             "id": self.id,
             "customer_id": self.customer_id,
-            "customer": self.customer.serialize() if self.customer else None,
+            "customer": {
+                "name": self.customer.name if self.customer.name else self.customer.email,
+            } if self.customer else None,
             "employee_id": self.employee_id,
             "employee": self.employee.serialize() if self.employee else None,
             "order_date": self.order_date.isoformat() if self.order_date else None,
@@ -185,7 +187,8 @@ class Services(db.Model):
         return {
             "id": self.id,
             "service_name": self.service_name,
-            "price": self.price
+            "price": self.price,
+            
         }
     
 class Notifications(db.Model):

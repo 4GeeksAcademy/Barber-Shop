@@ -76,8 +76,11 @@ const Dashboard = () => {
                 )}
             </div>
             <div className="container d-flex justify-content-evenly">
-                <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Employee</button>
-                <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Customer</button>
+                <Link to="/employee-register">
+                <button className='m-auto btn btn-warning fw-bold' type='button'>Register Employee</button>
+                </Link>
+
+                {/* <button className='m-auto btn btn-warning fw-bold' type='submit'>Register Customer</button> */}
             </div>
         </div>
     );

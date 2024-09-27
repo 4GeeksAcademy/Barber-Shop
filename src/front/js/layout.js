@@ -32,6 +32,7 @@ import DashboardCustomer from "./pages/DashboardCustomer";
 import UpdateCustomerCard from "./component/UpdateCustomerCard";
 import InactivityAlert from "./component/InactivityAlert";
 import SummaryCard from "./component/summaryCard";
+import EmployeeRegister from "./pages/EmployeeRegister";
 
 // Aquí se crean las rutas principales, incluida la que apunta a la sección de servicios
 const Layout = () => {
@@ -69,8 +70,8 @@ const Layout = () => {
                         {/* Ruta para la página de registro */}
                         <Route element={<SignUpPage />} path="/sign-up" />
 
-                        <Route element={<SignUp />} path="/register" />
-
+                        <Route element={<SignUp />} path="/register"/>
+                        <Route element={<EmployeeRegister/>} path="/employee-register"/>
                         {/* Ruta para los dashboards */}
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<DashboardCustomer />} path="/dashboard-customer" />
