@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Context } from '../store/appContext';
@@ -26,6 +26,8 @@ export const Navbar = () => {
     }
     setIsExpanded(false);
   };
+
+  
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -71,7 +73,7 @@ export const Navbar = () => {
               </Link>
             </li>
 
-            {userType === "employee" ? (
+            {userType === "employee"  ? (
               <li className="nav-item">
                 <Link to="dashboard" className="nav-link" onClick={toggleNavbar}>
                   Dashboard

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
+import { Context } from '../store/appContext';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ export const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const {store, actions} = useContext(Context)
 
     useEffect(() => {
         const rememberedEmail = localStorage.getItem('rememberedEmail');
@@ -46,6 +48,7 @@ export const Login = () => {
                         localStorage.removeItem('rememberedPassword');
                         localStorage.removeItem('rememberMeCheck');
                     }
+                    actions.setToken(data.jwt_token);
                     localStorage.setItem('jwt_token', data.jwt_token);
                     localStorage.setItem('userType', data.type);
                     localStorage.setItem('email', data.email);
