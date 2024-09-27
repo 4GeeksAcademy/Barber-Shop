@@ -442,8 +442,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error:", error);
 				}
 			},
-
-
 			deleteAppointment: async (appointmentId) => {
 				const store = getStore()
 				const token = store.token;
@@ -478,10 +476,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 					selectedTime: null,
 					appointment_id: null
 				});
-			}
-
-
-
+			},
+			deleteCustomer: async (email) => {
+				const store = getStore();
+				const token = store.token;
+				try {
+					const response = await fetch(process.env.BACKEND_URL + '/api/delete_customer', {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							"Authorization": `Bearer ${token}`,  // Asegúrate de que el token JWT está almacenado
+						},
+						body: JSON.stringify({ email })  // Asegúrate de que envías el email del cliente
+					});
+			
+					if (!response.ok) {
+						const errorMessage = await response.json();
+						throw new Error(errorMessage.msg || "Error al eliminar el cliente");
+					}
+			
+					const result = await response.json();
+					return result;
+			
+				} catch (error) {
+					console.error("Error al eliminar el cliente:", error);
+					throw error;
+				}
+			},
+			
+			
 		}
 	};
 };
