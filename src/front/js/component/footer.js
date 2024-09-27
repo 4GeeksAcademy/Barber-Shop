@@ -28,7 +28,7 @@ export const Footer = () => {
     }, []);
 
     return (
-        <footer className={`footer ${isVisible ? "show" : "hide"}`}>
+        <footer className= {`footer ${isVisible ? "show" : "hide"}`}>
             <nav className="navbar bg-dark">
                 <div className="container-fluid">
                     <p className="text ms-1 mt-1">
