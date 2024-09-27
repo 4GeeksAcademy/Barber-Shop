@@ -9,17 +9,31 @@ import BookAppointment from '../component/BookAppointment';
 const DashboardCustomer = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
-
+    
     useEffect(() => {
         if (localStorage.getItem("jwt_token")) {
-          
-            
+            actions.getAppointments();
+            store.appointments
         } else {
             navigate("/login");
         }
     }, [actions, navigate]);
 
+    const customerId = store.selectCustomer;
+    
 
+
+    // Filtrar las citas para mostrar solo las del cliente actual
+    const customerAppointments = store.appointments.filter(appointment => appointment.customer_id === customerId);
+
+    const stateAppointment = () => { 
+        if (store.appointments.appointment_state_id) {
+            return "Active";
+        } else {
+            return "Completed";
+        }
+    };
+    
     return (
         <div className='container'>
             <h1 className='mt-3'>Dashboard</h1>
@@ -36,21 +50,21 @@ const DashboardCustomer = () => {
                             <th scope="col">Time</th>
                             <th scope="col">Status</th>
                             <th scope="col">Total</th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
+                            <th scope="col"> </th>
+                            <th scope="col"> </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {store.appointments && store.appointments.map((appointment, index) => (
+                        {customerAppointments.map((appointment, index) => (
                             <tr key={index}>
                                 <th scope="row"><input type="checkbox" /></th>
-                                <td>{appointment.employee}</td>
-                                <td>{appointment.service}</td>
-                                <td>{appointment.price}</td>
+                                <td>{appointment.employee.name}</td>
+                                <td>{appointment.service.service_name}</td>
+                                <td>€{appointment.service.price}</td>
                                 <td>{appointment.appointment_time}</td>
                                 <td>{appointment.appointment_state_id}</td>
                                 <td>{appointment.appointment_date}</td>
-                                <td>{appointment.total}</td>
+                                <td>{}</td>
                                 <td>
                                     <Link to=""><button className="btn"><i className="bi bi-pencil-square"></i></button></Link>
                                 </td>
