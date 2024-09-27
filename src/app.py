@@ -1185,7 +1185,7 @@ def send_email(subject, recipients, body, sender):
 def get_customer_id():
     current_user = get_jwt_identity() 
     customer = Customer.query.filter_by(email=current_user).first()  # Buscar el cliente en la base de datos
-
+   
     if customer:
         return jsonify(customer_id=customer.id), 200
     else:
