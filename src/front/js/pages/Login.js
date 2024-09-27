@@ -68,7 +68,7 @@ export const Login = () => {
     return (
         <div className="d-flex justify-content-center align-items-start" style={{ paddingTop: '5rem', height: 'auto', minHeight: '100vh' }}> {/* Ajuste para reducir espacio inferior */}
             <div className="card p-4 shadow" style={{ width: '90%', maxWidth: '30rem' }}>
-                <h1 className="text-center h4">Login</h1>
+                <h1 className="text-center">Login</h1>
                 <h6 className="text-center fs-6 fw-lighter mt-3">Login to access your Barber Shop account</h6>
                 <form className="mt-3" onSubmit={handleSubmit}>
                     <div className="mb-2">

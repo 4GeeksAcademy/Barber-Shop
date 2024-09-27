@@ -5,7 +5,7 @@
     width: 100%;
     background-color: rgba(0, 0, 0, 0.968);
     transition: transform 0.3s ease-in-out;
-    z-index: 1000; /* Asegura que el footer esté por encima de otros elementos */
+    z-index: 1000; /*Asegura que el footer esté por encima de otros elementos*/
 }
 
 /* Mostrar el footer cuando se hace scroll hasta el final */

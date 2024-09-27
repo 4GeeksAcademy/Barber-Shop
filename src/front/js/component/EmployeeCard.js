@@ -32,7 +32,7 @@ const EmployeeCard = props => {
     const userEmail = localStorage.getItem('email');
     const employee = store.selectedProfessional
     return (
-        <div>
+        <div className='mb-5'>
             {store.professional.map((employee, index) => (
                 <div className="card mb-3" style={{ maxWidth: '540px' }} key={index}>
                     <div className="row g-0">

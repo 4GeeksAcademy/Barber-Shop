@@ -66,8 +66,8 @@ const SignUp = () => {
   }, []);
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="w-100 p-4" style={{ maxWidth: "500px", boxShadow: "none", border: "none" }}> {/* Eliminamos el borde */}
+    <div className="d-flex justify-content-center align-items-start" style={{ paddingTop: '5rem', height: 'auto', minHeight: '100vh' }}>
+      <div className="card p-4 shadow" style={{ width: '90%', maxWidth: '30rem' }}> 
         <h1 className="text-center">Create account</h1>
         <h6 className='fs-6 fw-lighter text-center mt-3'>Sign up to access Barber Shop.</h6>
         <form className='mt-3' onSubmit={handleSubmit}>

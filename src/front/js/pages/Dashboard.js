@@ -48,7 +48,8 @@ const Dashboard = () => {
                 <button className="m-auto nav-item btn btn-warning fw-bold" onClick={() => handleTabClick('tab3')}>All Appointments</button>
             </div>
             <div className="content mt-3 row card-group">
-                {activeTab === 'tab1' && <div className="col"><EmployeeCard /></div>}
+                {activeTab === 'tab1' && <div className="d-flex flex-wrap"><EmployeeCard /></div>}
+                
                 {activeTab === 'tab2' && (
                     <div className='container'>
                         <table className="table">
