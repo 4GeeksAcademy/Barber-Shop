@@ -26,7 +26,8 @@ const UpdateCustomerCard = ({ onUpdate }) => {
         e.preventDefault();
         setError('');
 
-        const customerId = await actions.getCustomer(customer.id);
+        const customerId = await actions.fetchCustomerId(customer.id);
+
 
         if (!customerId) {
             setError("No se pudo obtener el ID del customer.");

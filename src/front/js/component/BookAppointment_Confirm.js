@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../store/appContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const BookAppointment_Confirm = () => {
   const { store, actions } = useContext(Context);
@@ -8,6 +8,10 @@ const BookAppointment_Confirm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    store.auth
+  },[])
 
   useEffect(() => {
     // Si los detalles de la cita están en el store, guárdalos localmente al cargar esta vista
@@ -44,11 +48,9 @@ useEffect(() => {
 
     console.log("Appointment ID:", store?.appointment_id);
     try {
-
       if (!store?.appointment_id) {
         throw new Error("No appointment selected.");
       }
-
       await actions.deleteAppointment(store?.appointment_id);
       navigate('/');
     } catch (error) {
@@ -59,12 +61,10 @@ useEffect(() => {
 
   const handleReschedule = async () => {
     try {
-      // Aquí llamamos la acción que cancela la cita
-      await actions.deleteAppointment(store?.appointment_id);
-      navigate('/book-appointment-date'); // Redirige a la página de selección de nueva cita
+      await actions.deleteAppointment(store.appointment_id);
+      navigate('/book-appointment-proffesional'); 
     } catch (error) {
-      console.error("Error al cancelar y reprogramar la cita", error);
-     
+      console.error("Error al cancelar y reprogramar la cita", error);     
     }
   };
 
@@ -74,12 +74,12 @@ useEffect(() => {
 
   const handleRescheduleClick = () => {
     setShowRescheduleModal(true);  // Muestra el modal para reprogramar la cita
-  };
+   };
 
   const handleConfirmCancel = () => {
     handleCancel();
     setShowConfirmModal(false);  // Cierra el modal tras cancelar
-  };
+    };
 
   const handleCloseModal = () => {
     setShowConfirmModal(false);  // Cierra el modal sin cancelar
@@ -180,8 +180,8 @@ useEffect(() => {
                 <p>Si continúas, se cancelará la cita actual y serás redirigido al calendario para seleccionar una nueva cita. ¿Deseas continuar?</p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={handleCloseRescheduleModal}>Cancelar</button> {/* No cancela la cita, cierra modal */}
-                <button className="btn btn-danger" onClick={handleReschedule}>Sí, continuar</button> {/* Cancela la cita y redirige */}
+                <button className="btn btn-secondary" onClick={handleCloseRescheduleModal}>Cancelar</button> {/* No cancela la cita, cierra modal */}              
+                <button className="btn btn-danger" onClick={handleReschedule}>Sí, continuar</button> {/* Cancela la cita y redirige */}              
               </div>
             </div>
           </div>
