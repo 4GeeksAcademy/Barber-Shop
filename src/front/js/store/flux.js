@@ -201,7 +201,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			fetchEmployeeId: async () => {
 				const store = getStore();
 				const token = store.token;
-
+				
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + '/api/get_employee_info', {
 						method: 'GET',
@@ -423,6 +423,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 				try {
+					
 					const resp = await fetch(process.env.BACKEND_URL + "/api/get_customer_id", {
 						method: "GET",
 						headers: {
@@ -432,6 +433,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					if (!resp.ok) {
+						
 						throw new Error("Error al obtener el customer_id");
 					}
 
