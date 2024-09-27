@@ -23,10 +23,22 @@ const Dashboard = () => {
         }
     }, []);
 
+    const handleEdit = (customer) => {
+        navigate('/update-customer', { state: { customer } });
+    };
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
 
+    const handleDelete = async (email) => {
+        const result = await actions.deleteCustomer(email);
+        if (result) {
+            // Redirigir o actualizar la lista de clientes después de la eliminación
+            navigate('/dashboard');
+        } else {
+            alert('Error al eliminar el cliente');
+        }
+    };
     return (
         <div className='container'>
             <h1 className='mt-3'>Dashboard</h1>
@@ -37,7 +49,44 @@ const Dashboard = () => {
             </div>
             <div className="content mt-3 row card-group">
                 {activeTab === 'tab1' && <div className="col"><EmployeeCard /></div>}
-                {activeTab === 'tab2' && <div className="col"><CustomerCard /></div>}
+                {activeTab === 'tab2' && (
+                    <div className='container'>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Appointment</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {store.customer.map((customer, index) => (
+                                    <tr key={index}>
+                                        <th scope="row"><input type="checkbox" /></th>
+                                        <td>{customer.name} {customer.last_name}</td>
+                                        <td>{customer.email}</td>
+                                        <td>{customer.phone}</td>
+                                        <td>{customer.status}</td>
+                                        <td>{customer.appointments.service_name}</td>
+                                        <td>
+                                            
+                                            <button className="btn" onClick={() => handleEdit(customer)}><i className="bi bi-pencil-square"></i></button>
+                                           
+                                        </td>
+                                        <td>
+                                            <button className="btn" onClick={() => handleDelete(customer.email)}><i className="bi bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
                 {activeTab === 'tab3' && (
                     <div className='container'>
                         <table className="table">

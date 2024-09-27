@@ -636,7 +636,7 @@ def customer_update():
                            'update_phone': 'opcional'
                        }}), 400
     current_user_email = get_jwt_identity()
-    customer_update = Customer.query.filter_by(email=current_user_email).first()
+    customer_update = Customer.query.filter_by(email=current_user_email).first() 
     if not customer_update:
         return jsonify({'msg':'Usuario no existe o el email está mal',
                         'campos':{
@@ -686,6 +686,39 @@ def customer_update():
        'Msg':'¡Tu usuario ha sido actualizado!',
        'jwt_token': access_token
     }), 200
+
+@app.route('/api/delete_customer', methods=['DELETE'])
+@jwt_required()
+def delete_customer():
+    body = request.get_json(silent=True)
+    if body is None:
+       return jsonify({'msg':'Debes enviar el campo email para eliminar el cliente:',
+                       'campos':{
+                           'email':'requerido'
+                       }}), 400
+
+    current_user_email = get_jwt_identity()
+    customer_to_delete = Customer.query.filter_by(email=body.get('email')).first()
+    if not customer_to_delete:
+        return jsonify({'msg':'Usuario no existe o el email está mal',
+                        'campos':{
+                           'email':'requerido'
+                       }}), 404
+
+    current_user = User.query.filter_by(email=current_user_email).first()
+    # Verificar si el usuario actual es el mismo que el cliente o un administrador
+    user_admin = UserAdmin.query.filter_by(employe_id=current_user.id).first()
+    if current_user_email != customer_to_delete.email and (user_admin is None or not user_admin.is_active):
+        return jsonify({'msg':'No tienes permiso para eliminar este cliente'}), 403
+
+    # Eliminar el cliente
+    db.session.delete(customer_to_delete)
+    db.session.commit()
+
+    return jsonify({
+       'Msg':'¡El cliente ha sido eliminado!'
+    }), 200
+
 
 @app.route('/api/deactivate_customer', methods=['PUT'])
 @jwt_required()
@@ -1185,7 +1218,7 @@ def send_email(subject, recipients, body, sender):
 def get_customer_id():
     current_user = get_jwt_identity() 
     customer = Customer.query.filter_by(email=current_user).first()  # Buscar el cliente en la base de datos
-
+   
     if customer:
         return jsonify(customer_id=customer.id), 200
     else:

@@ -34,11 +34,12 @@ const SignUp = () => {
 
       try {
         await actions.postSignupCustomer(customerData);
-        if (location.pathname === '/book-appointment-date') {
-          navigate('/book-appointment-resume');
-        } else {
-          navigate('/dashboard-customer');
-        }
+        navigate('/book-appointment-resume');
+        // if (location.pathname === '/book-appointment-date') {
+          
+        // } else {
+        //   navigate('/dashboard-customer');
+        // }
       } catch (error) {
         console.error("Error submitting form:", error);
       }
