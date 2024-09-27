@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import SummaryCard from './summaryCard';
+import "../../styles/BookAppointment_Proffesional.css"; // Importa el CSS
 
 const BookAppointment_Proffesional = () => {
   const navigate = useNavigate();
@@ -15,13 +16,13 @@ const BookAppointment_Proffesional = () => {
   const getBadgeClasses = (status) => {
     switch (status) {
       case 'Available':
-        return 'badge bg-success text-white'; // Verde suave
+        return 'badge bg-success text-white';
       case 'Day Off':
-        return 'badge bg-danger text-white'; // Rojo suave
+        return 'badge bg-danger text-white';
       case 'Holiday':
-        return 'badge bg-secondary text-white'; // Gris
+        return 'badge bg-secondary text-white';
       default:
-        return 'badge bg-light text-dark'; // Fallback para cualquier otro estado
+        return 'badge bg-light text-dark';
     }
   };
 
@@ -39,10 +40,9 @@ const BookAppointment_Proffesional = () => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <div className="container mt-1 flex-grow-1"> {/* Eliminé el margen inferior aquí */}
+    <div className="d-flex flex-column min-vh-100 container-professional"> {/* Clase container-professional */}
+      <div className="container mt-1 flex-grow-1">
         <div className="row mt-4">
-          {/* Profesionales */}
           <div className="col-md-8">
             <h3 className="mb-3">Step 1 of 3</h3>
             <h2 className="mb-4">Select Professional</h2>
@@ -68,7 +68,6 @@ const BookAppointment_Proffesional = () => {
             </ul>
           </div>
 
-          {/* Muevo SummaryCard un poco hacia arriba con mt-3 */}
           <SummaryCard
             className="mt-3"
             profeName={selectedProfessional ? selectedProfessional.name : ''}

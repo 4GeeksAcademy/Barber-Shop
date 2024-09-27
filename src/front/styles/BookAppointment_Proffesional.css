@@ -1,0 +1,27 @@
+/* bookAppointmentProffesional.css */
+
+/* Espaciado general para que el footer no se superponga al contenido */
+.container-professional {
+    padding-bottom: 120px; /* Espacio para evitar que el footer tape contenido */
+}
+
+/* En móviles, agregamos más espacio si es necesario */
+@media (max-width: 768px) {
+    .container-professional {
+        padding-bottom: 155px; /* Aumentamos el espacio para móviles */
+    }
+}
+
+/* Ajuste del margen y centrado del contenido */
+.content {
+    margin: 0 auto;
+    max-width: 1200px; /* Limitar el ancho del contenido */
+}
+
+/* Estilos adicionales para dispositivos móviles */
+@media (max-width: 576px) {
+    .content {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}

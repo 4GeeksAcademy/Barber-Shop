@@ -14,17 +14,17 @@ const SignUpPage = () => {
   const selectedTime = store.selectedTime;
 
   return (
-    <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center container-login"> {/* Centrado en la pantalla */}
-      <div className="container mt-4 mb-5 pb-5">
-        <div className="row justify-content-center align-items-center"> {/* Centrar el contenido */}
+    <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center container-login">
+      <div className="form-card"> {/* Aplica la clase form-card */}
+        <div className="row justify-content-center align-items-center"> 
           
           {/* Columna del formulario de registro */}
-          <div className="col-12 col-md-6" style={{ maxWidth: '500px', padding: '0 15px' }}> {/* Ajuste del ancho y margen */}
+          <div className="col-12 col-md-6" style={{ maxWidth: '500px', padding: '0 15px' }}>
             <SignUp /> {/* Formulario de registro */}
           </div>
 
           {/* Columna del SummaryCard */}
-          <div className="col-12 col-md-4 mt-5 mt-md-0" style={{ maxWidth: '400px', padding: '0 15px' }}> {/* Ajuste del ancho y margen */}
+          <div className="col-12 col-md-4 mt-5 mt-md-0" style={{ maxWidth: '400px', padding: '0 15px' }}>
             <div className="card bg-light">
               <img
                 src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
