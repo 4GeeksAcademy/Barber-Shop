@@ -188,8 +188,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await resp.json();
-					const updatedProfessionals = store.customer.map(customer =>
-						customer.email === updatedCustomer.email ? { ...customer, ...updatedCustomer } : customer
+					const updatedcustomers = store.customer.map(customer =>
+						customer.id === updatedCustomer.id ? { ...customer, ...updatedCustomer } : customer
 					);
 					setStore({ customer: updatedcustomers });
 					return data;
@@ -204,6 +204,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 				
 				try {
 					const resp = await fetch(process.env.BACKEND_URL + '/api/get_employee_info', {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${token}`
+						}
+					});
+
+					if (!resp.ok) {
+						const errorData = await resp.json();
+						throw new Error(errorData.msg || 'Error al obtener ID del empleado');
+					}
+
+					const data = await resp.json();
+					return data.id;
+				} catch (error) {
+					console.error("Error loading employee ID from backend", error);
+					return null;
+				}
+			},
+
+			fetchCustomerId: async () => {
+				const store = getStore();
+				const token = store.token;
+				
+				try {
+					const resp = await fetch(process.env.BACKEND_URL + '/api/get_customer_info', {
 						method: 'GET',
 						headers: {
 							'Authorization': `Bearer ${token}`
@@ -447,15 +472,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deleteAppointment: async (appointmentId) => {
 				const store = getStore()
 				const token = store.token;
+				if (!token) {
+					console.error('Token JWT faltante');
+					return;
+				  }
 				try {
 					const response = await fetch(process.env.BACKEND_URL + '/api/delete_appointment', {
 						method: 'DELETE',
 						headers: {
 							'Content-Type': 'application/json',
-							"Authorization": `Bearer ${token}`,  // Asegúrate de que el token JWT está almacenado
+							"Authorization": `Bearer ${token}`,  
 						},
-						body: JSON.stringify({ appointment_id: appointmentId })  // Asegúrate de que envías el appointment_id
+						body: JSON.stringify({ appointment_id: appointmentId })  
 					});
+					
 
 					if (!response.ok) {
 						const errorMessage = await response.json();
@@ -463,6 +493,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const result = await response.json();
+					if (!result.msg) {
+						throw new Error("Formato de respuesta no esperado");
+					  }
+					console.log(result);
+					
 					return result;
 
 				} catch (error) {

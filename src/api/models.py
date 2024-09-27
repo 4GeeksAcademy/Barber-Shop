@@ -196,7 +196,7 @@ class Notifications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, ForeignKey('customer.id'), nullable=False)
     employee_id = db.Column(db.Integer, ForeignKey('employee.id'), nullable=False)
-    admin_id = db.Column(db.Integer, ForeignKey('user_admin.id'), nullable=False)
+    admin_id = db.Column(db.Integer, ForeignKey('user_admin.id'), nullable=True)
     appointment_date = db.Column(DateTime, nullable=False)  
     services = db.Column(db.Integer, nullable=False)
     customer = relationship("Customer", back_populates="notifications")
