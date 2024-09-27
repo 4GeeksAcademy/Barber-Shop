@@ -30,7 +30,7 @@ const EmployeeCard = props => {
     
     const userType = localStorage.getItem('userType');
     const userEmail = localStorage.getItem('email');
-    
+    const employee = store.selectedProfessional
     return (
         <div>
             {store.professional.map((employee, index) => (
@@ -53,7 +53,7 @@ const EmployeeCard = props => {
                         </div>
                     </div>
                 </div>
-            ))}
+            ))} 
         </div>
     );
 };

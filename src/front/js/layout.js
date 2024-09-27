@@ -72,8 +72,10 @@ const Layout = () => {
 
                         <Route element={<SignUp />} path="/register"/>
                         <Route element={<EmployeeRegister/>} path="/employee-register"/>
+
                         {/* Ruta para los dashboards */}
                         <Route element={<Dashboard />} path="/dashboard" />
+                        
                         <Route element={<DashboardCustomer />} path="/dashboard-customer" />
 
                         {/* Ruta para actualizar empleado */}
