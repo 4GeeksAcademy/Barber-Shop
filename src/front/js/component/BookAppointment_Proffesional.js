@@ -3,37 +3,36 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import SummaryCard from './summaryCard';
+import "../../styles/BookAppointment_Proffesional.css"; // Importa el CSS
 
 const BookAppointment_Proffesional = () => {
   const navigate = useNavigate();
   const { store, actions } = useContext(Context);
 
   useEffect(() => {
-    actions.getProfessional()
-
+    actions.getProfessional();
   }, []);
 
-
-  const getBadgeStyle = (status) => {
+  const getBadgeClasses = (status) => {
     switch (status) {
       case 'Available':
-        return { backgroundColor: '#d4edda', color: '#155724' }; // Verde suave
+        return 'badge bg-success text-white';
       case 'Day Off':
-        return { backgroundColor: '#f8d7da', color: '#721c24' }; // Rojo suave
+        return 'badge bg-danger text-white';
       case 'Holiday':
-        return { backgroundColor: '#e2e3e5', color: '#6c757d' }; // Gris
+        return 'badge bg-secondary text-white';
       default:
-        return {};
+        return 'badge bg-light text-dark';
     }
   };
 
   const selectedProfessional = store.selectedProfessional;
-  console.log(selectedProfessional);
 
   const handleContinue = () => {
     if (store.selectedProfessional) {
-
-      actions.selectProfessional(store.professional.find(pro => pro.id === store.selectedProfessional.id));
+      actions.selectProfessional(
+        store.professional.find(pro => pro.id === store.selectedProfessional.id)
+      );
       navigate('/book-appointment-services');
     } else {
       alert("Please select a professional before continuing.");
@@ -41,50 +40,45 @@ const BookAppointment_Proffesional = () => {
   };
 
   return (
-    <div className="container mt-5" style={{ paddingBottom: '80px' }}>
-      <div className="row">
-        {/* Profesionales */}
-        <div className="col-md-8">
-          <h3>Step 1 of 3</h3>
-          <h2>Select Professional</h2>
-          <ul className="list-group">
-            {store.professional.map((pro, index) => (
-              <li
-                key={index}
-                className="list-group-item d-flex justify-content-between align-items-center"
-                style={{
-                  cursor: pro.status === 'Available' ? 'pointer' : 'not-allowed',
-                  backgroundColor: selectedProfessional && selectedProfessional.id === pro.id ? '#fff9e6' : '',
-                  border: selectedProfessional && selectedProfessional.id === pro.id ? '1px solid #FFD700' : '',
-                  fontSize: '1.2rem',
-                  opacity: pro.status === 'Available' ? 1 : 0.6
-                }}
-                onClick={() => pro.status === 'Available' && actions.selectProfessional(pro)}
-              >
-                <div className="d-flex align-items-center">
-                  {selectedProfessional && selectedProfessional.id === pro.id && (
-                    <i className="fa-solid fa-circle-check me-2" style={{ color: '#FFD700', fontSize: '1.5rem' }}></i>
-                  )}
-                  {pro.name} {pro.last_name}
-                </div>
-                <span className="badge" style={getBadgeStyle(pro.status)}>
-                  {pro.status}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="d-flex flex-column min-vh-100 container-professional"> {/* Clase container-professional */}
+      <div className="container mt-1 flex-grow-1">
+        <div className="row mt-4">
+          <div className="col-md-8">
+            <h3 className="mb-3">Step 1 of 3</h3>
+            <h2 className="mb-4">Select Professional</h2>
+            <ul className="list-group">
+              {store.professional.map((pro, index) => (
+                <li
+                  key={index}
+                  className={`list-group-item d-flex justify-content-between align-items-center ${selectedProfessional && selectedProfessional.id === pro.id ? 'bg-warning' : ''} ${pro.status !== 'Available' ? 'opacity-50' : ''}`}
+                  onClick={() => pro.status === 'Available' && actions.selectProfessional(pro)}
+                  style={{ cursor: pro.status === 'Available' ? 'pointer' : 'not-allowed' }}
+                >
+                  <div className="d-flex align-items-center">
+                    {selectedProfessional && selectedProfessional.id === pro.id && (
+                      <i className="fa-solid fa-circle-check me-2 text-warning fs-3"></i>
+                    )}
+                    {pro.name} {pro.last_name}
+                  </div>
+                  <span className={getBadgeClasses(pro.status)}>
+                    {pro.status}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* SummaryCard */}
-        <SummaryCard
-          profeName={selectedProfessional ? selectedProfessional.name : ''}
-          profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
-          serviName={store.selectedService ? store.selectedService.service_name : ''}
-          serviPrice={store.selectedService ? store.selectedService.price : ''}
-          handleContinue={handleContinue}
-          backRoute='/book-appointment'
-          showContinueButton={true}
-        />
+          <SummaryCard
+            className="mt-3"
+            profeName={selectedProfessional ? selectedProfessional.name : ''}
+            profeLastName={selectedProfessional ? selectedProfessional.last_name : ''}
+            serviName={store.selectedService ? store.selectedService.service_name : ''}
+            serviPrice={store.selectedService ? store.selectedService.price : ''}
+            handleContinue={handleContinue}
+            backRoute='/book-appointment'
+            showContinueButton={true}
+          />
+        </div>
       </div>
     </div>
   );

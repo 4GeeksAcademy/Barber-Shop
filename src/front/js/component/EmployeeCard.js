@@ -27,9 +27,12 @@ const EmployeeCard = props => {
     const handleEdit = (employee) => {
         navigate('/update-employee', { state: { employee } });
     };
-
+    
+    const userType = localStorage.getItem('userType');
+    const userEmail = localStorage.getItem('email');
+    const employee = store.selectedProfessional
     return (
-        <div>
+        <div className='mb-5'>
             {store.professional.map((employee, index) => (
                 <div className="card mb-3" style={{ maxWidth: '540px' }} key={index}>
                     <div className="row g-0">
@@ -50,7 +53,7 @@ const EmployeeCard = props => {
                         </div>
                     </div>
                 </div>
-            ))}
+            ))} 
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Context } from '../store/appContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const BookAppointment_Confirm = () => {
   const { store, actions } = useContext(Context);
@@ -8,6 +8,10 @@ const BookAppointment_Confirm = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    store.auth
+  },[])
 
   useEffect(() => {
     // Si los detalles de la cita están en el store, guárdalos localmente al cargar esta vista
@@ -27,7 +31,7 @@ useEffect(() => {
     // Usa un pequeño timeout para asegurarte de que los datos se muestren antes de resetear el estado global
     const timer = setTimeout(() => {
         actions.resetAppointmentState();
-    }, 100);  // Espera 100ms antes de limpiar el store
+    }, 900000);  // Espera 100ms antes de limpiar el store
 
     // Limpia el timeout si el componente se desmonta
     return () => clearTimeout(timer);
@@ -44,25 +48,23 @@ useEffect(() => {
 
     console.log("Appointment ID:", store?.appointment_id);
     try {
-
       if (!store?.appointment_id) {
         throw new Error("No appointment selected.");
       }
-
       await actions.deleteAppointment(store?.appointment_id);
       navigate('/');
     } catch (error) {
+      
       console.error("Error al cancelar la cita", error);
     }
   };
 
   const handleReschedule = async () => {
     try {
-      // Aquí llamamos la acción que cancela la cita
       await actions.deleteAppointment(store.appointment_id);
-      navigate('/book-appointment-date'); // Redirige a la página de selección de nueva cita
+      navigate('/book-appointment-proffesional'); 
     } catch (error) {
-      console.error("Error al cancelar y reprogramar la cita", error);
+      console.error("Error al cancelar y reprogramar la cita", error);     
     }
   };
 
@@ -72,12 +74,12 @@ useEffect(() => {
 
   const handleRescheduleClick = () => {
     setShowRescheduleModal(true);  // Muestra el modal para reprogramar la cita
-  };
+   };
 
   const handleConfirmCancel = () => {
     handleCancel();
     setShowConfirmModal(false);  // Cierra el modal tras cancelar
-  };
+    };
 
   const handleCloseModal = () => {
     setShowConfirmModal(false);  // Cierra el modal sin cancelar
@@ -102,18 +104,19 @@ useEffect(() => {
               <img
                 src="https://images.unsplash.com/photo-1635611578109-4b9ce9525b13?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Location"
-                style={{ width: '150px', height: '150px', objectFit: 'cover', marginRight: '20px' }}
+                className="rounded-circle"
+                style={{ width: '120px', height: '120px', objectFit: 'cover', marginRight: '20px' }}
               />
               <div>
-                <h4>Vurve - Bangalore</h4>
-                <p>MG Road, Bangalore</p>
-                <p>Booking ref: #65742695</p>
+                <h4 style={{ fontSize: '20px', fontWeight: 'bold' }}>Vurve - Bangalore</h4>
+                <p className="text-muted" style={{ marginBottom: '0.2rem' }}>MG Road, Bangalore</p>
+                <p className="text-muted" style={{ marginBottom: '0.2rem' }}>Booking ref: #65742695</p>
               </div>
             </div>
 
-            <hr />
+            <hr className="mb-4" />
 
-            <div className="appointment-details">
+            <div className="appointment-details mb-4">
               {store.selectedService && (
                 <div>
                   <p><strong>Servicio: {store.selectedService.name}</strong></p> {/* Servicio que se hará el cliente */}
@@ -177,8 +180,8 @@ useEffect(() => {
                 <p>Si continúas, se cancelará la cita actual y serás redirigido al calendario para seleccionar una nueva cita. ¿Deseas continuar?</p>
               </div>
               <div className="modal-footer">
-                <button className="btn btn-secondary" onClick={handleCloseRescheduleModal}>Cancelar</button> {/* No cancela la cita, cierra modal */}
-                <button className="btn btn-danger" onClick={handleReschedule}>Sí, continuar</button> {/* Cancela la cita y redirige */}
+                <button className="btn btn-secondary" onClick={handleCloseRescheduleModal}>Cancelar</button> {/* No cancela la cita, cierra modal */}              
+                <button className="btn btn-danger" onClick={handleReschedule}>Sí, continuar</button> {/* Cancela la cita y redirige */}              
               </div>
             </div>
           </div>

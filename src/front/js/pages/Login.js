@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import "../../styles/login.css";
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Alert } from 'react-bootstrap';
+import { Context } from '../store/appContext';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +9,7 @@ export const Login = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const {store, actions} = useContext(Context)
 
     useEffect(() => {
         const rememberedEmail = localStorage.getItem('rememberedEmail');
@@ -32,16 +33,10 @@ export const Login = () => {
             },
             body: JSON.stringify({ email, password }),
         })
-            .then(response => {
-                console.log(response);
-
-                return response.json().then(data => ({ code: response.status, data }))
-            })
-
+            .then(response => response.json().then(data => ({ code: response.status, data })))
             .then(({ code, data }) => {
-                if (code == 400) {
+                if (code === 400) {
                     alert(data.msg);
-
                 }
                 if (data.jwt_token) {
                     if (rememberMe) {
@@ -53,15 +48,16 @@ export const Login = () => {
                         localStorage.removeItem('rememberedPassword');
                         localStorage.removeItem('rememberMeCheck');
                     }
+                    actions.setToken(data.jwt_token);
                     localStorage.setItem('jwt_token', data.jwt_token);
+                    localStorage.setItem('userType', data.type);
+                    localStorage.setItem('email', data.email);
                     if (data.type === "employee") {
                         navigate("/dashboard");
                     } else {
                         navigate("/dashboard-customer");
                     }
                 }
-
-                console.log('Success:', data);
             })
             .catch((error) => {
                 setErrorMessage("Incorrect username or password");
@@ -70,12 +66,12 @@ export const Login = () => {
     };
 
     return (
-        <div className='bodyPage'>
-            <div className='bodyCard mt-5'>
-                <h1>Login</h1>
-                <h6 className='fs-6 fw-lighter mt-3'>Login to access your Barber Shop account</h6>
-                <form className='mt-3' style={{ width: "25rem" }} onSubmit={handleSubmit}>
-                    <div className="mb-3">
+        <div className="d-flex justify-content-center align-items-start" style={{ paddingTop: '5rem', height: 'auto', minHeight: '100vh' }}> {/* Ajuste para reducir espacio inferior */}
+            <div className="card p-4 shadow" style={{ width: '90%', maxWidth: '30rem' }}>
+                <h1 className="text-center">Login</h1>
+                <h6 className="text-center fs-6 fw-lighter mt-3">Login to access your Barber Shop account</h6>
+                <form className="mt-3" onSubmit={handleSubmit}>
+                    <div className="mb-2">
                         <label htmlFor="emailLogin" className="form-label">Email</label>
                         <input
                             type="email"
@@ -85,9 +81,8 @@ export const Login = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
                     </div>
-                    <div className="mb-3">
+                    <div className="mb-2">
                         <label htmlFor="passwordLogin" className="form-label">Password</label>
                         <input
                             type="password"
@@ -97,7 +92,7 @@ export const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <div className="mb-3 form-check">
+                    <div className="mb-2 form-check">
                         <input
                             type="checkbox"
                             className="form-check-input"
@@ -108,16 +103,14 @@ export const Login = () => {
                         <label className="form-check-label" htmlFor="rememberMeCheck">Remember me</label>
                     </div>
 
-                    <button type="submit" className=" btn btn-login">Login</button>
-                    {
-                        errorMessage && (
-                            <div className="alert alert-danger mt-3" role="alert">
-                                {errorMessage}
-                            </div>
-                        )
-                    }
-                    <div className='mt-3'>
-                        <p>Reset password click <a href='/password-reset-request' className='text-danger'> here</a></p>
+                    <button type="submit" className="btn btn-warning w-100 mb-2">Login</button>
+                    {errorMessage && (
+                        <Alert variant="danger" className="mt-2">
+                            {errorMessage}
+                        </Alert>
+                    )}
+                    <div className="mt-2">
+                        <p className="text-center">Reset password click <a href='/password-reset-request' className='text-danger'>here</a></p>
                     </div>
                 </form>
 
@@ -126,5 +119,5 @@ export const Login = () => {
                 </p>
             </div>
         </div>
-    )
-}
+    );
+};

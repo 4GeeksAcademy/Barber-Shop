@@ -49,7 +49,7 @@ class Employee(db.Model):
     password = db.Column(db.String(150), unique=False, nullable=False)
     date_of_birth = db.Column(DateTime, unique=False, nullable=True)
     address = db.Column(db.String(255), unique=False, nullable=True)
-    phone = db.Column(db.Integer, unique=True, nullable=False)
+    phone = db.Column(db.Integer, unique=True, nullable=True)
     hire_date = db.Column(DateTime, unique=False, nullable=True)
     job_position = db.Column(db.String(50), unique=False, nullable=True)
     is_active = db.Column(Boolean, unique=False, nullable=False)
@@ -110,7 +110,10 @@ class Customer(db.Model):
             "name": self.name,
             "last_name": self.last_name,
             "email": self.email,
-            "phone": self.phone
+            "phone": self.phone,
+            "appointments": [appointment.serialize() for appointment in self.appointments],
+            "customer_favs": [fav.serialize() for fav in self.customer_favs],
+            "notifications": [notification.serialize() for notification in self.notifications]
         }
 
 
@@ -134,20 +137,20 @@ class CustomerFav(db.Model):
             "employee_id": self.employee_id,
             "services_id": self.services_id
         }
-    
 class Appointment(db.Model):
     __tablename__ = 'appointment'  
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, ForeignKey('customer.id'), nullable=False)
-    employee_id = db.Column(db.Integer, ForeignKey('employee.id'), nullable=False)
-    order_date = db.Column(DateTime, default=db.func.current_timestamp(), nullable=False)
-    appointment_date = db.Column(DateTime, nullable=False)
-    appointment_time = db.Column(Time, nullable=False)
-    appointment_state_id = db.Column(Boolean, nullable=False)
-    service_id = db.Column(db.Integer, ForeignKey('services.id'), nullable=False)
-    customer = relationship("Customer", back_populates="appointments")
-    employee = relationship("Employee", back_populates="appointments")
-    service = relationship("Services", back_populates="appointments")
+    employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), nullable=False)
+    order_date = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
+    appointment_date = db.Column(db.DateTime, nullable=False)
+    appointment_time = db.Column(db.Time, nullable=False)
+    appointment_state_id = db.Column(db.Boolean, nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey('services.id'), nullable=False)
+    
+    customer = db.relationship("Customer", back_populates="appointments")
+    employee = db.relationship("Employee", back_populates="appointments")
+    service = db.relationship("Services", back_populates="appointments")
 
     def __repr__(self):
         return f'<Appointment {self.id}>'
@@ -156,14 +159,19 @@ class Appointment(db.Model):
         return {
             "id": self.id,
             "customer_id": self.customer_id,
+            "customer": {
+                "name": self.customer.name if self.customer.name else self.customer.email,
+            } if self.customer else None,
             "employee_id": self.employee_id,
+            "employee": self.employee.serialize() if self.employee else None,
             "order_date": self.order_date.isoformat() if self.order_date else None,
             "appointment_date": self.appointment_date.isoformat() if self.appointment_date else None,
             "appointment_time": self.appointment_time.strftime('%H:%M:%S') if self.appointment_time else None,
             "appointment_state_id": self.appointment_state_id,
-            "service_id": self.service_id
+            "service_id": self.service_id,
+            "service": self.service.serialize() if self.service else None
         }
-    
+
 class Services(db.Model):
     __tablename__ = 'services'   
     id = db.Column(db.Integer, primary_key=True)
@@ -179,7 +187,8 @@ class Services(db.Model):
         return {
             "id": self.id,
             "service_name": self.service_name,
-            "price": self.price
+            "price": self.price,
+            
         }
     
 class Notifications(db.Model):
@@ -187,7 +196,7 @@ class Notifications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, ForeignKey('customer.id'), nullable=False)
     employee_id = db.Column(db.Integer, ForeignKey('employee.id'), nullable=False)
-    admin_id = db.Column(db.Integer, ForeignKey('user_admin.id'), nullable=False)
+    admin_id = db.Column(db.Integer, ForeignKey('user_admin.id'), nullable=True)
     appointment_date = db.Column(DateTime, nullable=False)  
     services = db.Column(db.Integer, nullable=False)
     customer = relationship("Customer", back_populates="notifications")
